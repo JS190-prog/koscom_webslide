@@ -186,6 +186,42 @@ body.editing .kpi:hover{padding-left:18px}
 .vchap button.on{background:var(--orp);border-color:var(--or);color:var(--ink);font-weight:700}
 .vchap button.on b{color:var(--or)}
 
+/* one-page summary · proof · before/after (2026-10-29) */
+.sum5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:34px}
+.sum5 .sc{background:var(--surface);border:1px solid var(--hair);border-top:3px solid var(--ink);padding:22px 20px 18px;min-height:330px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:12px;transition:transform .35s var(--ease),border-color .3s;font:inherit;color:inherit}
+.sum5 .sc:hover{transform:translateY(-4px);border-color:var(--or)}
+.sum5 .sc .sl{font-size:14px;letter-spacing:.12em;color:var(--grey);font-weight:700}
+.sum5 .sc .bg{font-size:26px;font-weight:700;line-height:1.3}
+.sum5 .sc .bg em{font-style:normal;color:var(--or)}
+.sum5 .sc p{font-size:16px;line-height:1.6;color:var(--ink2);flex:1}
+.sum5 .sc .go{font-size:13.5px;color:var(--grey)}
+.sum5 .sc.star{border-top-color:var(--or);background:#fff7f1}
+.sum5 .sc.star .sl{color:var(--or)}
+.ev{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 7px;border:1px solid currentColor;margin-left:6px;vertical-align:2px;letter-spacing:0;line-height:1.4}
+.ev.ext{color:#5b6b8c}.ev.rec{color:var(--navy)}.ev.asm{color:#8c8c92}.ev.goal{color:var(--or)}.ev.fic{color:#8c8c92}
+.agenda.mini{display:grid;grid-template-columns:repeat(5,1fr);margin-top:30px;border-top:1px solid var(--hair)}
+.agenda.mini .agrow{grid-template-columns:auto 1fr auto;gap:10px;padding:16px 14px;border-bottom:none;border-right:1px solid var(--hair)}
+.agenda.mini .agrow:hover{padding-left:16px}
+.agenda.mini .n{font-size:22px}.agenda.mini .h{font-size:16px}.agenda.mini .d,.agenda.mini .ar{display:none}
+.evlegend{margin-top:22px;font-size:14px;color:var(--grey)}
+.proof3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:22px}
+.proof3 .pf{border:1px solid var(--hair);background:#fff;display:flex;flex-direction:column}
+.proof3 .pf .im{height:215px;background:#f5f5f7;overflow:hidden;border-bottom:1px solid var(--hair)}
+.proof3 .pf .im img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.proof3 .pf .tx{padding:16px 18px}
+.proof3 .pf .tx b{display:block;font-size:13px;letter-spacing:.1em;color:var(--or);margin-bottom:6px}
+.proof3 .pf .tx h4{font-size:19px;margin-bottom:6px}
+.proof3 .pf .tx p{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.proof3 .pf .tx button{margin-top:10px;font:inherit;font-size:13px;color:var(--or);background:none;border:1px solid var(--or);padding:4px 10px;cursor:pointer}
+.ba{display:grid;grid-template-columns:130px 1fr;row-gap:30px;margin-top:44px;align-items:center}
+.ba .who{font-size:19px;font-weight:700}
+.ba .lane{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
+.ba .lane .s{padding:16px 16px;font-size:17.5px;line-height:1.35;border:1px solid var(--hair);background:var(--surface);white-space:nowrap}
+.ba .lane .s.re{border-style:dashed;color:#8c8c92}
+.ba .lane .ar{color:#b0b0b6;font-size:22px}
+.ba .lane.new .s{background:#fff7f1;border-color:var(--or);color:var(--ink);font-weight:700}
+.ba .lane.new .ar{color:var(--or)}
+.ba .loop{font-size:15px;color:#8c8c92;margin-left:4px}
 /* agenda */
 .agenda{margin-top:34px;border-top:1px solid var(--hair)}
 .agenda .agrow{cursor:pointer;display:grid;grid-template-columns:110px 300px 1fr 120px 40px;align-items:center;width:100%;text-align:left;padding:18px 18px;border-bottom:1px solid var(--hair);transition:background .35s,padding .35s var(--ease)}
@@ -680,33 +716,42 @@ body.editing .chart-edit{display:block}
       <div class="kick a"><span class="bar"></span>ㅋㅋ톤 2026 · 참가 기획서</div>
       <h1 class="a">코쇠 <em>오피스</em></h1>
       <p class="sub a">회사 양식에 맞춰 PPT·웹슬라이드·한글 문서를 만들고,<br>수정과 검수까지 이어드립니다.</p>
+      <p class="line a" style="color:var(--ink);font-weight:700"><span style="color:var(--or)">★</span> 대표 문서 몇 건이면, 우리 부서 전용 문서 스킬이 생깁니다</p>
       <p class="line a">양식 선택 → PPT·웹·한글 제작 → 수정·검수 → 저장·공유</p>
       <div class="chip-row a" style="margin-top:26px">
-        <span class="tag solid">PPT · .pptx</span><span class="tag solid">WEBSLIDE · .html</span><span class="tag solid">한글 · .hwp</span><span class="tag or">부서 문서팩</span>
+        <span class="tag solid">PPT · .pptx</span><span class="tag solid">WEBSLIDE · .html</span><span class="tag solid">한글 · .hwp</span><span class="tag or">★ 부서팩 스킬 자동 생성</span>
       </div>
       <div class="a"><button class="cta" data-go="1">기획서 펼치기 <span>↗</span></button><button class="cta ghost" data-side="video"><i>▶</i> 111초 요약 영상</button><button class="cta ghost" data-side="live">화면 시안 · 본선 준비</button></div>
     </div>
   </section>
 
-  <!-- 02 AGENDA -->
-  <section class="slide" data-sec="0" data-label="목차">
-    <div class="kick a"><span class="no">02</span>CONTENTS</div>
-    <h2 class="t a">다섯 장면으로 <em>말씀드립니다</em></h2>
-    <div class="agenda a">
-      <div class="agrow" role="button" tabindex="0" data-go="2"><span class="n">01</span><span class="h">문제</span><span class="d">보고서 부담 조사 · 부서 규칙 · 외부 도입 사례</span><span class="p">03–06</span><span class="ar">→</span></div>
-      <div class="agrow" role="button" tabindex="0" data-go="6"><span class="n">02</span><span class="h">해법</span><span class="d">회사 공통 엔진 + 부서별 문서팩</span><span class="p">07–08</span><span class="ar">→</span></div>
-      <div class="agrow" role="button" tabindex="0" data-go="8"><span class="n">03</span><span class="h">엔진 3종</span><span class="d">PPT·웹·한글 만들기 · 양식 목록 · 설계도 한 장</span><span class="p">09–13</span><span class="ar">→</span></div>
-      <div class="agrow" role="button" tabindex="0" data-go="13"><span class="n">04</span><span class="h">문서팩</span><span class="d">팩 구성 · ★ 대표 문서로 스킬 자동 생성 · 변경 반영 · 검수</span><span class="p">14–17</span><span class="ar">→</span></div>
-      <div class="agrow" role="button" tabindex="0" data-go="17"><span class="n">05</span><span class="h">실행과 효과</span><span class="d">전체 시연 구성 · 개발 계획 · 확산 가정·효과 검증 · 심사 기준</span><span class="p">18–21</span><span class="ar">→</span></div>
+  <!-- 02 ONE-PAGE SUMMARY (목차는 아래 띠 — 레일이 .agenda를 읽는다) -->
+  <section class="slide" data-sec="0" data-label="한 장 요약">
+    <div class="kick a"><span class="no">02</span>ONE-PAGE SUMMARY</div>
+    <h2 class="t a">한 장으로 보는 <em>코쇠오피스</em></h2>
+    <div class="sum5 a">
+      <button class="sc" data-go="2"><span class="sl">문제</span><span class="bg">업무시간의 <em>35%</em>가 보고서</span><p>AI가 초안을 써 줘도, 형식별 재작성과 부서 양식·용어 맞추기는 아직 사람 몫입니다.<span class="ev ext">외부 조사</span></p><span class="go">3–6장 →</span></button>
+      <button class="sc" data-go="6"><span class="sl">해법</span><span class="bg">회사 공통 엔진 <em>+ 부서팩</em></span><p>PPT·웹·한글을 회사 양식으로 만들고, 요청한 수정과 검수까지 한 흐름으로 잇습니다.</p><span class="go">7–8장 →</span></button>
+      <button class="sc star" data-go="15"><span class="sl">★ 핵심 기능</span><span class="bg">대표 문서 몇 건이면 <em>부서 전용 스킬</em></span><p>AI가 부서팩 스킬을 만들고, 검증을 통과한 뒤 관리자가 등록해야 정식 반영됩니다.</p><span class="go">16장 →</span></button>
+      <button class="sc" data-go="8"><span class="sl">증거</span><span class="bg">이 기획서가 <em>결과물</em></span><p>PPT 24쪽 · 한글 상세보고 · 지금 이 웹 기획서 — 사전 보유한 세 엔진으로 만들었습니다.<span class="ev rec">기존 기록</span></p><span class="go">9장 →</span></button>
+      <button class="sc" data-go="20"><span class="sl">효과</span><span class="bg">연 <em>24,000시간</em> 시나리오</span><p>전사 확산 가정입니다. 3개 부서 30명 시범 운영으로 총시간·품질을 측정해 확정합니다.<span class="ev asm">가정</span></p><span class="go">21장 →</span></button>
     </div>
+    <div class="agenda mini a">
+      <div class="agrow" role="button" tabindex="0" data-go="2"><span class="n">01</span><span class="h">문제</span><span class="d">보고서 부담 · 다시 맞추는 일 · 외부 도입 사례</span><span class="p">03–06</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="6"><span class="n">02</span><span class="h">해법</span><span class="d">회사 공통 엔진 + 부서팩</span><span class="p">07–08</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="8"><span class="n">03</span><span class="h">증거와 엔진</span><span class="d">이 기획서가 결과물 · PPT·웹·한글 · 설계도 한 장</span><span class="p">09–14</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="14"><span class="n">04</span><span class="h">부서팩</span><span class="d">팩 구성 · ★ 대표 문서로 스킬 자동 생성 · 변경 반영 · 검수</span><span class="p">15–18</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="18"><span class="n">05</span><span class="h">실행과 효과</span><span class="d">본선 시연 · 준비 상태 · 확산 가정 · 심사 기준</span><span class="p">19–22</span><span class="ar">→</span></div>
+    </div>
+    <p class="evlegend a">근거 표기 — <span class="ev ext">외부 조사</span><span class="ev ext">제공업체 발표</span><span class="ev rec">기존 기록</span><span class="ev asm">가정</span><span class="ev goal">목표</span><span class="ev fic">가상</span> &nbsp;숫자마다 성격을 붙였고, 산식과 구분 원칙은 부록 A에 모았습니다.</p>
   </section>
 
   <!-- 03 PROBLEM numbers -->
   <section class="slide" data-sec="1" data-label="문제 · 보고서 부담" data-hook="c3">
     <div class="side-links"><button class="side-link" data-side="sources">출처 보기 ↗</button></div>
     <div class="kick a"><span class="no">03</span>THE PROBLEM</div>
-    <h2 class="t a">보고서 부담, <em>양식과 작성 방식</em>부터</h2>
-    <p class="lead a">사람인의 2021년 직장인 1,227명 조사입니다. 작성 시간·스트레스·양식 관련 응답은 <b>서로 다른 질문의 결과</b>이며, 사내 실측이나 합산 비율이 아닙니다.</p>
+    <h2 class="t a">업무시간의 <em>35%</em>, 보고서에 씁니다</h2>
+    <p class="lead a">사람인 2021년 직장인 1,227명 조사입니다. 항목마다 서로 다른 질문의 응답입니다.<span class="ev ext">외부 조사</span></p>
     <div style="display:grid;grid-template-columns:1fr 330px;gap:48px;margin-top:22px">
       <div class="a">
         <div style="font-size:15px;font-weight:700;margin-bottom:4px">직장인 보고서 인식 <span class="note">(사람인 · 2021.8)</span></div>
@@ -714,23 +759,23 @@ body.editing .chart-edit{display:block}
       </div>
       <div class="a" style="text-align:center">
         <div class="chart-box" style="height:250px"><canvas id="c3ring"></canvas>
-          <div data-gen style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none"><div><div style="font-size:58px;font-weight:700;line-height:1"><span id="c3ringVal" data-count="35">0</span><small style="font-size:22px">%</small></div><div class="note" style="margin-top:6px" id="c3ringLab">업무시간 중 보고서</div></div></div>
+          <div data-gen style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none"><div><div style="font-size:58px;font-weight:700;line-height:1"><span id="c3ringVal" data-count="35">35</span><small style="font-size:22px">%</small></div><div class="note" style="margin-top:6px" id="c3ringLab">업무시간 중 보고서</div></div></div>
         </div>
         <h4 style="font-size:20px;margin-top:12px">업무시간의 평균 35%를 보고서에</h4>
         <p class="note" style="margin-top:4px">외부 조사 · 작성 시간의 평균 비중</p>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:22px">
-      <div class="kpi a"><div class="v"><span data-count="65.4" data-dec="1">0</span><small>%</small></div><div class="d">보고서 작성에 스트레스를 느낀다</div></div>
-      <div class="kpi navy a"><div class="v"><span data-count="36.8" data-dec="1">0</span><small>%</small></div><div class="d">작성 요령: 기존 보고서 양식 벤치마킹</div></div>
-      <div class="kpi grey a"><div class="v"><span data-count="20.8" data-dec="1">0</span><small>%</small></div><div class="d">어려운 이유: 보고서 서식이 까다롭다</div></div>
+      <div class="kpi a"><div class="v"><span data-count="65.4" data-dec="1">65.4</span><small>%</small></div><div class="d">보고서 작성에 스트레스를 느낀다</div></div>
+      <div class="kpi navy a"><div class="v"><span data-count="36.8" data-dec="1">36.8</span><small>%</small></div><div class="d">작성 요령: 기존 보고서 양식 벤치마킹</div></div>
+      <div class="kpi grey a"><div class="v"><span data-count="20.8" data-dec="1">20.8</span><small>%</small></div><div class="d">어려운 이유: 보고서 서식이 까다롭다</div></div>
     </div>
   </section>
 
   <!-- 04 PROBLEM scene -->
   <section class="slide" data-sec="1" data-label="문제 · 다시 쓰기">
     <div class="kick a"><span class="no">04</span>PAIN POINTS</div>
-    <h2 class="t a">만들고 나서도, <em>다시 맞추는 일</em>이 남습니다</h2>
+    <h2 class="t a">AI가 써 줘도, <em>양식 맞추기</em>는 아직 사람 몫입니다</h2>
     <div style="display:grid;grid-template-columns:700px 1fr;gap:48px;margin-top:26px;align-items:start">
       <div class="a rv">
         <div class="illu tilt" data-tilt style="height:420px;border:1px solid var(--hair)"><img src="assets/illust/k2-pain-ruler.webp" alt="장표마다 여백과 색을 자로 재며 다시 맞추는 코쇠"></div>
@@ -744,40 +789,35 @@ body.editing .chart-edit{display:block}
     </div>
   </section>
 
-  <!-- 05 COMPETITION -->
-  <section class="slide" data-sec="1" data-label="문제 · 작업 흐름" data-hook="c5">
-    <div class="side-links"><button class="side-link" data-side="sources">출처 보기 ↗</button></div>
-    <div class="kick a"><span class="no">05</span>WORKFLOW</div>
-    <h2 class="t a">만들고, 고치고, <em>회사 기준으로</em> 마무리합니다</h2>
-    <div style="display:grid;grid-template-columns:640px 1fr;gap:44px;margin-top:20px">
-      <div class="a">
-        <div class="chart-box" style="height:430px"><canvas id="c5"></canvas></div>
-        <p class="note" style="margin-top:6px">구성 연결도 · 좌표·원 크기는 설명용 배치값이며 성능 점수·형식 수가 아닙니다.</p>
-      </div>
-      <div>
-        <div class="fact a"><b>공통 엔진</b><span>PPT·웹·한글 제작·수정·검수를 연결</span></div>
-        <div class="fact a"><b>회사 기준</b><span>양식·로고·색상·보고 문법과 고정 콘텐츠를 공유</span></div>
-        <div class="fact a"><b>부서별 팩</b><span>목차·용어·결재라인과 검수 규칙을 결합</span></div>
-        <div class="fact a"><b>관리와 반영</b><span>승인·버전으로 다음 문서에 기준을 적용</span></div>
-        <div class="fact a"><b>직원</b><span>사용 자료와 목적을 전달하고 결과물을 확인</span></div>
-        <div class="a" style="margin-top:18px;background:var(--ink);color:#fff;padding:18px 20px;font-size:16px;line-height:1.6">
-          <em>회사 공통 엔진 + 부서별 문서팩</em> — 회사 양식에 맞춰 만들고, 수정과 검수까지 잇습니다
-        </div>
-      </div>
+  <!-- 05 BEFORE / AFTER -->
+  <section class="slide" data-sec="1" data-label="문제 · 달라지는 흐름">
+    <div class="kick a"><span class="no">05</span>BEFORE &amp; AFTER</div>
+    <h2 class="t a">다시 맞추는 대신, <em>처음부터 회사 양식</em>으로</h2>
+    <div class="ba a">
+      <div class="who" style="color:#8c8c92">지금</div>
+      <div class="lane"><span class="s">자료·메모</span><span class="ar">→</span><span class="s">AI 초안 · 직접 작성</span><span class="ar">→</span><span class="s re">PPT·웹·한글<br>형식별 다시 정리</span><span class="ar">→</span><span class="s re">부서 양식·용어<br>손으로 맞추기</span><span class="ar">→</span><span class="s re">검토 · 반려</span><span class="loop">↺ 다시 고치기</span></div>
+      <div class="who" style="color:var(--or)">코쇠오피스</div>
+      <div class="lane new"><span class="s">양식 · 부서팩 선택</span><span class="ar">→</span><span class="s">세 형식 제작</span><span class="ar">→</span><span class="s">요청한 수정</span><span class="ar">→</span><span class="s">자동 검수 + 사람 확인</span><span class="ar">→</span><span class="s">저장 · 공유</span></div>
     </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px">
+      <div class="card a"><h4>형식별 재작성 → 설계도 한 장</h4><p>내용·표·그림을 한 번 정리하면 PPT·웹·한글로 나눠 만듭니다.</p></div>
+      <div class="card a"><h4>개인의 기억 → 부서팩 규칙</h4><p>목차·고정 문구·용어·결재라인을 팩에 담아 모두 같은 기준으로 씁니다.</p></div>
+      <div class="card a"><h4>눈으로 확인 → 자동 검수</h4><p>필수 문구·숫자·서식·수정 누락을 먼저 찾고, 사람이 최종 확인합니다.</p></div>
+    </div>
+    <div class="a" style="margin-top:30px;background:var(--ink);color:#fff;padding:18px 22px;font-size:17px;line-height:1.6"><em>회사 공통 엔진 + 부서별 문서팩</em> — 흐름 비교 설명도입니다 <span class="ev" style="color:#bbb">개념도</span></div>
   </section>
 
   <!-- 06 PRECEDENTS -->
   <section class="slide" data-sec="1" data-label="문제 · 해외·국내 선례" data-hook="c6">
     <div class="side-links"><button class="side-link" data-side="sources">출처 보기 ↗</button></div>
     <div class="kick a"><span class="no">06</span>EXTERNAL ADOPTION</div>
-    <h2 class="t a">조직 양식의 재사용, <em>외부 도입 사례</em>가 있습니다</h2>
-    <p class="lead a">회사 양식과 공통 콘텐츠를 관리하는 구조는 해외 도입 사례가 있습니다. 아래는 업무·대상이 서로 다른 제공업체·고객 발표이며 코쇠오피스의 성과나 직접 비교 실험이 아닙니다.</p>
+    <h2 class="t a">회사 양식 관리, <em>해외에서는 이미 도입</em>했습니다</h2>
+    <p class="lead a">회사 양식과 공통 콘텐츠를 조직 단위로 관리하는 서비스가 쓰이고 있습니다. 수치는 업무·대상이 서로 다른 제공업체·고객 발표입니다.<span class="ev ext">제공업체 발표</span></p>
     <div style="display:grid;grid-template-columns:690px 1fr;gap:44px;margin-top:18px">
       <div class="a">
         <div style="font-size:15px;font-weight:700">외부 사례에서 발표한 최소 시간 절감률 <span class="note">(% 이상 · 자체 발표)</span></div>
         <div class="chart-box" style="height:330px;margin-top:6px"><canvas id="c6"></canvas></div>
-        <p class="src">삼성SDS 공식 발표(2024.5.2) · Templafy의 Waterman 고객 사례. 서로 다른 작업의 발표값이며 같은 조건의 성능 순위로 해석하지 않습니다.</p>
+        <p class="src">삼성SDS 공식 발표(2024.5.2) · Templafy의 Waterman 고객 사례</p>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start">
         <div class="card a"><h4>조직 양식 재사용</h4><p>양식·공통 콘텐츠를 조직 단위로 관리하는 선례</p></div>
@@ -801,8 +841,8 @@ body.editing .chart-edit{display:block}
     <div style="position:relative;display:grid;grid-template-columns:1fr 620px;gap:40px;height:100%;align-items:center">
       <div style="padding-left:20px">
         <div class="kick a"><span class="bar"></span>CHAPTER 02 · SOLUTION</div>
-        <h2 class="a" style="font-size:62px;line-height:1.2">PPT·웹·한글,<br><em>회사 양식</em>에 맞춰.</h2>
-        <p class="lead a" style="font-size:20px;margin-top:22px">회사 공통 엔진에 <b style="color:#fff">부서별 문서팩</b>을 결합합니다. 팩의 양식·목차·용어·고정 콘텐츠를 바탕으로 PPT·웹·한글을 만들고, 수정과 검수까지 이어갑니다.</p>
+        <h2 class="a" style="font-size:56px;line-height:1.22">회사 양식을 아는 AI,<br><em>코쇠오피스</em>.</h2>
+        <p class="lead a" style="font-size:20px;margin-top:22px">회사 공통 엔진에 <b style="color:#fff">부서별 문서팩</b>을 결합합니다. 팩의 양식·목차·용어·고정 콘텐츠를 바탕으로 PPT·웹·한글을 만들고, 수정과 검수까지 이어갑니다.<br><span style="color:#ffb27f">★ 대표 문서만 올리면 부서팩 스킬이 자동으로 만들어지고, 검증 뒤 관리자가 등록합니다.</span></p>
       </div>
       <div class="a r">
         <div class="illu tilt" data-tilt style="height:380px;padding:16px"><img src="assets/illust/01-engine-pack.webp" alt="공통 엔진에 부서 팩 카트리지를 끼우는 코쇠"></div>
@@ -856,11 +896,28 @@ body.editing .chart-edit{display:block}
     </div>
   </section>
 
+  <!-- 09 PROOF OF WORK -->
+  <section class="slide" data-sec="3" data-label="엔진 · 보유 결과물">
+    <div class="side-links"><button class="side-link" data-side="gallery">실물 보기 ↗</button></div>
+    <div class="kick a"><span class="no">09</span>PROOF OF WORK</div>
+    <h2 class="t a">이 기획서가 <em>증거</em>입니다</h2>
+    <p class="lead a">PPT·한글·웹슬라이드 엔진은 공모전 전에 만들어 둔 개인 작업(스킬)입니다. 이 기획서의 세 형식이 모두 그 엔진의 결과물입니다.</p>
+    <div class="proof3">
+      <div class="pf a"><div class="im"><img src="assets/gallery/ppt-01.webp" alt="PPT 엔진으로 만든 코쇠 덱 표지"></div><div class="tx"><b>PPT 엔진</b><h4>「코쇠 덱」 24쪽 <span class="ev rec">기존 기록</span></h4><p>회사 템플릿·셰브론·삽화를 그대로 쓴 편집 가능한 PPTX. PowerPoint에서 바로 고칩니다.</p><button data-side="gallery">24쪽 보기 ↗</button></div></div>
+      <div class="pf a"><div class="im"><img src="assets/gallery/hwp-summary.webp" alt="한글 엔진으로 만든 상세보고 표지"></div><div class="tx"><b>한글 엔진</b><h4>상세보고 .hwp <span class="ev rec">기존 기록</span></h4><p>코스콤 상세보고 양식의 표지·자동 목차·본문 12쪽·첨부. 한컴 뷰어에서 그대로 열립니다.</p><button data-side="gallery">한글 화면 보기 ↗</button></div></div>
+      <div class="pf a"><div class="im"><img src="assets/gallery/web-cover.webp" alt="웹슬라이드 엔진으로 만든 이 기획서 표지"></div><div class="tx"><b>웹슬라이드 엔진 · LIVE</b><h4>지금 보는 이 HTML</h4><p>차트·편집 모드·모션·요약 영상까지 한 파일(약 6MB). 링크 하나로 열고 공유합니다.</p><button data-go="10">웹슬라이드 장으로 →</button></div></div>
+    </div>
+    <div class="a" style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:18px">
+      <div style="border-top:2px solid var(--ink);padding-top:12px;font-size:15.5px;line-height:1.6"><b>이미 있는 것</b> — 22장 기획서 첫 완성본 43분·수정 3회 포함 139분, 한글 평가 스킬 사용 100% vs 미사용 79% <span class="ev rec">기존 기록</span></div>
+      <div style="border-top:2px solid var(--or);padding-top:12px;font-size:15.5px;line-height:1.6"><b style="color:var(--or)">본선에서 만들 것</b> — 세 엔진을 잇는 서비스 · 부서팩 · 스킬 자동 생성 · 검수 (11/6 개발 환경 지원 이후)</div>
+    </div>
+  </section>
+
   <!-- 09 PPT ENGINE -->
   <section class="slide" data-sec="3" data-label="엔진 ① PPT" data-hook="c9">
     <div class="side-links"><button class="side-link" data-side="basis">작업 기록·가정 ↗</button><button class="side-link" data-side="gallery">실물 보기 ↗</button></div>
-    <div class="kick a"><span class="no">09</span>ENGINE 01 · PPT</div>
-    <h2 class="t a">회사 양식으로 만들고, <em>선택 장표</em>를 고칩니다</h2>
+    <div class="kick a"><span class="no">10</span>ENGINE 01 · PPT</div>
+    <h2 class="t a">22장 기획서 첫 완성본 <em>43분</em>, 고칠 수 있는 PPTX로</h2>
     <div class="pipe a" style="margin-top:24px">
       <div class="st"><b>회사 양식 선택</b><small>목적·양식·원고를 확인</small></div>
       <div class="st"><b>설계도·원고 구성</b><small>결론·근거·표·그림을 배치</small></div>
@@ -882,15 +939,15 @@ body.editing .chart-edit{display:block}
             <text x="80" y="674" font-size="18" font-weight="700" fill="#2b2b2e" font-family="KoPub Dotum">KOSCOM</text>
           </svg>
         </div>
-        <p class="cap">원고를 회사 양식에 맞춰 구성하고, 필요한 장표를 고쳐 편집 가능한 PPTX로 저장합니다. 아래 시간은 보유 엔진의 별도 22장 작업 기록이며 수작업 대조군은 가정입니다.</p>
+        <p class="cap">원고를 회사 양식에 맞춰 구성하고, 필요한 장표를 고쳐 편집 가능한 PPTX로 저장합니다.<span class="ev rec">기존 기록</span><span class="ev asm">수작업은 가정</span></p>
         <div class="chip-row" style="margin-top:14px"><span class="tag">회사 양식</span><span class="tag">선택 장표 편집</span><span class="tag or">PPTX 저장</span><span class="tag">재열기 확인</span></div>
       </div>
       <div class="a">
         <div style="font-size:15px;font-weight:700">22장 기획서 작성 시간 <span class="note">(분 · 기존 작업 기록 / 수작업은 가정)</span></div>
         <div class="chart-box" style="height:250px;margin-top:6px"><canvas id="c9"></canvas></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:12px">
-          <div class="kpi"><div class="v"><span data-count="43">0</span><small>분</small></div><div class="d">14:58 → 15:41 · 첫 완성본 기록</div></div>
-          <div class="kpi navy"><div class="v"><span data-count="139">0</span><small>분</small></div><div class="d">14:58 → 17:17 · 수정 3회 포함</div></div>
+          <div class="kpi"><div class="v"><span data-count="43">43</span><small>분</small></div><div class="d">14:58 → 15:41 · 첫 완성본 기록</div></div>
+          <div class="kpi navy"><div class="v"><span data-count="139">139</span><small>분</small></div><div class="d">14:58 → 17:17 · 수정 3회 포함</div></div>
         </div>
       </div>
     </div>
@@ -898,7 +955,7 @@ body.editing .chart-edit{display:block}
 
   <!-- 10 WEBSLIDE ENGINE -->
   <section class="slide" data-sec="3" data-label="엔진 ② WEBSLIDE">
-    <div class="kick a"><span class="no">10</span>ENGINE 02 · WEBSLIDE</div>
+    <div class="kick a"><span class="no">11</span>ENGINE 02 · WEBSLIDE</div>
     <h2 class="t a">링크 하나로 여는, <em>움직이는 발표자료</em></h2>
     <div style="display:grid;grid-template-columns:620px 1fr;gap:48px;margin-top:22px">
       <div class="a rv">
@@ -913,14 +970,14 @@ body.editing .chart-edit{display:block}
         <div class="feat a"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="12"/><path d="M8 21h8"/></svg></div><div><h4>화면에 맞춰 자동 배율</h4><p>노트북·대형 모니터·전체 화면 어디서나 16:9 그대로</p></div></div>
       </div>
     </div>
-    <div class="live-strip a" style="margin-top:18px"><span class="badge-live">LIVE</span>이 HTML의 탐색·차트·편집·모션은 사전 보유한 웹슬라이드 스킬의 실제 기능입니다. 세 형식의 제작·수정·검수를 잇는 서비스는 기획이며 11/6 이후 구현·검증합니다.</div>
+    <div class="live-strip a" style="margin-top:18px"><span class="badge-live">LIVE</span>지금 보고 있는 이 HTML의 탐색·차트·편집·모션이 사전 보유한 웹슬라이드 스킬의 실제 기능입니다.</div>
   </section>
 
   <!-- 11 HWP ENGINE -->
   <section class="slide" data-sec="3" data-label="엔진 ③ 한글" data-hook="c11">
     <div class="side-links"><button class="side-link" data-side="gallery">실물 보기 ↗</button></div>
-    <div class="kick a"><span class="no">11</span>ENGINE 03 · HANGUL</div>
-    <h2 class="t a">회사 서식대로 쓰고, <em>한글 파일</em>에서 마무리합니다</h2>
+    <div class="kick a"><span class="no">12</span>ENGINE 03 · HANGUL</div>
+    <h2 class="t a">양식 규칙을 아는 한글 엔진, <em>100% vs 79%</em></h2>
     <div style="display:grid;grid-template-columns:540px 330px 1fr;gap:40px;margin-top:22px">
       <div>
         <div class="illu a rv" style="height:240px;border:1px solid var(--hair)"><img src="assets/illust/13-hwp-typeset.webp" alt="활자판에 단계 기호와 간격 막대를 끼워 .hwp를 짜는 코쇠"></div>
@@ -946,12 +1003,12 @@ body.editing .chart-edit{display:block}
           <div class="l l2">ㅇ 11월 중 2차 화면 적용, 12월 효과 점검</div>
           <div class="att">※ 첨부: 화면별 개선 내역 1부</div>
         </div>
-        <p class="cap">요약보고 예시(가상 내용) — 오른쪽의 과거 3과제 평가와는 별도입니다. 올려 보면 간격 규칙이 보입니다.</p>
+        <p class="cap">요약보고 예시(가상 내용). 올려 보면 간격 규칙이 보입니다.</p>
       </div>
       <div class="a">
         <div style="font-size:15px;font-weight:700">보고서 작성 평가 통과율 <span class="note">(% · 기존 3과제 기록)</span></div>
         <div class="chart-box" style="height:280px;margin-top:6px"><canvas id="c11"></canvas></div>
-        <div class="kpi" style="margin-top:16px"><div class="v"><span data-count="21">0</span><small>%p</small></div><div class="d">스킬 사용 100% · 미사용 79%. 기존 평가 기록이며 채점표·집계 방식은 별도, 이번 재측정 없음</div></div>
+        <div class="kpi" style="margin-top:16px"><div class="v"><span data-count="21">21</span><small>%p</small></div><div class="d">같은 3과제 · 스킬 사용 100% / 미사용 79% <span class="ev rec">기존 기록</span></div></div>
       </div>
     </div>
   </section>
@@ -959,9 +1016,9 @@ body.editing .chart-edit{display:block}
   <!-- 12 HWP CATALOG -->
   <section class="slide" data-sec="3" data-label="엔진 ③ 한글 템플릿" data-hook="c12">
     <div class="side-links"><button class="side-link" data-side="gallery">실물 보기 ↗</button></div>
-    <div class="kick a"><span class="no">12</span>HANGUL TEMPLATES</div>
+    <div class="kick a"><span class="no">13</span>HANGUL TEMPLATES</div>
     <h2 class="t a">보고서 양식 <em>n종</em>, 파일은 따로 확인합니다</h2>
-    <p class="lead a">보고서 종류를 고르면 목차·표·작성 방법이 함께 따라옵니다(요약보고·상세보고). 모든 양식의 파일을 실제로 만들어 확인했다는 뜻은 아닙니다.</p>
+    <p class="lead a">보고서 종류를 고르면 목차·표·작성 방법이 함께 따라옵니다(요약보고·상세보고).</p>
     <div style="display:grid;grid-template-columns:840px 1fr;gap:40px;margin-top:18px">
       <div>
         <div class="tierbox a"><h4>기본 보고서 종류<small>요약 양식 n종 · 상세 양식 n종</small></h4></div>
@@ -982,7 +1039,7 @@ body.editing .chart-edit{display:block}
 
   <!-- 13 BLUEPRINT -->
   <section class="slide" data-sec="3" data-label="공통 설계도">
-    <div class="kick a"><span class="no">13</span>ONE BLUEPRINT</div>
+    <div class="kick a"><span class="no">14</span>ONE BLUEPRINT</div>
     <h2 class="t a">설계도 한 장으로 <em>세 형식의 문서</em>를</h2>
     <div style="display:grid;grid-template-columns:560px 1fr;gap:44px;margin-top:22px">
       <div>
@@ -1017,7 +1074,7 @@ body.editing .chart-edit{display:block}
 
   <!-- 14 PACK -->
   <section class="slide" data-sec="4" data-label="문서팩 · 구성">
-    <div class="kick a"><span class="no">14</span>DEPARTMENT PACK ★</div>
+    <div class="kick a"><span class="no">15</span>DEPARTMENT PACK ★</div>
     <h2 class="t a">부서 양식·작성 규칙을 <em>팩 하나</em>로</h2>
     <p class="lead a">양식·고정 콘텐츠·용어·결재라인·삽화·검수·버전을 부서팩으로 묶습니다. 직원은 바로 제작·수정하고, 공통 기준 변경은 관리자가 승인합니다. 오른쪽 부서 예시는 가상입니다.</p>
     <div style="display:grid;grid-template-columns:820px 1fr;gap:40px;margin-top:18px">
@@ -1040,8 +1097,8 @@ body.editing .chart-edit{display:block}
 
   <!-- 15 PACK SKILL BUILDER ★ -->
   <section class="slide" data-sec="4" data-label="문서팩 · 스킬 자동 생성">
-    <div class="kick a"><span class="no">15</span>PACK SKILL BUILDER <span style="color:var(--or);margin-left:6px">★ 핵심 기능</span></div>
-    <h2 class="t a">대표 문서를 올리고 요청하면, <em>부서팩 스킬</em>이 만들어진다</h2>
+    <div class="kick a"><span class="no">16</span>PACK SKILL BUILDER <span style="color:var(--or);margin-left:6px">★ 핵심 기능</span></div>
+    <h2 class="t a">대표 문서 몇 건이면, <em>우리 부서 전용 스킬</em>이 생깁니다</h2>
     <p class="lead a">대표 문서 몇 건과 한 줄 요청이면 AI가 부서 맞춤 <b>스킬</b>을 만든다. <b>검증 통과</b> 후 <b>관리자가 등록</b>해야 정식 부서팩으로 반영된다.</p>
     <div class="pipe a" style="margin-top:20px">
       <div class="st"><b>① 첨부 · 요청</b><small>대표 문서 3~5건 + "영업팀 제안서 팩 만들어줘"</small></div>
@@ -1079,8 +1136,8 @@ body.editing .chart-edit{display:block}
 
   <!-- 15 INHERITANCE -->
   <section class="slide" data-sec="4" data-label="문서팩 · 상속과 일괄 반영">
-    <div class="kick a"><span class="no">16</span>INHERIT &amp; PROPAGATE</div>
-    <h2 class="t a">고친 기준은, <em>다음 문서에도</em> 적용.</h2>
+    <div class="kick a"><span class="no">17</span>INHERIT &amp; PROPAGATE</div>
+    <h2 class="t a">한 번 고친 기준이, <em>부서 전체의 다음 문서</em>로</h2>
     <div style="display:grid;grid-template-columns:640px 1fr;gap:40px;margin-top:16px">
       <div class="a">
         <div class="stack" id="stack" data-gen></div>
@@ -1103,14 +1160,14 @@ body.editing .chart-edit{display:block}
 
   <!-- 16 MAKER + INSPECTOR -->
   <section class="slide" data-sec="4" data-label="문서팩 · 도우미와 검수">
-    <div class="kick a"><span class="no">17</span>HUMAN IN THE LOOP</div>
+    <div class="kick a"><span class="no">18</span>HUMAN IN THE LOOP</div>
     <h2 class="t a">문서에서 팩 초안을, <em>사람이 쓴 문서도</em> 검수.</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:22px">
       <div>
         <div class="illu a rv tilt" data-tilt style="height:230px;border:1px solid var(--hair)"><img src="assets/illust/04-pack-maker.webp" alt="기존 문서 3건을 깔때기에 넣어 팩 초안을 뽑고 승인 도장을 받는 코쇠"></div>
         <h3 class="a" style="font-size:24px;margin-top:16px">대표 문서 → 스킬 초안 → 승인</h3>
         <div class="step a"><i>1</i><span>부서의 대표 문서 <b>3~5건</b>을 올리고 한 줄로 요청한다</span></div>
-        <div class="step a"><i>2</i><span>AI가 목차·반복 문구·용어·양식을 뽑아 <b>부서팩 스킬</b>을 만들고 <b>검증 과제</b>로 채점한다(15장)</span></div>
+        <div class="step a"><i>2</i><span>AI가 목차·반복 문구·용어·양식을 뽑아 <b>부서팩 스킬</b>을 만들고 <b>검증 과제</b>로 채점한다(16장)</span></div>
         <div class="step a"><i>3</i><span>검증 리포트를 본 관리자가 등록하면 <b>버전이 붙어 정식 반영</b>된다</span></div>
       </div>
       <div>
@@ -1125,7 +1182,7 @@ body.editing .chart-edit{display:block}
 
   <!-- 17 DEMO TIMELINE -->
   <section class="slide" data-sec="5" data-label="실행 · 본선 시연 3분" data-hook="tl">
-    <div class="kick a"><span class="no">18</span>DEMO PLAN · 3 MIN</div>
+    <div class="kick a"><span class="no">19</span>DEMO PLAN · 3 MIN</div>
     <h2 class="t a">만들고 고친 뒤, <em>검수까지</em> 보여드립니다</h2>
     <div class="tl a" id="tl" data-gen><div class="fillline" id="tlFill"></div></div>
     <div class="scene a" id="scene" data-gen>
@@ -1141,7 +1198,7 @@ body.editing .chart-edit{display:block}
 
   <!-- 18 READINESS + ROADMAP -->
   <section class="slide" data-sec="5" data-label="실행 · 준비 상태와 로드맵" data-hook="c18">
-    <div class="kick a"><span class="no">19</span>READINESS &amp; ROADMAP</div>
+    <div class="kick a"><span class="no">20</span>READINESS &amp; ROADMAP</div>
     <h2 class="t a">문서 제작 기반에, <em>수정·검수</em>를 연결합니다</h2>
     <div style="display:grid;grid-template-columns:520px 1fr;gap:44px;margin-top:20px">
       <div class="a" style="border-top:2px solid var(--ink)">
@@ -1151,7 +1208,7 @@ body.editing .chart-edit{display:block}
         <div class="ready"><b>공통 설계도·세 출력</b><div class="meter"><i class="p" style="--v:.3"></i></div><span class="st">추가 연결</span></div>
         <div class="ready"><b>부서팩·스킬 생성·검수</b><div class="meter"><i class="p" style="--v:.15"></i></div><span class="st">추가 개발</span></div>
         <div class="ready"><b>외부 모델·인증</b><div class="meter"><i class="p" style="--v:.1"></i></div><span class="st">도입 검증</span></div>
-        <p class="note" style="margin-top:12px;line-height:1.6">PPT·한글·웹슬라이드 엔진과 삽화는 사전 보유한 개인 작업(스킬)이고, 서류 단계에서는 아이디어와 자료만 정리했습니다. 결과물 개발은 11/6 개발 환경 지원 이후입니다.<br>처음 만들 기능은 <b style="color:var(--ink)">세 엔진 · 가상 부서팩 2개 · 스킬 자동 생성 · 변경 반영 · 검수</b>입니다. 막대는 준비 상태의 개념 표시이며 측정된 완성률은 아닙니다.</p>
+        <p class="note" style="margin-top:12px;line-height:1.6">PPT·한글·웹슬라이드 엔진과 삽화는 사전 보유한 개인 작업(스킬)이고, 서류 단계에서는 아이디어와 자료만 정리했습니다. 결과물 개발은 11/6 개발 환경 지원 이후입니다.<br>처음 만들 기능은 <b style="color:var(--ink)">세 엔진 · 가상 부서팩 2개 · 스킬 자동 생성 · 변경 반영 · 검수</b>입니다. 막대는 준비 정도의 개념 표시입니다.</p>
       </div>
       <div class="a">
         <div style="font-size:15px;font-weight:700">단계별 일정 <span class="note">(2026. 10. 27 ~ 11. 12 · 10/30 최종 기획서 제출 · 오렌지 = 서류·본선 당일)</span></div>
@@ -1163,16 +1220,16 @@ body.editing .chart-edit{display:block}
   <!-- 19 EFFECT -->
   <section class="slide" data-sec="5" data-label="실행 · 기대 효과" data-hook="c19">
     <div class="side-links"><button class="side-link" data-side="basis">산정 근거 보기 ↗</button></div>
-    <div class="kick a"><span class="no">20</span>IMPACT</div>
-    <h2 class="t a">전사 확산 시나리오 — 연 <em><span data-count="24000">0</span>시간</em></h2>
+    <div class="kick a"><span class="no">21</span>IMPACT</div>
+    <h2 class="t a">연 <em><span data-count="24000">24,000</span>시간</em>, 12명이 1년 일하는 시간 <span class="ev asm" style="font-size:15px;vertical-align:8px">확산 가정</span></h2>
     <div style="display:grid;grid-template-columns:720px 1fr;gap:44px;margin-top:18px">
       <div class="a">
         <div style="font-size:15px;font-weight:700">월별·누적 절감시간 가정 <span class="note">(시간 · 월 2,000 × 12개월)</span></div>
         <div class="chart-box" style="height:330px;margin-top:6px"><canvas id="c19"></canvas></div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:16px">
           <div class="kpi"><div class="v">8→4<small>시간</small></div><div class="d">1인 월 작성 시간 · 50% 절감 가정</div></div>
-          <div class="kpi navy"><div class="v"><span data-count="500">0</span><small>명</small></div><div class="d">확산 단계 작성자 수 · 가정</div></div>
-          <div class="kpi grey"><div class="v">50<small>%</small></div><div class="d">시나리오 절감률 · 달성 실적 아님</div></div>
+          <div class="kpi navy"><div class="v"><span data-count="500">500</span><small>명</small></div><div class="d">확산 단계 작성자 수 · 가정</div></div>
+          <div class="kpi grey"><div class="v">50<small>%</small></div><div class="d">시나리오 절감률 · 가정</div></div>
         </div>
       </div>
       <div class="a">
@@ -1184,7 +1241,7 @@ body.editing .chart-edit{display:block}
           <div class="fact" style="grid-template-columns:130px 1fr"><b>관리된 사용</b><span>권한·승인·버전으로 적용 범위와 변경을 추적</span></div>
           <div class="fact" style="grid-template-columns:130px 1fr"><b>지식 축적</b><span>허용된 대표 문서에서 공통 목차·표현을 재사용</span></div>
         </div>
-        <p class="note" style="margin-top:12px;line-height:1.6">산식: 500명 × 월 8시간 × 50% × 12개월 = 연 24,000시간. 모두 확산 가정입니다. 별도 시범 운영(3개 부서 30명)에서는 준비·작성·수정·검토 총시간 중앙값 30% 감소와 품질을 확인합니다.</p>
+        <p class="note" style="margin-top:12px;line-height:1.6">산식: 500명 × 월 8시간 × 50% × 12개월 = 연 24,000시간(1인 연 2,000시간 기준 약 12명분). 모두 확산 가정입니다. 별도 시범 운영(3개 부서 30명)에서는 준비·작성·수정·검토 총시간 중앙값 30% 감소와 품질을 확인합니다.</p>
       </div>
     </div>
   </section>
@@ -1192,7 +1249,7 @@ body.editing .chart-edit{display:block}
   <!-- 20 CRITERIA -->
   <section class="slide" data-sec="5" data-label="실행 · 심사 기준 대응" data-hook="c20">
     <div class="side-links"><button class="side-link" data-side="qa">예상 질문 Q&amp;A ↗</button></div>
-    <div class="kick a"><span class="no">21</span>EVALUATION</div>
+    <div class="kick a"><span class="no">22</span>EVALUATION</div>
     <h2 class="t a">공식 심사 기준에, <em>구체적인 증거로</em> 답합니다</h2>
     <div style="display:grid;grid-template-columns:420px 1fr;gap:44px;margin-top:22px;align-items:center">
       <div class="a">
@@ -1202,7 +1259,7 @@ body.editing .chart-edit{display:block}
       <div class="crit" id="crit">
         <div class="card a" data-k="0"><div class="pt">창의성</div><h4>공통 엔진 + 부서별 팩 <span>30</span></h4><p>회사 기준을 공유하면서 부서별 양식·용어를 결합합니다. 대표 문서만 올리면 부서팩 스킬 초안이 만들어지고, 검증 뒤 관리자가 등록합니다.</p></div>
         <div class="card a" data-k="1"><div class="pt">업무 도구 실용성</div><h4>매주 쓰는 세 형식의 업무 <span>30</span></h4><p>PPT·웹·한글을 목적에 맞게 제작·수정·검수합니다. 팩의 승인된 기준은 다음 문서에도 적용합니다.</p></div>
-        <div class="card a" data-k="2"><div class="pt">구현 가능성</div><h4>보유 기록과 추가 개발 구분 <span>20</span></h4><p>22장 43·139분 작업 기록, 한글 평가 100·79%(기존 기록)와 이 HTML을 근거로 제시하고, 통합 기능의 첫 버전은 11/6 이후 개발·검증합니다.</p></div>
+        <div class="card a" data-k="2"><div class="pt">구현 가능성</div><h4>보유 기록과 추가 개발 구분 <span>20</span></h4><p>이 기획서 자체(9장)와 22장 43·139분 작업 기록, 한글 평가 100·79%(기존 기록)를 근거로 제시하고, 통합 기능의 첫 버전은 11/6 이후 개발·검증합니다.</p></div>
         <div class="card a" data-k="3"><div class="pt">기대 효과</div><h4>가정에서 시범 운영 측정으로 <span>20</span></h4><p>연 24,000시간은 가정 계산입니다. 시범 운영의 총시간·품질·잔여 오류·규칙 관리 비용으로 실제 효과를 확인합니다.</p></div>
       </div>
     </div>
@@ -1215,9 +1272,9 @@ body.editing .chart-edit{display:block}
     <div style="position:relative;display:grid;grid-template-columns:1fr 600px;gap:40px;height:100%;align-items:center">
       <div style="padding-left:20px">
         <div class="kick a"><span class="bar"></span>CLOSING</div>
-        <h2 class="a" style="font-size:56px;line-height:1.25">회사 양식대로,<br>만들고 고치고<br><em>검수까지.</em></h2>
-        <p class="lead a" style="margin-top:22px">PPT·웹슬라이드·한글 제작 → 요청한 수정 → 결과 검수 → 저장·공유</p>
-        <div class="chip-row a" style="margin-top:28px"><span class="tag solid">PPT·웹·한글</span><span class="tag solid">회사 양식</span><span class="tag solid">수정·검수</span><span class="tag solid">가상 자료 시연</span></div>
+        <h2 class="a" style="font-size:54px;line-height:1.25">11월 12일, 하루 만에<br><em>우리 부서팩</em>을<br>만들어 보이겠습니다.</h2>
+        <p class="lead a" style="margin-top:22px">회사 양식대로, 만들고 고치고 검수까지 — PPT·웹슬라이드·한글</p>
+        <div class="chip-row a" style="margin-top:28px"><span class="tag solid">PPT·웹·한글</span><span class="tag solid">회사 양식</span><span class="tag solid">수정·검수</span><span class="tag solid">★ 부서팩 스킬 자동 생성</span></div>
       </div>
       <div class="a r">
         <div class="illu tilt" data-tilt style="height:330px;padding:14px"><img src="assets/illust/k5-closing-relay.webp" alt="사람이 건넨 내용을 코쇠가 코스콤다운 장표로 바꿔 드는 모습"></div>
@@ -1274,7 +1331,7 @@ body.editing .chart-edit{display:block}
     </header>
     <div class="sp-body">
       <div class="flt"><button data-f="" class="on">전체</button><button data-f="m">기존 기록</button><button data-f="x">외부 조사</button><button data-f="n">언론 보도</button><button data-f="v">제공업체 발표</button><button data-f="o">공식 문서</button><button data-f="s">오픈소스</button></div>
-      <h3>문제의 크기</h3><div class="srcs"><div class="it" data-k="x"><div><div class="t">사람인 — 평균 작성 시간 35% · 스트레스 65.4% · 까다로운 서식 20.8% · 양식 벤치마킹 36.8% (서로 다른 질문, 합산하지 않음. 36.8%는 작성 요령 1위가 아님)</div><div class="s">사람인, 직장인 1,227명 (2021.8 보도) · <a href="https://www.saramin.co.kr/zf_user/help/live/view?idx=108415&listType=news" target="_blank" rel="noopener">사람인</a></div></div><span class="tg x">외부 조사</span><span class="pg">3장</span></div><div class="it" data-k="x"><div><div class="t">원안 참고 — 드롭박스·유고브: 정기 업무 66% · 반복 업무 연 251억 시간 (동일 지표 원문 미확인, 본문 미사용)</div><div class="s">드롭박스·유고브 7개국 조사, 한경비즈니스 2025.7.30 보도</div></div><span class="tg x">외부 조사</span><span class="pg">참고</span></div><div class="it" data-k="o"><div><div class="t">행안부 'AI 친화 보고서' — 2026.8.24부터 실·국장 보고서로 확대</div><div class="s">행정안전부 · <a href="https://zdnet.co.kr/view/?no=20260823161702" target="_blank" rel="noopener">ZDNet Korea</a> · <a href="https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=128940" target="_blank" rel="noopener">행안부 보도자료</a></div></div><span class="tg o">공식 문서</span><span class="pg">4장</span></div></div><h3>원안 참고 — 본문 비교에는 쓰지 않음</h3><div class="srcs"><div class="it" data-k="n"><div><div class="t">케이뱅크 K/THON 26 — 팀전 1위 '이상 징후 탐지 + 보고서 자동 작성'</div><div class="s">더페어 · <a href="https://www.thefairnews.co.kr/news/articleView.html?idxno=91808" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">참고</span></div><div class="it" data-k="n"><div><div class="t">빗썸 첫 사내 AI 공모전 — 110명 참가, 107건 접수 (2026.10.26)</div><div class="s">뉴스1 · <a href="https://www.news1.kr/finance/blockchain-fintech/6331597" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">참고</span></div><div class="it" data-k="o"><div><div class="t">MS PowerPoint 조직 브랜드 템플릿 — Copilot 연결 (2026.8~9 배포)</div><div class="s">Microsoft 365 메시지 센터 MC1442612 · <a href="https://mc.merill.net/message/MC1442612" target="_blank" rel="noopener">MC1442612</a> · <a href="https://support.microsoft.com/en-US/Microsoft-365-Copilot/use-branded-templates-in-the-microsoft-365-copilot-app" target="_blank" rel="noopener">지원 문서</a></div></div><span class="tg o">공식 문서</span><span class="pg">참고</span></div><div class="it" data-k="n"><div><div class="t">한컴 × LG AI연구원 — 양식을 적용한 기획서 초안 작성 (2026.5.22)</div><div class="s">ZDNet Korea · <a href="https://zdnet.co.kr/view/?no=20260522105512" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">참고</span></div><div class="it" data-k="n"><div><div class="t">한컴어시스턴트 — 국회·행안부 사업 공급</div><div class="s">서울경제 · <a href="https://www.sedaily.com/article/14065162" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">참고</span></div><div class="it" data-k="s"><div><div class="t">hwpx_new — 한글 서식 블록 약 87% 재현(자체 발표), .hwpx 기본</div><div class="s">GitHub · <a href="https://github.com/ZZombie04/hwpx_new" target="_blank" rel="noopener">저장소</a></div></div><span class="tg s">오픈소스</span><span class="pg">참고</span></div><div class="it" data-k="s"><div><div class="t">hwpx-report-skills — 공공 보고서용 Codex 스킬</div><div class="s">GitHub · <a href="https://github.com/pinetreelic/hwpx-report-skills" target="_blank" rel="noopener">저장소</a></div></div><span class="tg s">오픈소스</span><span class="pg">참고</span></div></div><h3>선례 수치 — 모두 제공업체·자체 발표</h3><div class="srcs"><div class="it" data-k="v"><div><div class="t">Templafy / Forrester 2019 — 작성 30% faster · 고위직 주 약 4시간 절감 (시간 30% 감소로 바꾸지 않음, 6장 차트에서 제외)</div><div class="s">Forrester TEI 2019 (Templafy 의뢰) · <a href="https://www.templafy.com/news/templafy-saves-4-hours-per-week-in-document-creation" target="_blank" rel="noopener">발표</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">Templafy BDO Canada — 계약서 템플릿 24종 → 4종</div><div class="s">Templafy 고객 사례 · <a href="https://www.templafy.com/case/bdo-canada/" target="_blank" rel="noopener">사례</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">참고</span></div><div class="it" data-k="v"><div><div class="t">Waterman Group — 제안서·보고서 작성 시간 최소 50% 감소 (고객 사례 발표, 코쇠오피스와 직접 비교한 실험 아님)</div><div class="s">Templafy 고객 사례 · <a href="https://www.casestudies.com/company/templafy/case-study/waterman-group-cuts-proposal-and-report-creation-time-by-50-with-templafy" target="_blank" rel="noopener">사례</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">Canva Enterprise — ROI 414% (투자수익률. 시간 절감률과 합치지 않음, 68%·54%는 원문 미확인으로 제외)</div><div class="s">Forrester TEI 2026.1 (Canva 의뢰) · <a href="https://www.canva.com/resources/forrester-tei/" target="_blank" rel="noopener">발표</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">삼성SDS 브리티 코파일럿 — 회의록 작성 75% 이상 · 메일 요약·초안 66% 이상 절감 (2024.5.2 자체 시범 발표, 사내 실측 아님)</div><div class="s">삼성SDS 자체 발표, 경제일보 (2024.5) · <a href="https://www.kyungjeilbo.com/view/20240502122617959" target="_blank" rel="noopener">기사</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">6장</span></div><div class="it" data-k="o"><div><div class="t">Claude 조직 스킬 — 관리자가 올리면 전원 활성, 그룹별 플러그인</div><div class="s">Anthropic · <a href="https://support.claude.com/en/articles/13119606-provision-and-manage-skills-for-your-organization" target="_blank" rel="noopener">지원 문서</a> · <a href="https://claude.com/blog/organization-skills-and-directory" target="_blank" rel="noopener">블로그</a></div></div><span class="tg o">공식 문서</span><span class="pg">6장</span></div></div><h3>기존 작업·평가 기록 — 이번 재측정 아님</h3><div class="srcs"><div class="it" data-k="m"><div><div class="t">22장 기획서 — 첫 완성본 43분 · 수정 3회 포함 최종본 139분 (수작업 440분은 가정)</div><div class="s">작업 기록 시각 14:58 → 15:41 → 17:17 (부록 A)</div></div><span class="tg m">기존 기록</span><span class="pg">9·20장</span></div><div class="it" data-k="m"><div><div class="t">한글 보고서 작성 평가 3과제 — 스킬 사용 100% · 미사용 79% · 차이 21%p (개별 채점표 별도, 이번 재측정 없음)</div><div class="s">한글 스킬 평가 (2026.10)</div></div><span class="tg m">기존 기록</span><span class="pg">11장</span></div><div class="it" data-k="m"><div><div class="t">요약보고 샘플 재현 — 원본 1쪽 배치와 일치</div><div class="s">한컴 뷰어 화면 확인</div></div><span class="tg m">기존 기록</span><span class="pg">11장</span></div><h3>구현·심사 근거</h3><div class="srcs"><div class="it" data-k="o"><div><div class="t">ㅋㅋ톤 공식 안내 — 심사 배점 창의성 30 · 업무 도구 실용성 30 · 구현 가능성 20 · 기대 효과 20, 서류 단계는 기획·자료 정리, 개발은 11/6 지원 이후, HTML 10MB 이하·가상 자료</div><div class="s">주최 측 공지·FAQ</div></div><span class="tg o">공식 문서</span><span class="pg">19·21장</span></div><div class="it" data-k="o"><div><div class="t">한컴 — HWPX는 XML 기반 표준 문서 형식으로 문서 콘텐츠를 기계 판독·가공할 수 있다 (화면 배치 검증의 완료 증거는 아님)</div><div class="s">한글과컴퓨터 공식 안내</div></div><span class="tg o">공식 문서</span><span class="pg">11·17장</span></div><div class="it" data-k="o"><div><div class="t">Microsoft Learn — Open XML SDK로 저장된 PPTX 장표의 텍스트를 읽는 공식 예제 (저장 파일 값 재검사의 설계 근거, 화면 배치 보장은 아님)</div><div class="s">Microsoft Learn · Open XML SDK</div></div><span class="tg o">공식 문서</span><span class="pg">9·17장</span></div><div class="it" data-k="o"><div><div class="t">Anthropic — Agent Skills: 지침·스크립트·자원을 묶어 반복 업무를 실행하고 대표 과제로 평가하는 구조 (부서팩 스킬 자동 생성·검증의 참고)</div><div class="s">Anthropic 공식 문서</div></div><span class="tg o">공식 문서</span><span class="pg">15장</span></div><div class="it" data-k="x"><div><div class="t">BetterUp Labs·Stanford — 'Workslop': 미국 직장인 1,150명 조사, 초안 뒤에 남는 재작업 부담 (사내 수치로 일반화하지 않음)</div><div class="s">Harvard Business Review (2025.9)</div></div><span class="tg x">외부 조사</span><span class="pg">참고</span></div></div></div>
+      <h3>문제의 크기</h3><div class="srcs"><div class="it" data-k="x"><div><div class="t">사람인 — 평균 작성 시간 35% · 스트레스 65.4% · 까다로운 서식 20.8% · 양식 벤치마킹 36.8% (서로 다른 질문, 합산하지 않음. 36.8%는 작성 요령 1위가 아님)</div><div class="s">사람인, 직장인 1,227명 (2021.8 보도) · <a href="https://www.saramin.co.kr/zf_user/help/live/view?idx=108415&listType=news" target="_blank" rel="noopener">사람인</a></div></div><span class="tg x">외부 조사</span><span class="pg">3장</span></div><div class="it" data-k="x"><div><div class="t">원안 참고 — 드롭박스·유고브: 정기 업무 66% · 반복 업무 연 251억 시간 (동일 지표 원문 미확인, 본문 미사용)</div><div class="s">드롭박스·유고브 7개국 조사, 한경비즈니스 2025.7.30 보도</div></div><span class="tg x">외부 조사</span><span class="pg">참고</span></div><div class="it" data-k="o"><div><div class="t">행안부 'AI 친화 보고서' — 2026.8.24부터 실·국장 보고서로 확대</div><div class="s">행정안전부 · <a href="https://zdnet.co.kr/view/?no=20260823161702" target="_blank" rel="noopener">ZDNet Korea</a> · <a href="https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=128940" target="_blank" rel="noopener">행안부 보도자료</a></div></div><span class="tg o">공식 문서</span><span class="pg">4장</span></div></div><h3>원안 참고 — 본문 비교에는 쓰지 않음</h3><div class="srcs"><div class="it" data-k="n"><div><div class="t">케이뱅크 K/THON 26 — 팀전 1위 '이상 징후 탐지 + 보고서 자동 작성'</div><div class="s">더페어 · <a href="https://www.thefairnews.co.kr/news/articleView.html?idxno=91808" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">참고</span></div><div class="it" data-k="n"><div><div class="t">빗썸 첫 사내 AI 공모전 — 110명 참가, 107건 접수 (2026.10.26)</div><div class="s">뉴스1 · <a href="https://www.news1.kr/finance/blockchain-fintech/6331597" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">참고</span></div><div class="it" data-k="o"><div><div class="t">MS PowerPoint 조직 브랜드 템플릿 — Copilot 연결 (2026.8~9 배포)</div><div class="s">Microsoft 365 메시지 센터 MC1442612 · <a href="https://mc.merill.net/message/MC1442612" target="_blank" rel="noopener">MC1442612</a> · <a href="https://support.microsoft.com/en-US/Microsoft-365-Copilot/use-branded-templates-in-the-microsoft-365-copilot-app" target="_blank" rel="noopener">지원 문서</a></div></div><span class="tg o">공식 문서</span><span class="pg">참고</span></div><div class="it" data-k="n"><div><div class="t">한컴 × LG AI연구원 — 양식을 적용한 기획서 초안 작성 (2026.5.22)</div><div class="s">ZDNet Korea · <a href="https://zdnet.co.kr/view/?no=20260522105512" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">참고</span></div><div class="it" data-k="n"><div><div class="t">한컴어시스턴트 — 국회·행안부 사업 공급</div><div class="s">서울경제 · <a href="https://www.sedaily.com/article/14065162" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">참고</span></div><div class="it" data-k="s"><div><div class="t">hwpx_new — 한글 서식 블록 약 87% 재현(자체 발표), .hwpx 기본</div><div class="s">GitHub · <a href="https://github.com/ZZombie04/hwpx_new" target="_blank" rel="noopener">저장소</a></div></div><span class="tg s">오픈소스</span><span class="pg">참고</span></div><div class="it" data-k="s"><div><div class="t">hwpx-report-skills — 공공 보고서용 Codex 스킬</div><div class="s">GitHub · <a href="https://github.com/pinetreelic/hwpx-report-skills" target="_blank" rel="noopener">저장소</a></div></div><span class="tg s">오픈소스</span><span class="pg">참고</span></div></div><h3>선례 수치 — 모두 제공업체·자체 발표</h3><div class="srcs"><div class="it" data-k="v"><div><div class="t">Templafy / Forrester 2019 — 작성 30% faster · 고위직 주 약 4시간 절감 (시간 30% 감소로 바꾸지 않음, 6장 차트에서 제외)</div><div class="s">Forrester TEI 2019 (Templafy 의뢰) · <a href="https://www.templafy.com/news/templafy-saves-4-hours-per-week-in-document-creation" target="_blank" rel="noopener">발표</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">Templafy BDO Canada — 계약서 템플릿 24종 → 4종</div><div class="s">Templafy 고객 사례 · <a href="https://www.templafy.com/case/bdo-canada/" target="_blank" rel="noopener">사례</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">참고</span></div><div class="it" data-k="v"><div><div class="t">Waterman Group — 제안서·보고서 작성 시간 최소 50% 감소 (고객 사례 발표, 코쇠오피스와 직접 비교한 실험 아님)</div><div class="s">Templafy 고객 사례 · <a href="https://www.casestudies.com/company/templafy/case-study/waterman-group-cuts-proposal-and-report-creation-time-by-50-with-templafy" target="_blank" rel="noopener">사례</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">Canva Enterprise — ROI 414% (투자수익률. 시간 절감률과 합치지 않음, 68%·54%는 원문 미확인으로 제외)</div><div class="s">Forrester TEI 2026.1 (Canva 의뢰) · <a href="https://www.canva.com/resources/forrester-tei/" target="_blank" rel="noopener">발표</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">삼성SDS 브리티 코파일럿 — 회의록 작성 75% 이상 · 메일 요약·초안 66% 이상 절감 (2024.5.2 자체 시범 발표, 사내 실측 아님)</div><div class="s">삼성SDS 자체 발표, 경제일보 (2024.5) · <a href="https://www.kyungjeilbo.com/view/20240502122617959" target="_blank" rel="noopener">기사</a></div></div><span class="tg v">제공업체 발표</span><span class="pg">6장</span></div><div class="it" data-k="o"><div><div class="t">Claude 조직 스킬 — 관리자가 올리면 전원 활성, 그룹별 플러그인</div><div class="s">Anthropic · <a href="https://support.claude.com/en/articles/13119606-provision-and-manage-skills-for-your-organization" target="_blank" rel="noopener">지원 문서</a> · <a href="https://claude.com/blog/organization-skills-and-directory" target="_blank" rel="noopener">블로그</a></div></div><span class="tg o">공식 문서</span><span class="pg">6장</span></div></div><h3>기존 작업·평가 기록 — 이번 재측정 아님</h3><div class="srcs"><div class="it" data-k="m"><div><div class="t">22장 기획서 — 첫 완성본 43분 · 수정 3회 포함 최종본 139분 (수작업 440분은 가정)</div><div class="s">작업 기록 시각 14:58 → 15:41 → 17:17 (부록 A)</div></div><span class="tg m">기존 기록</span><span class="pg">10·21장</span></div><div class="it" data-k="m"><div><div class="t">한글 보고서 작성 평가 3과제 — 스킬 사용 100% · 미사용 79% · 차이 21%p (개별 채점표 별도, 이번 재측정 없음)</div><div class="s">한글 스킬 평가 (2026.10)</div></div><span class="tg m">기존 기록</span><span class="pg">12장</span></div><div class="it" data-k="m"><div><div class="t">요약보고 샘플 재현 — 원본 1쪽 배치와 일치</div><div class="s">한컴 뷰어 화면 확인</div></div><span class="tg m">기존 기록</span><span class="pg">12장</span></div><h3>구현·심사 근거</h3><div class="srcs"><div class="it" data-k="o"><div><div class="t">ㅋㅋ톤 공식 안내 — 심사 배점 창의성 30 · 업무 도구 실용성 30 · 구현 가능성 20 · 기대 효과 20, 서류 단계는 기획·자료 정리, 개발은 11/6 지원 이후, HTML 10MB 이하·가상 자료</div><div class="s">주최 측 공지·FAQ</div></div><span class="tg o">공식 문서</span><span class="pg">20·22장</span></div><div class="it" data-k="o"><div><div class="t">한컴 — HWPX는 XML 기반 표준 문서 형식으로 문서 콘텐츠를 기계 판독·가공할 수 있다 (화면 배치 검증의 완료 증거는 아님)</div><div class="s">한글과컴퓨터 공식 안내</div></div><span class="tg o">공식 문서</span><span class="pg">12·18장</span></div><div class="it" data-k="o"><div><div class="t">Microsoft Learn — Open XML SDK로 저장된 PPTX 장표의 텍스트를 읽는 공식 예제 (저장 파일 값 재검사의 설계 근거, 화면 배치 보장은 아님)</div><div class="s">Microsoft Learn · Open XML SDK</div></div><span class="tg o">공식 문서</span><span class="pg">10·18장</span></div><div class="it" data-k="o"><div><div class="t">Anthropic — Agent Skills: 지침·스크립트·자원을 묶어 반복 업무를 실행하고 대표 과제로 평가하는 구조 (부서팩 스킬 자동 생성·검증의 참고)</div><div class="s">Anthropic 공식 문서</div></div><span class="tg o">공식 문서</span><span class="pg">16장</span></div><div class="it" data-k="x"><div><div class="t">BetterUp Labs·Stanford — 'Workslop': 미국 직장인 1,150명 조사, 초안 뒤에 남는 재작업 부담 (사내 수치로 일반화하지 않음)</div><div class="s">Harvard Business Review (2025.9)</div></div><span class="tg x">외부 조사</span><span class="pg">참고</span></div></div></div>
     </div>
   </aside>
   <aside class="side-page" id="side-qa" data-side="qa" data-key="C" data-short="예상 질문" data-label="부록 C · 예상 질문" aria-hidden="true">
@@ -1286,14 +1343,14 @@ body.editing .chart-edit{display:block}
     </header>
     <div class="sp-body">
       <div class="qa-bar"><button class="qa-all">모두 펼치기</button><span class="note">창의성 2 · 실용성 4 · 구현 가능성 4 · 보안 1</span></div>
-      <div class="qa"><details class="q" open><summary><span class="qn">Q1</span><span class="qt">코쇠오피스는 어떤 일을 맡는가?</span><span class="qa-tag">창의성</span><span class="pm">+</span></summary><div class="ans"><ul><li>회사 공통 엔진에 <b>부서별 문서팩</b>을 결합해 PPT·웹·한글을 회사 양식에 맞춰 <b>제작·수정·검수</b>합니다.</li><li>팩은 양식·목차·고정 문구·용어·결재라인·삽화·검수 규칙·버전을 묶고, 대표 문서로 부서팩 스킬 초안을 자동으로 만듭니다(15장). 숫자 대조는 검수의 한 사례입니다.</li></ul><button class="sp-go" data-goto="4">관련 장 5장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q2</span><span class="qt">오픈소스 HWPX 스킬로도 되지 않나?</span><span class="qa-tag">창의성</span><span class="pm">+</span></summary><div class="ans"><ul><li>기존 편집 기술과 공개 파일 형식을 활용하면서 <b>설계도 한 장, 회사 보고 기준, 세 형식 엔진과 부서팩</b>을 연결하는 것이 제안 범위입니다.</li><li>한글 3과제 통과율 100%·79%는 기존 기록이며 채점표는 별도, 이번 재측정은 없습니다.</li></ul><button class="sp-go" data-goto="10">관련 장 11장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q3</span><span class="qt">웹슬라이드는 왜 따로 필요한가? PPT로 충분하지 않나?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>PPT는 보고·발표와 편집, 웹은 링크 공유·움직이는 설명, 한글은 결재·상세 보고에 씁니다. 같은 설계도의 내용·표·삽화를 재사용하고 목적에 맞게 구성합니다.</li><li>이 HTML의 탐색·차트·모션·편집은 사전 보유한 웹슬라이드 스킬의 실제 기능이며, 세 형식을 함께 만드는 기능은 11/6 이후 개발·검증합니다.</li></ul><button class="sp-go" data-goto="9">관련 장 10장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q4</span><span class="qt">팩은 누가 만들고 관리하나?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>대표 문서 3~5건과 한 줄 요청이면 AI가 <b>부서팩 스킬 초안</b>과 검증 리포트를 만듭니다. 양식 관리자가 적용 범위와 검수 규칙을 확인해 등록하고 운영자가 배포·복구를 관리합니다.</li><li>일반 제작·수정은 매번 규칙 승인을 기다리지 않습니다.</li></ul><button class="sp-go" data-goto="14">관련 장 15장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q5</span><span class="qt">팩이 부서마다 난립하면?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>전사 → 본부 → 부서 → 개인의 허용 범위를 두고, 보호할 로고·색상·등급 표기는 하위 팩이 덮어쓰지 못하게 합니다.</li><li>승인·버전·검사 후 다음 문서에 적용하고 필요하면 이전 승인 버전으로 복구합니다. 이미 제출한 파일은 작성 당시 버전으로 둡니다.</li></ul><button class="sp-go" data-goto="15">관련 장 16장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q6</span><span class="qt">사내 Qwen 27B로 품질이 나오나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>모델은 작성과 수정 요청 해석에 쓰고, 정의한 수치·필수 표시 검사는 <b>파일에서 읽은 값과 명시적 조건</b>으로 수행합니다. 읽기 실패·미지원 개체·모호한 단위는 판정 불가로 남깁니다.</li><li>지금은 사내 GPU의 Qwen 3.8 27B, H200에 400B급 오픈웨이트가 오면 초안까지, 품질이 중요한 대외 문서는 승인받아 AWS Bedrock Claude를 씁니다.</li><li>모델별 내용 품질·도구 호출·사내 인증은 같은 평가 과제로 따로 검증하며, 설정만 바꿔 같은 품질이 된다고 보장하지 않습니다.</li></ul><button class="sp-go" data-goto="7">관련 장 8장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q7</span><span class="qt">.hwp인가 .hwpx인가? AI 친화 문서 흐름과 맞나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>출력은 편집 가능한 PPTX, 공유용 웹슬라이드, 결재·보고용 한글 문서입니다. HWP·HWPX의 지원·검사 경로는 실제 환경에서 확인하며 파일 데이터 검사와 화면 배치 검증은 구분합니다.</li><li>n종 양식 목록이 모든 실제 파일의 품질 검증 완료를 뜻하지는 않습니다.</li></ul><button class="sp-go" data-goto="11">관련 장 12장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q8</span><span class="qt">서류 단계에서 미리 개발한 것 아닌가?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>서류 단계는 <b>기획·자료 정리</b>입니다. 개발은 11/6 지원 시작 이후, 본선 시연은 11/12 계획입니다. 화면은 설계 시안(가상 데이터)입니다.</li><li>PPT·한글 엔진과 웹슬라이드 스킬은 <b>사전 보유한 개인 작업</b>입니다. 기존 출력·작업·평가 기록과 새 통합 개발을 구분하며, 처음 만들 기능은 세 엔진·가상 부서팩 2개·스킬 자동 생성·변경 반영·검수입니다.</li><li>보유 자산의 반입 범위는 주최 측 확인에 따릅니다.</li></ul><button class="sp-go" data-goto="18">관련 장 19장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q9</span><span class="qt">보안은 어떻게 하나?</span><span class="qa-tag">보안</span><span class="pm">+</span></summary><div class="ans"><ul><li>공모전에는 <b>가상 자료만</b> 씁니다. 사업별 금액·이름·인원·일자는 그 업무의 입력값으로 관리하고 재사용 규칙에 섞지 않습니다.</li><li>운영 기본은 사내 GPU 모델이고, AWS Bedrock Claude는 혁신금융서비스 범위에서 팀장 승인·기간제로만 열며 보내기 전에 고객사명·연락처·계좌번호를 가립니다. 대외비 문서는 보낼 수 없습니다.</li><li>실제 사내 운영의 접근 권한·전송·저장·로그는 승인된 환경에서 검증합니다.</li></ul><button class="sp-go" data-goto="7">관련 장 8장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q10</span><span class="qt">본선 당일 개발 환경이 정해지면 어떻게 하나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>본선에는 사내 LLM이 없고 <b>외부망 상용 AI</b>로 개발합니다. AI 호출은 한 곳에 모아 어떤 상용 AI가 주어져도 설정만 바꿉니다.</li><li>표준 도구(브라우저·Python·Java)만 써서 설치 부담을 줄이고, 당일 받는 팀 GitHub 저장소에 첫 30분 안에 골격을 올립니다.</li><li>AI가 막히면 규칙 기반 모드로, 시간이 모자라면 정한 순서대로 범위를 줄입니다.</li></ul><button class="sp-go" data-goto="18">관련 장 19장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q11</span><span class="qt">AI가 만든 부서팩 스킬을 믿을 수 있나?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>바로 쓰지 않습니다. 대표 문서에서 만든 <b>검증 과제</b>로 구성 재현·고정 문구·숫자 보존·보고 문법·보안을 자동 채점하고, 스킬 사용 / 미사용 결과를 비교한 리포트를 냅니다.</li><li>기준을 넘고 담당자 시범 작성까지 거친 뒤 <b>관리자가 등록해야</b> 정식 부서팩이 됩니다. 버전이 남아 문제가 생기면 되돌립니다.</li></ul><button class="sp-go" data-goto="14">관련 장 15장 보기 →</button></div></details></div>
+      <div class="qa"><details class="q" open><summary><span class="qn">Q1</span><span class="qt">코쇠오피스는 어떤 일을 맡는가?</span><span class="qa-tag">창의성</span><span class="pm">+</span></summary><div class="ans"><ul><li>회사 공통 엔진에 <b>부서별 문서팩</b>을 결합해 PPT·웹·한글을 회사 양식에 맞춰 <b>제작·수정·검수</b>합니다.</li><li>팩은 양식·목차·고정 문구·용어·결재라인·삽화·검수 규칙·버전을 묶고, 대표 문서로 부서팩 스킬 초안을 자동으로 만듭니다(16장). 숫자 대조는 검수의 한 사례입니다.</li></ul><button class="sp-go" data-goto="4">관련 장 5장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q2</span><span class="qt">오픈소스 HWPX 스킬로도 되지 않나?</span><span class="qa-tag">창의성</span><span class="pm">+</span></summary><div class="ans"><ul><li>기존 편집 기술과 공개 파일 형식을 활용하면서 <b>설계도 한 장, 회사 보고 기준, 세 형식 엔진과 부서팩</b>을 연결하는 것이 제안 범위입니다.</li><li>한글 3과제 통과율 100%·79%는 기존 기록이며 채점표는 별도, 이번 재측정은 없습니다.</li></ul><button class="sp-go" data-goto="11">관련 장 12장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q3</span><span class="qt">웹슬라이드는 왜 따로 필요한가? PPT로 충분하지 않나?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>PPT는 보고·발표와 편집, 웹은 링크 공유·움직이는 설명, 한글은 결재·상세 보고에 씁니다. 같은 설계도의 내용·표·삽화를 재사용하고 목적에 맞게 구성합니다.</li><li>이 HTML의 탐색·차트·모션·편집은 사전 보유한 웹슬라이드 스킬의 실제 기능이며, 세 형식을 함께 만드는 기능은 11/6 이후 개발·검증합니다.</li></ul><button class="sp-go" data-goto="10">관련 장 11장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q4</span><span class="qt">팩은 누가 만들고 관리하나?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>대표 문서 3~5건과 한 줄 요청이면 AI가 <b>부서팩 스킬 초안</b>과 검증 리포트를 만듭니다. 양식 관리자가 적용 범위와 검수 규칙을 확인해 등록하고 운영자가 배포·복구를 관리합니다.</li><li>일반 제작·수정은 매번 규칙 승인을 기다리지 않습니다.</li></ul><button class="sp-go" data-goto="15">관련 장 16장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q5</span><span class="qt">팩이 부서마다 난립하면?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>전사 → 본부 → 부서 → 개인의 허용 범위를 두고, 보호할 로고·색상·등급 표기는 하위 팩이 덮어쓰지 못하게 합니다.</li><li>승인·버전·검사 후 다음 문서에 적용하고 필요하면 이전 승인 버전으로 복구합니다. 이미 제출한 파일은 작성 당시 버전으로 둡니다.</li></ul><button class="sp-go" data-goto="16">관련 장 17장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q6</span><span class="qt">사내 Qwen 27B로 품질이 나오나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>모델은 작성과 수정 요청 해석에 쓰고, 정의한 수치·필수 표시 검사는 <b>파일에서 읽은 값과 명시적 조건</b>으로 수행합니다. 읽기 실패·미지원 개체·모호한 단위는 판정 불가로 남깁니다.</li><li>지금은 사내 GPU의 Qwen 3.8 27B, H200에 400B급 오픈웨이트가 오면 초안까지, 품질이 중요한 대외 문서는 승인받아 AWS Bedrock Claude를 씁니다.</li><li>모델별 내용 품질·도구 호출·사내 인증은 같은 평가 과제로 따로 검증하며, 설정만 바꿔 같은 품질이 된다고 보장하지 않습니다.</li></ul><button class="sp-go" data-goto="7">관련 장 8장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q7</span><span class="qt">.hwp인가 .hwpx인가? AI 친화 문서 흐름과 맞나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>출력은 편집 가능한 PPTX, 공유용 웹슬라이드, 결재·보고용 한글 문서입니다. HWP·HWPX의 지원·검사 경로는 실제 환경에서 확인하며 파일 데이터 검사와 화면 배치 검증은 구분합니다.</li><li>n종 양식 목록이 모든 실제 파일의 품질 검증 완료를 뜻하지는 않습니다.</li></ul><button class="sp-go" data-goto="12">관련 장 13장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q8</span><span class="qt">서류 단계에서 미리 개발한 것 아닌가?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>서류 단계는 <b>기획·자료 정리</b>입니다. 개발은 11/6 지원 시작 이후, 본선 시연은 11/12 계획입니다. 화면은 설계 시안(가상 데이터)입니다.</li><li>PPT·한글 엔진과 웹슬라이드 스킬은 <b>사전 보유한 개인 작업</b>입니다. 기존 출력·작업·평가 기록과 새 통합 개발을 구분하며, 처음 만들 기능은 세 엔진·가상 부서팩 2개·스킬 자동 생성·변경 반영·검수입니다.</li><li>보유 자산의 반입 범위는 주최 측 확인에 따릅니다.</li></ul><button class="sp-go" data-goto="19">관련 장 20장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q9</span><span class="qt">보안은 어떻게 하나?</span><span class="qa-tag">보안</span><span class="pm">+</span></summary><div class="ans"><ul><li>공모전에는 <b>가상 자료만</b> 씁니다. 사업별 금액·이름·인원·일자는 그 업무의 입력값으로 관리하고 재사용 규칙에 섞지 않습니다.</li><li>운영 기본은 사내 GPU 모델이고, AWS Bedrock Claude는 혁신금융서비스 범위에서 팀장 승인·기간제로만 열며 보내기 전에 고객사명·연락처·계좌번호를 가립니다. 대외비 문서는 보낼 수 없습니다.</li><li>실제 사내 운영의 접근 권한·전송·저장·로그는 승인된 환경에서 검증합니다.</li></ul><button class="sp-go" data-goto="7">관련 장 8장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q10</span><span class="qt">본선 당일 개발 환경이 정해지면 어떻게 하나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>본선에는 사내 LLM이 없고 <b>외부망 상용 AI</b>로 개발합니다. AI 호출은 한 곳에 모아 어떤 상용 AI가 주어져도 설정만 바꿉니다.</li><li>표준 도구(브라우저·Python·Java)만 써서 설치 부담을 줄이고, 당일 받는 팀 GitHub 저장소에 첫 30분 안에 골격을 올립니다.</li><li>AI가 막히면 규칙 기반 모드로, 시간이 모자라면 정한 순서대로 범위를 줄입니다.</li></ul><button class="sp-go" data-goto="19">관련 장 20장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q11</span><span class="qt">AI가 만든 부서팩 스킬을 믿을 수 있나?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>바로 쓰지 않습니다. 대표 문서에서 만든 <b>검증 과제</b>로 구성 재현·고정 문구·숫자 보존·보고 문법·보안을 자동 채점하고, 스킬 사용 / 미사용 결과를 비교한 리포트를 냅니다.</li><li>기준을 넘고 담당자 시범 작성까지 거친 뒤 <b>관리자가 등록해야</b> 정식 부서팩이 됩니다. 버전이 남아 문제가 생기면 되돌립니다.</li></ul><button class="sp-go" data-goto="15">관련 장 16장 보기 →</button></div></details></div>
     </div>
   </aside>
   <aside class="side-page" id="side-gallery" data-side="gallery" data-key="D" data-short="실물" data-label="부록 D · 실물" aria-hidden="true">
     <header class="sp-head">
       <div class="kick"><span class="bar"></span>APPENDIX D · 실물</div>
       <h2>보유 엔진의 <em>출력물</em>과 참고 화면</h2>
-      <p class="lead">사전 보유한 엔진(PPT·한글·웹슬라이드 스킬)의 출력물입니다. 24쪽 「코쇠 덱」과 9장의 별도 22장 작업시간 기록은 같은 측정 대상으로 합치지 않습니다. 과거 출력 화면이 통합 서비스의 완성을 뜻하지는 않습니다. 그림을 누르면 크게 봅니다.</p>
+      <p class="lead">사전 보유한 엔진(PPT·한글·웹슬라이드 스킬)의 출력물입니다. 24쪽 「코쇠 덱」과 10장의 별도 22장 작업시간 기록은 같은 측정 대상으로 합치지 않습니다. 과거 출력 화면이 통합 서비스의 완성을 뜻하지는 않습니다. 그림을 누르면 크게 봅니다.</p>
       <button class="sp-close" aria-label="닫기">✕</button>
     </header>
     <div class="sp-body">
@@ -1401,7 +1458,7 @@ body.editing .chart-edit{display:block}
 <!-- 편집 가능한 데이터: 편집 모드에서 고치고 'HTML 저장'하면 이 블록이 다시 쓰인다 -->
 <!-- 삽화 레이어 지도: 배경과 움직일 요소의 위치(원본 픽셀) -->
 <script type="application/json" id="illu-layers">{"01-engine-pack":{"w":1523,"h":695,"K":[{"x":789,"y":87,"w":193,"h":198,"eyes":[[823.5,163.5,7.5,8.5],[892.5,174.0,8.5,9.0]],"fill":"#605d5a","m":"bPress","pivot":[886.0,279],"crest":{"x":883,"y":24,"w":59,"h":70,"ox":904.4,"oy":92}}],"G":[{"id":"o2","c":"o","x":44,"y":463,"w":89,"h":58,"a":"pop"},{"id":"o3","c":"o","x":96,"y":537,"w":60,"h":29,"a":"pop"},{"id":"o0","c":"o","x":578,"y":34,"w":123,"h":120,"a":"pop"},{"id":"o1","c":"o","x":608,"y":197,"w":92,"h":45,"a":"pop"},{"id":"b0","c":"b","x":90,"y":375,"w":95,"h":57,"a":"pop"},{"id":"b1","c":"b","x":90,"y":563,"w":137,"h":73,"a":"pop"}]},"02-same-memo":{"w":1467,"h":519,"K":[{"x":73,"y":197,"w":178,"h":179,"eyes":[[207.5,265.5,7.5,8.5],[137.0,277.5,8.0,8.5]],"fill":"#5e5b58","m":"bTilt","pivot":[162.0,370],"crest":{"x":126,"y":144,"w":48,"h":61,"ox":137.1,"oy":203}}],"G":[{"id":"o0","c":"o","x":326,"y":64,"w":108,"h":74,"a":"pop"},{"id":"o8","c":"o","x":696,"y":412,"w":51,"h":14,"a":"wx"},{"id":"o4","c":"o","x":698,"y":204,"w":50,"h":13,"a":"pop"},{"id":"o6","c":"o","x":763,"y":410,"w":89,"h":40,"a":"pop"},{"id":"o2","c":"o","x":764,"y":192,"w":88,"h":42,"a":"pop"},{"id":"o3","c":"o","x":869,"y":201,"w":61,"h":15,"a":"wx"},{"id":"o7","c":"o","x":869,"y":410,"w":65,"h":14,"a":"pop"},{"id":"o1","c":"o","x":961,"y":180,"w":94,"h":38,"a":"wx"},{"id":"o5","c":"o","x":965,"y":394,"w":125,"h":38,"a":"wx"},{"id":"b1","c":"b","x":1277,"y":402,"w":123,"h":44,"a":"wx"},{"id":"b0","c":"b","x":1321,"y":165,"w":103,"h":42,"a":"wx"}]},"03-one-line-all":{"w":1600,"h":512,"K":[{"x":68,"y":199,"w":170,"h":169,"eyes":[[177.5,270.5,5.5,8.5],[218.0,270.0,5.0,8.0]],"fill":"#5b5958","m":"bTilt","pivot":[152.5,363],"crest":{"x":135,"y":133,"w":52,"h":69,"ox":147.8,"oy":200}}],"G":[{"id":"o4","c":"o","x":414,"y":147,"w":98,"h":23,"a":"wx"},{"id":"o6","c":"o","x":422,"y":190,"w":77,"h":13,"a":"pop"},{"id":"o5","c":"o","x":514,"y":147,"w":180,"h":57,"a":"wx"},{"id":"o12","c":"o","x":596,"y":288,"w":892,"h":133,"a":"wx"},{"id":"o7","c":"o","x":784,"y":208,"w":41,"h":33,"a":"pop"},{"id":"o8","c":"o","x":951,"y":208,"w":40,"h":34,"a":"pop"},{"id":"o2","c":"o","x":977,"y":47,"w":35,"h":57,"a":"pop"},{"id":"o1","c":"o","x":1039,"y":45,"w":79,"h":52,"a":"pop"},{"id":"o9","c":"o","x":1119,"y":208,"w":40,"h":33,"a":"pop"},{"id":"o3","c":"o","x":1138,"y":47,"w":77,"h":50,"a":"pop"},{"id":"o0","c":"o","x":1244,"y":43,"w":32,"h":51,"a":"pop"},{"id":"o10","c":"o","x":1288,"y":208,"w":40,"h":33,"a":"pop"},{"id":"o11","c":"o","x":1460,"y":208,"w":39,"h":33,"a":"pop"},{"id":"b0","c":"b","x":403,"y":325,"w":95,"h":33,"a":"wx"},{"id":"b3","c":"b","x":950,"y":454,"w":27,"h":42,"a":"pop"},{"id":"b1","c":"b","x":1019,"y":448,"w":186,"h":44,"a":"wx"},{"id":"b2","c":"b","x":1252,"y":453,"w":24,"h":39,"a":"pop"}]},"04-pack-maker":{"w":1600,"h":597,"K":[{"x":493,"y":196,"w":189,"h":202,"eyes":[[587.5,284.5,7.5,10.5],[653.0,287.0,7.0,10.0]],"fill":"#5e5a59","m":"bRock","pivot":[587.0,392],"crest":{"x":572,"y":121,"w":60,"h":77,"ox":587.8,"oy":196}}],"G":[{"id":"o0","c":"o","x":354,"y":266,"w":92,"h":48,"a":"pop"},{"id":"o1","c":"o","x":1066,"y":265,"w":92,"h":49,"a":"pop"},{"id":"o3","c":"o","x":1250,"y":422,"w":116,"h":52,"a":"pop"},{"id":"o2","c":"o","x":1300,"y":305,"w":123,"h":63,"a":"pop"},{"id":"b0","c":"b","x":910,"y":351,"w":163,"h":79,"a":"pop"},{"id":"r0","c":"r","x":1300,"y":305,"w":123,"h":63,"a":"pop"}]},"05-inherit-layers":{"w":1117,"h":823,"K":[{"x":370,"y":73,"w":157,"h":141,"eyes":[[463.0,146.5,6.0,6.5]],"fill":"#5c5754","m":"bNod","pivot":[449.0,208],"crest":{"x":462,"y":27,"w":54,"h":59,"ox":484.6,"oy":84}}],"G":[{"id":"o2","c":"o","x":33,"y":610,"w":157,"h":64,"a":"wx"},{"id":"o0","c":"o","x":494,"y":222,"w":70,"h":472,"a":"wy"},{"id":"o1","c":"o","x":856,"y":316,"w":170,"h":43,"a":"wx"},{"id":"r0","c":"r","x":34,"y":610,"w":156,"h":64,"a":"wx"}]},"10-cover-backpack":{"w":1405,"h":625,"K":[{"x":293,"y":290,"w":221,"h":241,"eyes":[[433.0,390.0,8.0,11.0],[486.5,397.5,7.5,10.5]],"fill":"#5c5a59","m":"bTilt","pivot":[403.5,525],"crest":{"x":416,"y":220,"w":66,"h":81,"ox":438.7,"oy":299}}],"G":[{"id":"o0","c":"o","x":144,"y":341,"w":113,"h":67,"a":"pop"},{"id":"o7","c":"o","x":184,"y":584,"w":142,"h":13,"a":"wx"},{"id":"o8","c":"o","x":339,"y":584,"w":31,"h":12,"a":"wx"},{"id":"o6","c":"o","x":384,"y":584,"w":30,"h":12,"a":"pop"},{"id":"o5","c":"o","x":451,"y":582,"w":30,"h":13,"a":"wx"},{"id":"o3","c":"o","x":494,"y":582,"w":78,"h":13,"a":"wx"},{"id":"o4","c":"o","x":586,"y":582,"w":30,"h":12,"a":"pop"},{"id":"o2","c":"o","x":630,"y":580,"w":123,"h":14,"a":"wx"},{"id":"o1","c":"o","x":766,"y":577,"w":300,"h":16,"a":"wx"},{"id":"b1","c":"b","x":49,"y":53,"w":61,"h":68,"a":"pop"},{"id":"b0","c":"b","x":188,"y":27,"w":127,"h":72,"a":"pop"},{"id":"b2","c":"b","x":389,"y":60,"w":54,"h":70,"a":"pop"}]},"11-webslide":{"w":1366,"h":795,"K":[{"x":576,"y":369,"w":177,"h":173,"eyes":[[613.0,442.0,6.0,9.0],[671.0,448.0,7.0,9.0]],"fill":"#5b5958","m":"bPush","pivot":[665.0,536],"crest":{"x":663,"y":309,"w":59,"h":65,"ox":682.7,"oy":372}}],"G":[{"id":"o4","c":"o","x":230,"y":392,"w":40,"h":46,"a":"pop"},{"id":"o3","c":"o","x":334,"y":338,"w":43,"h":47,"a":"pop"},{"id":"o2","c":"o","x":422,"y":276,"w":36,"h":42,"a":"pop"},{"id":"o1","c":"o","x":884,"y":238,"w":36,"h":76,"a":"pop"},{"id":"o0","c":"o","x":936,"y":198,"w":276,"h":75,"a":"wx"},{"id":"o5","c":"o","x":1109,"y":570,"w":101,"h":56,"a":"pop"},{"id":"o6","c":"o","x":1113,"y":660,"w":108,"h":58,"a":"pop"},{"id":"b0","c":"b","x":899,"y":664,"w":139,"h":93,"a":"pop"}]},"12-blueprint":{"w":1429,"h":751,"K":[{"x":131,"y":224,"w":215,"h":207,"eyes":[[245.0,329.5,8.0,10.5],[308.5,336.5,7.5,9.5]],"fill":"#5b5b5b","m":"bNod","pivot":[240.5,427],"crest":{"x":244,"y":148,"w":68,"h":82,"ox":265.8,"oy":228}}],"G":[{"id":"o1","c":"o","x":422,"y":240,"w":220,"h":76,"a":"wx"},{"id":"o2","c":"o","x":464,"y":316,"w":54,"h":88,"a":"pop"},{"id":"o0","c":"o","x":631,"y":142,"w":344,"h":484,"a":"wx"},{"id":"b2","c":"b","x":1195,"y":530,"w":142,"h":75,"a":"pop"},{"id":"b0","c":"b","x":1226,"y":27,"w":141,"h":84,"a":"pop"},{"id":"b1","c":"b","x":1259,"y":288,"w":121,"h":65,"a":"pop"}]},"13-hwp-typeset":{"w":1512,"h":616,"K":[{"x":385,"y":110,"w":210,"h":201,"eyes":[[487.5,210.5,8.5,10.5],[556.5,213.5,7.5,10.5]],"fill":"#575554","m":"bNod","pivot":[490.0,306],"crest":{"x":480,"y":31,"w":66,"h":83,"ox":499.0,"oy":112}}],"G":[{"id":"o3","c":"o","x":76,"y":450,"w":218,"h":140,"a":"wx"},{"id":"o1","c":"o","x":712,"y":195,"w":37,"h":41,"a":"pop"},{"id":"o2","c":"o","x":1024,"y":315,"w":86,"h":61,"a":"pop"},{"id":"o0","c":"o","x":1114,"y":83,"w":190,"h":58,"a":"wx"},{"id":"b0","c":"b","x":1350,"y":422,"w":108,"h":74,"a":"pop"}]},"k2-pain-ruler":{"w":1600,"h":561,"K":[{"x":839,"y":286,"w":147,"h":152,"eyes":[[898.0,346.0,5.0,7.0]],"fill":"#625d5c","m":"bTilt","pivot":[913.0,432],"crest":{"x":868,"y":148,"w":78,"h":142,"ox":916.0,"oy":288}}],"G":[{"id":"o3","c":"o","x":212,"y":406,"w":235,"h":64,"a":"wx"},{"id":"o4","c":"o","x":637,"y":451,"w":201,"h":65,"a":"wx"},{"id":"o2","c":"o","x":768,"y":259,"w":16,"h":15,"a":"pop"},{"id":"o1","c":"o","x":875,"y":201,"w":11,"h":43,"a":"wy"},{"id":"o0","c":"o","x":934,"y":143,"w":88,"h":32,"a":"wx"},{"id":"r0","c":"r","x":212,"y":405,"w":56,"h":47,"a":"pop"},{"id":"r1","c":"r","x":281,"y":406,"w":166,"h":64,"a":"wx"},{"id":"b0","c":"b","x":399,"y":82,"w":338,"h":52,"a":"wx"},{"id":"b1","c":"b","x":852,"y":83,"w":465,"h":54,"a":"wx"},{"id":"b2","c":"b","x":960,"y":467,"w":121,"h":42,"a":"wx"}]},"k3-vault-llm":{"w":1600,"h":606,"K":[{"x":338,"y":316,"w":125,"h":138,"eyes":[[406.0,373.0,6.0,7.0],[440.5,374.0,5.5,7.0]],"fill":"#555354","m":"bBreathe","pivot":[401.0,448],"crest":{"x":393,"y":269,"w":41,"h":49,"ox":405.7,"oy":316}}],"G":[{"id":"o3","c":"o","x":493,"y":276,"w":123,"h":65,"a":"pop"},{"id":"o5","c":"o","x":614,"y":366,"w":62,"h":66,"a":"pop"},{"id":"o4","c":"o","x":692,"y":286,"w":123,"h":68,"a":"pop"},{"id":"o2","c":"o","x":1010,"y":260,"w":310,"h":52,"a":"wx"},{"id":"o0","c":"o","x":1132,"y":210,"w":129,"h":46,"a":"wx"},{"id":"o1","c":"o","x":1277,"y":211,"w":27,"h":38,"a":"pop"},{"id":"b0","c":"b","x":852,"y":82,"w":112,"h":47,"a":"wx"},{"id":"r2","c":"r","x":1010,"y":260,"w":310,"h":52,"a":"wx"},{"id":"r0","c":"r","x":1132,"y":210,"w":129,"h":47,"a":"wx"},{"id":"r1","c":"r","x":1277,"y":211,"w":27,"h":38,"a":"pop"}]},"k4-inspector":{"w":1600,"h":466,"K":[{"x":597,"y":170,"w":153,"h":158,"eyes":[[679.5,232.5,4.5,7.5]],"fill":"#5c5856","m":"bPeer","pivot":[673.5,322],"crest":{"x":647,"y":116,"w":45,"h":58,"ox":657.6,"oy":172}}],"G":[{"id":"o8","c":"o","x":28,"y":258,"w":49,"h":31,"a":"pop"},{"id":"o7","c":"o","x":280,"y":256,"w":48,"h":32,"a":"pop"},{"id":"o9","c":"o","x":534,"y":257,"w":46,"h":31,"a":"pop"},{"id":"o11","c":"o","x":745,"y":284,"w":69,"h":66,"a":"pop"},{"id":"o3","c":"o","x":868,"y":160,"w":74,"h":83,"a":"pop"},{"id":"o6","c":"o","x":990,"y":229,"w":67,"h":77,"a":"pop"},{"id":"o4","c":"o","x":1246,"y":205,"w":42,"h":44,"a":"pop"},{"id":"o2","c":"o","x":1264,"y":128,"w":37,"h":43,"a":"pop"},{"id":"o10","c":"o","x":1308,"y":263,"w":47,"h":31,"a":"pop"},{"id":"o1","c":"o","x":1312,"y":112,"w":62,"h":47,"a":"pop"},{"id":"o0","c":"o","x":1388,"y":108,"w":112,"h":62,"a":"pop"},{"id":"o5","c":"o","x":1494,"y":204,"w":42,"h":46,"a":"pop"},{"id":"r2","c":"r","x":724,"y":284,"w":90,"h":65,"a":"pop"},{"id":"b0","c":"b","x":812,"y":242,"w":116,"h":14,"a":"pop"},{"id":"r0","c":"r","x":868,"y":160,"w":74,"h":83,"a":"pop"},{"id":"r1","c":"r","x":990,"y":229,"w":67,"h":77,"a":"pop"}]},"k5-closing-relay":{"w":1593,"h":551,"K":[{"x":990,"y":225,"w":212,"h":207,"eyes":[[1165.5,309.5,8.5,10.5],[1094.0,317.5,9.0,10.5]],"fill":"#5e5a59","m":"bBreathe","pivot":[1096.0,426],"crest":{"x":1048,"y":144,"w":70,"h":89,"ox":1063.6,"oy":231}},{"x":523,"y":226,"w":196,"h":204,"eyes":[[620.5,309.5,8.5,10.5],[551.5,310.5,8.5,10.5]],"fill":"#5e5a59","m":"bBreathe","pivot":[621.0,424],"crest":{"x":591,"y":154,"w":62,"h":75,"ox":607.2,"oy":227}}],"G":[{"id":"o2","c":"o","x":744,"y":212,"w":220,"h":62,"a":"wx"},{"id":"o0","c":"o","x":1232,"y":26,"w":298,"h":133,"a":"wx"},{"id":"o1","c":"o","x":1432,"y":212,"w":32,"h":43,"a":"pop"},{"id":"b0","c":"b","x":118,"y":44,"w":264,"h":124,"a":"wx"}]}}</script>
-<script type="application/json" id="deck-data">{"cat":[["결과보고","요약","개요 → 주요 내용 → 성과 → 향후 계획","실적표, 전년 대비 증감"],["계획보고","요약","추진 배경 → 추진 내용 → 추진 일정 → 기대 효과","일정표(분기·월)"],["검토보고","요약","검토 배경 → 현황 → 검토 의견 → 건의 사항","대안 비교표"],["이슈·장애 보고","요약","발생 개요 → 경과 → 원인 → 조치 → 재발 방지","시각표, 영향 범위"],["회의 결과 보고","요약","회의 개요 → 주요 논의 → 결정 사항 → 후속 조치","담당·기한 표"],["출장 결과 보고","요약","출장 개요 → 주요 활동 → 시사점 → 후속 조치","일자별 일정표"],["고객 방문 결과","요약","방문 개요 → 주요 논의 → 고객 요청 → 후속 조치","참석자 표(가명 규칙)"],["행사 계획 보고","요약","행사 개요 → 세부 일정 → 역할 분담 → 소요 예산 → 준비 일정","시간표, 예산표"],["주간 업무 보고","요약","금주 실적 → 차주 계획 → 이슈","표 중심, 1쪽"],["교육 기획안","요약","교육 개요 → 커리큘럼 → 운영 계획 → 소요 예산","차시별 표"],["사업계획서","상세","Ⅰ.추진 배경 → Ⅱ.현황 → Ⅲ.기본 방향 → Ⅳ.추진 과제 → Ⅴ.기대 효과","표지·목차"],["제안서·공모전","상세","Ⅰ.배경 → Ⅱ.현황 분석 → Ⅲ.제안 개요 → Ⅳ.추진 내용 → Ⅴ.추진 계획 → Ⅵ.기대 효과 → 별첨","그림 중심, 심사 기준 대응 별첨"],["업무 가이드","상세","Ⅰ.목적 → Ⅱ.절차별 가이드 → Ⅲ.유의 사항 → 별첨 서식","절차 그림, 참고 박스"]],"packs":[["영업 팩","고객사 제안서 · 방문 결과 보고 · 고객 브리핑 링크",["PPT","WEB","한글"],"회사 소개·서비스 목록·레퍼런스 고정 블록, 대외용 등급 표기","고객사명 오기 검사"],["기획 팩","임원 보고 · 요약보고 · 한 장 요약",["한글","PPT"],"결론 먼저 구성, 결재라인 기본값, 한 장 요약 장표","보고 문법(□ ㅇ - ·) 잠금"],["운영 팩","장애 경위서 · 주간 운영 보고 · 운영 현황판",["한글","WEB"],"경위서 목차(개요·경과·원인·조치·재발 방지), 시스템 용어 사전","시각 표기 규칙(2026. 10. 27 14:05)"],["교육 팩","교육·안내 자료 · 사내 공유용 학습 페이지",["PPT","WEB"],"쉬운 말 규칙, 용어 첫 등장 풀이, 확인 퀴즈 장표","코쇠 삽화 자동 매칭"]],"layers":[["개인 설정","자주 쓰는 표현, 서명",false],["부서 팩","고정 문구 · 용어 · 결재라인",false],["본부 팩","본부 공통 보고 구성",false],["전사 공통 팩","CI · 보고 문법 · 검수 기준 🔒",true]],"scenes":[["0:00","입력과 문제","메모·기존 문서에서 출발","같은 자료를 형식·부서 규칙에 맞춰 다시 쓰는 장면을 보여줍니다. 3분은 발표 구성 목표이며 서비스 처리시간 보장이 아닙니다.","k2-pain-ruler"],["0:20","한글 제작","메모 → 회사 양식의 한글","기획 팩을 선택해 메모를 요약보고로 구성합니다. 보고 문법·표·문단을 적용한 결과를 한글에서 열어 확인하는 시연 계획입니다.","01-engine-pack"],["0:50","PPT·웹 제작","같은 메모 → 제안서와 웹","영업 팩으로 같은 내용을 PPT·웹슬라이드로 구성합니다. 회사 소개·레퍼런스와 공통 삽화를 쓰임에 맞게 배치합니다.","02-same-memo"],["1:20","팩 변경 반영","승인된 기준 → 다음 문서","관리자가 팩의 서비스 소개 문구를 고치고 승인합니다. 다음 생성물에 반영되는지와 이전 승인 버전 복구를 확인합니다.","03-one-line-all"],["1:50","검수·재검사","수정 누락을 찾아 고칩니다","대표 사례로 원본·한글 예산 120만원, PPT 100만원의 누락을 찾고 저장 후 재검사합니다. 서식·필수 문구 검사와 실제 배치 확인도 구분합니다.","k4-inspector"],["2:15","팩 스킬 생성","대표 문서 3건 → 스킬 → 검증 → 등록","가상 부서의 대표 문서 3건을 올리고 \"영업팀 제안서 팩 만들어줘\"라고 요청한다. 부서팩 스킬이 만들어지고 검증 리포트(구성·고정 문구·숫자·보고 문법)가 나온다. 관리자가 등록하면 바로 쓴다.","04-pack-maker"],["2:40","운영 검증","본선은 상용 AI, 운영은 승인된 환경","본선은 외부망 상용 AI로 시연합니다. 사내 GPU(Qwen·H200)·Bedrock Claude의 품질·권한·망은 승인된 환경에서 별도 검증하며, 설정 변경만으로 같은 품질을 보장하지 않습니다.","k3-vault-llm"],["2:50","마무리","세 형식 결과물과 확인 범위","PPT·웹·한글 제작·수정·검수의 연결을 정리합니다. 편집 가능한 파일·공유 범위·검수 내역과 남은 확인 항목을 함께 보여줍니다.","k5-closing-relay"]],"charts":{"c3bar":{"title":"03 · 직장인 보고서 인식 · 외부 조사","cols":["질문·항목","응답값(%)","색","출처·해석"],"types":["t","n","c","t"],"rows":[["보고서 작성 스트레스",65.4,"오렌지","사람인 2021.8 · 직장인 1,227명 조사"],["기존 양식 벤치마킹",36.8,"네이비","작성 요령 응답 · 1위가 아니며 단순 재활용과 구분"],["업무 중 보고서 작성 시간",35,"오렌지","작성에 쓰는 시간의 평균 비중"],["까다로운 보고서 서식",20.8,"회색","어려운 이유에 대한 응답 · 다른 질문과 합산하지 않음"]]},"c3ring":{"title":"03 · 업무시간 중 보고서 비중","cols":["항목","값(%)"],"types":["t","n"],"rows":[["보고서 작성",35]]},"c5":{"title":"05 · 공통 엔진과 부서 운영의 연결 · 개념도","cols":["구성 요소","가로 배치값","세로 배치값","표시 크기","색"],"types":["t","n","n","n","c"],"rows":[["회사 공통 엔진",2,2,2,"네이비"],["양식·고정 콘텐츠",6,3,2,"회색"],["부서팩·승인",3,7,2,"네이비"],["제작·수정·검수",8,8,2,"오렌지"]]},"c6":{"title":"06 · 외부 사례에서 발표한 최소 시간 절감률 · 제공업체·고객 발표","cols":["업무·발표 주체","최소 절감률(%)","색","근거"],"types":["t","n","c","t"],"rows":[["회의록 · 삼성SDS",75,"회색","공식 자체 시범 발표 · 75% 이상 절감"],["메일 요약·초안 · 삼성SDS",66,"네이비","공식 자체 시범 발표 · 66% 이상 절감"],["제안서·보고서 · Waterman",50,"오렌지","Templafy 고객 사례 · 최소 50% 감소"]]},"c9":{"title":"09 · 22장 기획서 작성 시간","cols":["구분","분","색"],"types":["t","n","c"],"rows":[["수작업 (가정)",440,"회색"],["첫 완성본 (기존 기록)",43,"오렌지"],["수정 포함 최종본 (기존 기록)",139,"네이비"]]},"c11":{"title":"11 · 보고서 작성 평가 통과율 · 기존 3과제 기록","cols":["구분","통과율(%)","색"],"types":["t","n","c"],"rows":[["스킬 사용",100,"오렌지"],["스킬 미사용",79,"회색"]]},"c12":{"title":"12 · 한글 보고서 양식 구성","cols":["구분","종 수","색"],"types":["t","n","c"],"rows":[["요약보고 양식",10,"오렌지"],["상세보고 양식",3,"진네이비"]]},"c18":{"title":"19 · 단계별 일정 (2026년)","cols":["단계","시작(월/일)","끝(월/일)","색"],"types":["t","d","d","c"],"rows":[["아이디어·자료 정리 (서류)","10/27","10/30","오렌지"],["최종 기획서 제출","10/30","10/30","오렌지"],["본선 진출 · 개발 환경 지원","11/6","11/6","네이비"],["환경 점검 · 엔진 연결 확인","11/6","11/9","네이비"],["공통 설계도 · AI 어댑터","11/9","11/10","네이비"],["문서팩 · 자동 검수 · 화면","11/10","11/11","네이비"],["리허설 · 시연 데이터","11/11","11/11","연오렌지"],["본선 — 저장소 받아 구현·시연","11/12","11/12","오렌지"]]},"c19":{"title":"20 · 월별·누적 절감시간 · 전사 확산 가정","cols":["월","월 절감(시간)"],"types":["t","n"],"rows":[["1월",2000],["2월",2000],["3월",2000],["4월",2000],["5월",2000],["6월",2000],["7월",2000],["8월",2000],["9월",2000],["10월",2000],["11월",2000],["12월",2000]]},"c20":{"title":"21 · 심사 배점","cols":["영역","배점","색"],"types":["t","n","c"],"rows":[["창의성",30,"오렌지"],["업무 도구 실용성",30,"진네이비"],["구현 가능성",20,"연오렌지"],["기대 효과",20,"진회색"]]}}}</script>
+<script type="application/json" id="deck-data">{"cat":[["결과보고","요약","개요 → 주요 내용 → 성과 → 향후 계획","실적표, 전년 대비 증감"],["계획보고","요약","추진 배경 → 추진 내용 → 추진 일정 → 기대 효과","일정표(분기·월)"],["검토보고","요약","검토 배경 → 현황 → 검토 의견 → 건의 사항","대안 비교표"],["이슈·장애 보고","요약","발생 개요 → 경과 → 원인 → 조치 → 재발 방지","시각표, 영향 범위"],["회의 결과 보고","요약","회의 개요 → 주요 논의 → 결정 사항 → 후속 조치","담당·기한 표"],["출장 결과 보고","요약","출장 개요 → 주요 활동 → 시사점 → 후속 조치","일자별 일정표"],["고객 방문 결과","요약","방문 개요 → 주요 논의 → 고객 요청 → 후속 조치","참석자 표(가명 규칙)"],["행사 계획 보고","요약","행사 개요 → 세부 일정 → 역할 분담 → 소요 예산 → 준비 일정","시간표, 예산표"],["주간 업무 보고","요약","금주 실적 → 차주 계획 → 이슈","표 중심, 1쪽"],["교육 기획안","요약","교육 개요 → 커리큘럼 → 운영 계획 → 소요 예산","차시별 표"],["사업계획서","상세","Ⅰ.추진 배경 → Ⅱ.현황 → Ⅲ.기본 방향 → Ⅳ.추진 과제 → Ⅴ.기대 효과","표지·목차"],["제안서·공모전","상세","Ⅰ.배경 → Ⅱ.현황 분석 → Ⅲ.제안 개요 → Ⅳ.추진 내용 → Ⅴ.추진 계획 → Ⅵ.기대 효과 → 별첨","그림 중심, 심사 기준 대응 별첨"],["업무 가이드","상세","Ⅰ.목적 → Ⅱ.절차별 가이드 → Ⅲ.유의 사항 → 별첨 서식","절차 그림, 참고 박스"]],"packs":[["영업 팩","고객사 제안서 · 방문 결과 보고 · 고객 브리핑 링크",["PPT","WEB","한글"],"회사 소개·서비스 목록·레퍼런스 고정 블록, 대외용 등급 표기","고객사명 오기 검사"],["기획 팩","임원 보고 · 요약보고 · 한 장 요약",["한글","PPT"],"결론 먼저 구성, 결재라인 기본값, 한 장 요약 장표","보고 문법(□ ㅇ - ·) 잠금"],["운영 팩","장애 경위서 · 주간 운영 보고 · 운영 현황판",["한글","WEB"],"경위서 목차(개요·경과·원인·조치·재발 방지), 시스템 용어 사전","시각 표기 규칙(2026. 10. 27 14:05)"],["교육 팩","교육·안내 자료 · 사내 공유용 학습 페이지",["PPT","WEB"],"쉬운 말 규칙, 용어 첫 등장 풀이, 확인 퀴즈 장표","코쇠 삽화 자동 매칭"]],"layers":[["개인 설정","자주 쓰는 표현, 서명",false],["부서 팩","고정 문구 · 용어 · 결재라인",false],["본부 팩","본부 공통 보고 구성",false],["전사 공통 팩","CI · 보고 문법 · 검수 기준 🔒",true]],"scenes":[["0:00","입력과 문제","메모·기존 문서에서 출발","같은 자료를 형식·부서 규칙에 맞춰 다시 쓰는 장면에서 출발합니다.","k2-pain-ruler"],["0:20","한글 제작","메모 → 회사 양식의 한글","기획 팩을 선택해 메모를 요약보고로 구성합니다. 보고 문법·표·문단을 적용한 결과를 한글에서 열어 확인하는 시연 계획입니다.","01-engine-pack"],["0:50","PPT·웹 제작","같은 메모 → 제안서와 웹","영업 팩으로 같은 내용을 PPT·웹슬라이드로 구성합니다. 회사 소개·레퍼런스와 공통 삽화를 쓰임에 맞게 배치합니다.","02-same-memo"],["1:20","팩 변경 반영","승인된 기준 → 다음 문서","관리자가 팩의 서비스 소개 문구를 고치고 승인합니다. 다음 생성물에 반영되는지와 이전 승인 버전 복구를 확인합니다.","03-one-line-all"],["1:50","검수·재검사","수정 누락을 찾아 고칩니다","대표 사례로 원본·한글 예산 120만원, PPT 100만원의 누락을 찾고 저장 후 재검사합니다. 서식·필수 문구 검사와 실제 배치 확인도 구분합니다.","k4-inspector"],["2:15","팩 스킬 생성","대표 문서 3건 → 스킬 → 검증 → 등록","가상 부서의 대표 문서 3건을 올리고 \"영업팀 제안서 팩 만들어줘\"라고 요청한다. 부서팩 스킬이 만들어지고 검증 리포트(구성·고정 문구·숫자·보고 문법)가 나온다. 관리자가 등록하면 바로 쓴다.","04-pack-maker"],["2:40","운영 검증","본선은 상용 AI, 운영은 승인된 환경","본선은 외부망 상용 AI로 시연합니다. 사내 GPU(Qwen·H200)·Bedrock Claude의 품질·권한·망은 승인된 환경에서 별도로 검증합니다.","k3-vault-llm"],["2:50","마무리","세 형식 결과물과 확인 범위","PPT·웹·한글 제작·수정·검수의 연결을 정리합니다. 편집 가능한 파일·공유 범위·검수 내역과 남은 확인 항목을 함께 보여줍니다.","k5-closing-relay"]],"charts":{"c3bar":{"title":"03 · 직장인 보고서 인식 · 외부 조사","cols":["질문·항목","응답값(%)","색","출처·해석"],"types":["t","n","c","t"],"rows":[["보고서 작성 스트레스",65.4,"오렌지","사람인 2021.8 · 직장인 1,227명 조사"],["기존 양식 벤치마킹",36.8,"네이비","작성 요령 응답 · 1위가 아니며 단순 재활용과 구분"],["업무 중 보고서 작성 시간",35,"오렌지","작성에 쓰는 시간의 평균 비중"],["까다로운 보고서 서식",20.8,"회색","어려운 이유에 대한 응답 · 다른 질문과 합산하지 않음"]]},"c3ring":{"title":"03 · 업무시간 중 보고서 비중","cols":["항목","값(%)"],"types":["t","n"],"rows":[["보고서 작성",35]]},"c6":{"title":"06 · 외부 사례에서 발표한 최소 시간 절감률 · 제공업체·고객 발표","cols":["업무·발표 주체","최소 절감률(%)","색","근거"],"types":["t","n","c","t"],"rows":[["회의록 · 삼성SDS",75,"회색","공식 자체 시범 발표 · 75% 이상 절감"],["메일 요약·초안 · 삼성SDS",66,"네이비","공식 자체 시범 발표 · 66% 이상 절감"],["제안서·보고서 · Waterman",50,"오렌지","Templafy 고객 사례 · 최소 50% 감소"]]},"c9":{"title":"10 · 22장 기획서 작성 시간","cols":["구분","분","색"],"types":["t","n","c"],"rows":[["수작업 (가정)",440,"회색"],["첫 완성본 (기존 기록)",43,"오렌지"],["수정 포함 최종본 (기존 기록)",139,"네이비"]]},"c11":{"title":"12 · 보고서 작성 평가 통과율 · 기존 3과제 기록","cols":["구분","통과율(%)","색"],"types":["t","n","c"],"rows":[["스킬 사용",100,"오렌지"],["스킬 미사용",79,"회색"]]},"c12":{"title":"13 · 한글 보고서 양식 구성","cols":["구분","종 수","색"],"types":["t","n","c"],"rows":[["요약보고 양식",10,"오렌지"],["상세보고 양식",3,"진네이비"]]},"c18":{"title":"20 · 단계별 일정 (2026년)","cols":["단계","시작(월/일)","끝(월/일)","색"],"types":["t","d","d","c"],"rows":[["아이디어·자료 정리 (서류)","10/27","10/30","오렌지"],["최종 기획서 제출","10/30","10/30","오렌지"],["본선 진출 · 개발 환경 지원","11/6","11/6","네이비"],["환경 점검 · 엔진 연결 확인","11/6","11/9","네이비"],["공통 설계도 · AI 어댑터","11/9","11/10","네이비"],["문서팩 · 자동 검수 · 화면","11/10","11/11","네이비"],["리허설 · 시연 데이터","11/11","11/11","연오렌지"],["본선 — 저장소 받아 구현·시연","11/12","11/12","오렌지"]]},"c19":{"title":"21 · 월별·누적 절감시간 · 전사 확산 가정","cols":["월","월 절감(시간)"],"types":["t","n"],"rows":[["1월",2000],["2월",2000],["3월",2000],["4월",2000],["5월",2000],["6월",2000],["7월",2000],["8월",2000],["9월",2000],["10월",2000],["11월",2000],["12월",2000]]},"c20":{"title":"22 · 심사 배점","cols":["영역","배점","색"],"types":["t","n","c"],"rows":[["창의성",30,"오렌지"],["업무 도구 실용성",30,"진네이비"],["구현 가능성",20,"연오렌지"],["기대 효과",20,"진회색"]]}}}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>window.Chart || document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>')</script>
 <script>

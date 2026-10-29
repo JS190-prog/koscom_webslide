@@ -1,4 +1,4 @@
-"""템플릿(예시 덱 「코쇠 문서팩」 기획서)을 복사해 새 덱 폴더를 만든다.
+"""템플릿(예시 덱 「코쇠오피스」 기획서)을 복사해 새 덱 폴더를 만든다.
 
     python new_deck.py <새 폴더> [--title "제목"] [--keep 1,2,8,19,21] [--drop-side qa,gallery,live] [--no-motion] [--list]
 

@@ -1,7 +1,7 @@
 # koscom_webslide — 코스콤 스타일 웹슬라이드 스킬
 
 말로 원고를 주면 **코스콤 양식(KoPub돋움체 · 오렌지·네이비 · 셰브론)의 움직이는 HTML 웹슬라이드**를 만드는 Claude 스킬입니다.
-「ㅋㅋ톤 2026」 참가 기획서 「코쇠 문서팩」을 만든 엔진을 스킬로 정리했습니다.
+「ㅋㅋ톤 2026」 참가 기획서 「코쇠오피스」을 만든 엔진을 스킬로 정리했습니다.
 
 - 1440×810 무대 자동 배율, 마우스 반응(기울기·패럴랙스), 단어 단위 줄바꿈
 - Chart.js 차트 — 데이터(JSON)만 적으면 그려지고, 편집 모드에서 표로 고친다
@@ -31,7 +31,7 @@ node   skills/koscom-webslide/scripts/check_deck.js ./my-deck/제목_단일파�
 자세한 규칙과 부품은 [SKILL.md](skills/koscom-webslide/SKILL.md)와 `references/`.
 
 ## 예시
-`skills/koscom-webslide/template/index.html` — 「코쇠 문서팩」 참가 기획서(22장). 브라우저로 바로 열립니다.
+`skills/koscom-webslide/template/index.html` — 「코쇠오피스」 참가 기획서(22장). 브라우저로 바로 열립니다.
 
 ## 필요한 것
 Python 3.10+ (Pillow · numpy · fontTools[woff2]), Node 18+ + `playwright-core`(점검·녹화, 설치된 Edge/Chrome 사용), ffmpeg(mp4를 만들 때만).

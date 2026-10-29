@@ -1,0 +1,8 @@
+# 만들어지는 것
+*_단일파일.html
+video/qa/
+video/frames/
+qa/
+__pycache__/
+node_modules/
+*.mp4

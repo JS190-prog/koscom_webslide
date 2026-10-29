@@ -1,0 +1,2296 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>코쇠 문서팩 기획서</title>
+<meta name="description" content="ㅋㅋ톤 2026 참가 기획서 — 코스콤 맞춤형 PPT·웹슬라이드·한글 문서 제작 패키지 솔루션">
+<style>
+@font-face{font-family:'KoPub Dotum';src:local('KoPub돋움체 Medium'),local('KoPubDotum Medium'),url(assets/fonts/KoPubDotum-Medium.ttf) format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:'KoPub Dotum';src:local('KoPub돋움체 Bold'),local('KoPubDotum Bold'),url(assets/fonts/KoPubDotum-Bold.ttf) format('truetype');font-weight:700;font-display:swap}
+
+:root{
+  --canvas:#ffffff;--surface:#f5f5f7;--hair:#dcdce0;--chev:#ececee;
+  --or:#ee6d1d;--or2:#f26522;--ort:#fad3bb;--orp:#fdeee4;
+  --navy:#00338d;--navy2:#1f4b9b;--navy3:#0f499c;--bt:#edf4fb;
+  --black:#000;--wave1:#7a3a10;--wave2:#b85415;
+  --ink:#2b2b2e;--ink2:#6e6e73;--grey:#8c8c92;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --font:'KoPub Dotum','KoPub돋움체 Medium',Pretendard,'Malgun Gothic',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#e7e7ea;color:var(--ink);font-family:var(--font);font-weight:500;
+  word-break:keep-all;overflow-wrap:break-word;line-break:strict;-webkit-font-smoothing:antialiased;font-synthesis:none}
+h1,h2,h3,h4{font-weight:700;text-wrap:balance}
+p,li{text-wrap:pretty}
+b,strong{font-weight:700}
+em{font-style:normal;color:var(--or)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ───────── stage ───────── */
+#stage{position:fixed;left:0;top:0;width:1440px;height:810px;transform-origin:0 0;background:var(--canvas);overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.04)}
+.slide{position:absolute;inset:0;padding:96px 72px 84px 128px;visibility:hidden;opacity:0;pointer-events:none}
+.slide.active{visibility:visible;opacity:1;pointer-events:auto;transition:opacity .5s var(--ease)}
+.slide.leaving{visibility:visible;opacity:0;transition:opacity .35s ease}
+.slide.navy{background:var(--navy);color:#fff}
+.slide.black{background:#000;color:#fff}
+
+/* chrome */
+.topbar{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;padding:0 40px 0 32px;z-index:20;
+  border-bottom:1px solid var(--hair);background:rgba(255,255,255,.92);transition:background .4s,border-color .4s,color .4s}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:19px}
+.brand svg{width:22px;height:22px}
+.brand .div{width:1px;height:18px;background:var(--hair);margin:0 6px}
+.brand small{font-size:12px;letter-spacing:.32em;color:var(--grey);font-weight:500}
+.topbar .right{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:14px;color:var(--ink2)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border:1px solid var(--hair);border-radius:999px}
+.pill i{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--or);color:#fff;font-style:normal;font-size:11px;font-weight:700}
+.iconbtn{width:36px;height:36px;border:1px solid var(--hair);display:grid;place-items:center;border-radius:8px;transition:transform .25s var(--ease),border-color .25s}
+.iconbtn:hover{transform:translateY(-2px);border-color:var(--or)}
+.rail{position:absolute;left:0;top:64px;bottom:64px;width:112px;z-index:20;display:flex;flex-direction:column;justify-content:center;gap:16px;padding-left:24px}
+.rail>button{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding-left:22px;color:var(--grey);transition:color .3s}
+.rail>button::before{content:"";position:absolute;left:0;top:8px;width:12px;height:2px;background:currentColor;opacity:.5;transition:width .45s var(--ease),opacity .3s}
+.rail .n{font-size:12.5px;letter-spacing:.08em;line-height:1.3}
+.rail .nm{font-size:13.5px;line-height:1.35;white-space:nowrap;margin-top:2px;transition:color .3s,transform .35s var(--ease)}
+.rail .dots{display:flex;gap:5px;height:0;margin-top:0;opacity:0;overflow:hidden;transition:height .35s var(--ease),margin .35s var(--ease),opacity .3s}
+.rail .dots i{width:6px;height:6px;border-radius:50%;background:var(--hair);transition:background .3s,transform .3s}
+.rail .dots i.done{background:var(--ort)}
+.rail .dots i.on{background:var(--or);transform:scale(1.25)}
+.rail>button:hover{color:var(--ink)}
+.rail>button.on{color:var(--or)}
+.rail>button.on .n{font-weight:700}
+.rail>button.on .nm{color:var(--ink);font-weight:700}
+.rail>button.on::before{width:16px;opacity:1}
+.rail>button.on .dots{height:8px;margin-top:8px;opacity:1}
+.bottombar{position:absolute;left:0;right:0;bottom:0;height:64px;z-index:20;display:flex;align-items:center;padding:0 40px 0 32px;border-top:1px solid var(--hair);background:rgba(255,255,255,.92);transition:background .4s,border-color .4s,color .4s}
+.pager{font-size:15px;color:var(--grey);display:flex;align-items:baseline;gap:12px}
+.pager b{color:var(--or);font-size:18px}
+.pager .lab{color:var(--ink);font-weight:700;margin-left:10px}
+.progress{position:absolute;left:0;top:-1px;height:3px;background:var(--or);transition:width .6s var(--ease)}
+.bottombar .right{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:13px;color:var(--grey)}
+.kbd{display:inline-block;border:1px solid var(--hair);border-radius:4px;padding:1px 6px;font-size:12px;margin:0 2px}
+.navbtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--hair);display:grid;place-items:center;transition:background .3s,color .3s,transform .3s var(--ease),border-color .3s}
+.navbtn:hover{background:var(--or);border-color:var(--or);color:#fff}
+.navbtn.next:hover{transform:translateX(4px)}.navbtn.prev:hover{transform:translateX(-4px)}
+#stage[data-theme=navy] .topbar,#stage[data-theme=navy] .bottombar{background:rgba(0,51,141,.6);border-color:rgba(255,255,255,.14);color:#fff}
+#stage[data-theme=black] .topbar,#stage[data-theme=black] .bottombar{background:rgba(0,0,0,.55);border-color:rgba(255,255,255,.12);color:#fff}
+#stage[data-theme=navy] .pager .lab,#stage[data-theme=black] .pager .lab{color:#fff}
+#stage:is([data-theme=navy],[data-theme=black]) :is(.pill,.iconbtn,.navbtn,.kbd){border-color:rgba(255,255,255,.25)}
+#stage:is([data-theme=navy],[data-theme=black]) :is(.topbar .right,.bottombar .right,.pager,.rail>button){color:var(--bt)}
+#stage:is([data-theme=navy],[data-theme=black]) .rail>button.on{color:var(--or)}
+#stage:is([data-theme=navy],[data-theme=black]) :is(.rail>button.on .nm,.rail>button:hover .nm){color:#fff}
+#stage:is([data-theme=navy],[data-theme=black]) .rail .dots i:not(.on):not(.done){background:rgba(255,255,255,.25)}
+#stage:is([data-theme=navy],[data-theme=black]) .brand small{color:var(--bt)}
+
+/* cursor */
+#cursor{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:1.5px solid var(--or);border-radius:50%;pointer-events:none;z-index:99;
+  transition:width .25s var(--ease),height .25s var(--ease),margin .25s var(--ease),background .25s,opacity .3s;opacity:0}
+#cursor.big{width:64px;height:64px;margin:-32px 0 0 -32px;background:rgba(238,109,29,.08)}
+@media (hover:none){#cursor{display:none}}
+
+/* ───────── shared slide parts ───────── */
+.kick{display:flex;align-items:center;gap:12px;font-size:14px;letter-spacing:.24em;color:var(--grey);margin-bottom:14px}
+.kick .no{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--or);color:#fff;font-size:13px;letter-spacing:0;font-weight:700}
+.kick .bar{width:8px;height:22px;background:var(--or)}
+h2.t{font-size:42px;line-height:1.25;letter-spacing:-.01em}
+.lead{font-size:19px;line-height:1.6;color:var(--ink2);margin-top:12px;max-width:1040px}
+.navy .lead,.black .lead{color:var(--bt)}
+.navy .kick,.black .kick{color:var(--bt)}
+.src{font-size:12.5px;color:var(--grey);line-height:1.55}
+.card{background:var(--surface);border:1px solid var(--hair);padding:22px 24px;position:relative;transition:transform .35s var(--ease),border-color .35s,background .35s}
+.card::before{content:"";position:absolute;left:-1px;top:-1px;height:3px;width:0;background:var(--or);transition:width .45s var(--ease)}
+.card:hover{transform:translateY(-5px);border-color:var(--or);background:#fff}
+.card:hover::before{width:calc(100% + 2px)}
+.card h4{font-size:19px;margin-bottom:8px}
+.card p{font-size:16px;line-height:1.55;color:var(--ink2)}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:5px 10px;border:1px solid var(--hair);background:#fff;color:var(--ink2)}
+.tag.or{border-color:var(--or);color:var(--or)}
+.tag.solid{background:var(--or);border-color:var(--or);color:#fff}
+.tag.navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px}
+.illu{position:relative;overflow:hidden;background:#fff}
+.illu img{display:block;width:100%;height:100%;object-fit:contain;transition:transform .9s var(--ease)}
+.illu:hover img{transform:scale(1.045)}
+.cap{font-size:13px;color:var(--grey);margin-top:8px}
+.kpi{border-left:3px solid var(--or);padding:4px 0 4px 18px}
+.kpi .v{font-size:44px;font-weight:700;letter-spacing:-.01em;line-height:1.1;transition:color .3s}
+.kpi{transition:border-color .3s,padding .35s var(--ease)}
+.kpi:hover{padding-left:24px}
+.kpi:hover .v{color:var(--or)}
+body.editing .kpi:hover{padding-left:18px}
+.kpi .v small{font-size:18px;margin-left:4px;color:var(--ink2);font-weight:500}
+.kpi .d{font-size:14px;color:var(--ink2);margin-top:6px;line-height:1.45}
+.kpi.navy{border-color:var(--navy)}.kpi.grey{border-color:var(--grey)}
+.chart-box{position:relative}
+.chart-box canvas{position:absolute;inset:0}
+.note{font-size:13px;color:var(--grey)}
+.badge-live{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--or);font-weight:700}
+.badge-live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--or);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(238,109,29,.5)}100%{box-shadow:0 0 0 10px rgba(238,109,29,0)}}
+
+/* entrance animations */
+@keyframes slideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fromRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes reveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes barFill{from{transform:scaleX(0)}}
+@keyframes growUp{from{transform:scaleY(0)}}
+@keyframes dash{to{stroke-dashoffset:-40}}
+@keyframes chevIn{from{opacity:0;transform:translateX(-80px)}to{opacity:1;transform:none}}
+.slide .a{opacity:0}
+.slide.active .a{animation:slideIn .75s var(--ease) both;animation-delay:calc(var(--i,0) * 80ms + 120ms)}
+.slide.active .a.r{animation-name:fromRight}
+.slide.active .a.rv{animation-name:reveal;animation-duration:1.1s;opacity:1}
+.px{translate:calc(var(--mx,0) * var(--d,10) * 1px) calc(var(--my,0) * var(--d,10) * 1px);transition:translate .25s linear}
+.tilt{transition:transform .5s var(--ease);transform-style:preserve-3d;will-change:transform}
+
+/* ───────── anchors (cover / statement / closing) ───────── */
+.chevs{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.chevs svg{position:absolute}
+.slide.active .chevs svg{animation:chevIn 1.2s var(--ease) both}
+.cover h1{font-size:104px;letter-spacing:-.02em;line-height:1}
+.cover .sub{font-size:31px;line-height:1.35;margin-top:22px;font-weight:700;color:var(--ink)}
+.cover .line{font-size:20px;color:var(--ink2);margin-top:18px}
+.cta{display:inline-flex;align-items:center;gap:14px;margin-top:34px;background:var(--or);color:#fff;font-size:17px;font-weight:700;padding:16px 22px 16px 26px;transition:transform .3s var(--ease),background .3s}
+.cta:hover{transform:translateY(-3px);background:var(--or2)}
+.cta span{display:inline-block;transition:transform .3s var(--ease)}
+.cta:hover span{transform:translate(4px,-4px)}
+.cta.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--ink);margin-left:10px;padding:15px 22px}
+.cta.ghost:hover{background:var(--ink);color:#fff}
+.cta.ghost i{font-style:normal;color:var(--or);margin-right:2px}
+/* 부록 F · 화면 시안과 본선 준비 */
+#side-live table.map td:first-child{white-space:nowrap;font-weight:700;width:96px}
+#side-live table.map td{white-space:normal;word-break:keep-all;overflow-wrap:anywhere}#side-live table.map{table-layout:fixed}#side-live table.map th:first-child{width:96px}
+.hw-out{margin-top:16px;border:1px solid var(--hair);background:#fff;padding:22px 26px;font-size:14px;line-height:1.6;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.hw-out .hw-t{font-size:18px;font-weight:700;text-align:center;border:2px solid var(--ink);padding:8px;margin-bottom:12px}
+.hw-out .hw-s{margin-top:10px}.hw-out .hw-s b{display:block;font-size:15px;margin-bottom:2px}.hw-out .hw-s div{padding-left:10px;color:var(--ink2)}
+/* 부록 E · 요약 영상 */
+.vbox{position:relative;background:#000;aspect-ratio:16/9}
+.vbox video,.vbox iframe{display:block;width:100%;height:100%;border:0;background:#000}
+.vbox iframe{pointer-events:none}
+.vbox{cursor:pointer;overflow:hidden}
+.vbig{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:rgba(238,109,29,.94);color:#fff;font-size:32px;display:grid;place-items:center;padding-left:6px;box-shadow:0 8px 30px rgba(0,0,0,.35);transition:transform .25s,opacity .25s}
+.vbox:hover .vbig{transform:scale(1.08)}.vbox.on .vbig{opacity:0;transform:scale(.8);pointer-events:none}
+.vctl{display:flex;align-items:center;gap:12px;margin-top:8px;font-size:13px;color:var(--ink2)}
+.vctl button{width:34px;height:30px;border:1px solid var(--hair);display:grid;place-items:center;font-size:13px;color:var(--ink)}
+.vctl button:hover{border-color:var(--or);color:var(--or)}
+.vbar{flex:1;height:8px;background:var(--surface,#f5f5f7);position:relative;cursor:pointer}
+.vbar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--or)}
+.vbar b{position:absolute;top:-4px;width:2px;height:16px;background:var(--ink);left:0;display:none}.vbar:hover b{display:block}
+.vtm{min-width:86px;text-align:right;font-variant-numeric:tabular-nums}
+#sumMotion:fullscreen{background:#000}#sumMotion:fullscreen .vbig{display:none}
+.vchap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.vchap button{display:flex;align-items:baseline;gap:8px;text-align:left;font-size:14px;padding:9px 10px;border:1px solid var(--hair);color:var(--ink2);transition:border-color .2s,color .2s,background .2s}
+.vchap button b{font-size:13px;color:var(--grey);font-weight:700;min-width:34px}
+.vchap button:hover{border-color:var(--or);color:var(--ink)}
+.vchap button.on{background:var(--orp);border-color:var(--or);color:var(--ink);font-weight:700}
+.vchap button.on b{color:var(--or)}
+
+/* agenda */
+.agenda{margin-top:34px;border-top:1px solid var(--hair)}
+.agenda .agrow{cursor:pointer;display:grid;grid-template-columns:110px 300px 1fr 120px 40px;align-items:center;width:100%;text-align:left;padding:18px 18px;border-bottom:1px solid var(--hair);transition:background .35s,padding .35s var(--ease)}
+.agenda .agrow:hover{background:var(--surface);padding-left:30px}
+.agenda .n{font-size:44px;font-weight:700;color:var(--or);line-height:1}
+.agenda .h{font-size:24px;font-weight:700}
+.agenda .d{font-size:17px;color:var(--ink2);line-height:1.5}
+.agenda .p{font-size:13px;color:var(--grey);text-align:right}
+.agenda .ar{font-size:22px;color:var(--grey);text-align:right;transition:transform .35s var(--ease),color .3s}
+.agenda .agrow:hover .ar{transform:translateX(8px);color:var(--or)}
+
+/* hbars (css) */
+.hb{display:grid;grid-template-columns:200px 1fr 70px;align-items:center;gap:14px;margin:12px 0;font-size:16px}
+.hb .track{height:14px;background:var(--surface);position:relative}
+.hb .fill{position:absolute;inset:0;transform-origin:left;transform:scaleX(var(--v));background:var(--hair)}
+.slide.active .hb .fill{animation:barFill 1.2s var(--ease) both;animation-delay:.45s}
+.hb.on .fill{background:var(--or)}
+.hb .val{font-weight:700;text-align:right}
+.hb.on .val{color:var(--or)}
+
+/* pains */
+.pain{display:grid;grid-template-columns:54px 1fr;gap:6px 14px;padding:20px 0;border-bottom:1px solid var(--hair)}
+.pain .n{grid-row:span 2;font-size:34px;font-weight:700;color:var(--or);line-height:1}
+.pain h4{font-size:21px}
+.pain p{font-size:16px;color:var(--ink2);line-height:1.6}
+.pain:hover h4{color:var(--or)}
+
+/* facts list */
+.fact{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid var(--hair);font-size:15.5px;line-height:1.5;transition:padding .3s var(--ease)}
+.fact:hover{padding-left:8px}
+.fact b{color:var(--ink)}
+.fact span{color:var(--ink2)}
+
+/* architecture */
+#arch .node rect{fill:#fff;stroke:var(--hair);stroke-width:1.5;transition:stroke .3s,fill .3s}
+#arch text{font-family:var(--font)}
+#arch text:not([fill]){fill:var(--ink)}
+#arch .flow{fill:none;stroke:var(--hair);stroke-width:2.5;transition:stroke .3s,opacity .3s}
+#arch .flow.live{stroke:var(--or);stroke-dasharray:8 8;animation:dash 1.2s linear infinite}
+#arch .eng{cursor:pointer;transition:opacity .35s}
+#arch .eng:hover rect.box,#arch .eng.on rect.box{stroke:var(--or);fill:var(--orp)}
+#arch.focus .eng:not(.on){opacity:.28}
+#arch.focus .flow.e:not(.on){opacity:.15}
+#arch .flow.e.on{stroke:var(--or);stroke-dasharray:8 8;animation:dash .8s linear infinite}
+.rule{display:grid;grid-template-columns:12px 1fr;gap:14px;padding:16px 14px;border-bottom:1px solid var(--hair);cursor:pointer;transition:background .3s}
+.rule:hover,.rule.on{background:var(--surface)}
+.rule i{width:12px;height:12px;margin-top:6px;background:var(--hair);transition:background .3s}
+.rule:hover i,.rule.on i{background:var(--or)}
+.rule h4{font-size:18px}
+.rule p{font-size:15px;color:var(--ink2);line-height:1.5;margin-top:4px}
+
+/* pipeline */
+.pipe{display:flex;gap:0}
+.pipe .st{flex:1;position:relative;background:var(--surface);padding:18px 16px 18px 34px;font-size:15px;line-height:1.45;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%,18px 50%);margin-right:-12px;transition:background .3s,color .3s}
+.pipe .st:first-child{clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%);padding-left:20px}
+.pipe .st b{display:block;font-size:17px;margin-bottom:3px}
+.pipe .st small{color:var(--grey);font-size:13px}
+.pipe .st:hover{background:var(--or);color:#fff}
+.pipe .st:hover small{color:var(--ort)}
+
+/* features */
+.feat{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--hair)}
+.feat .ic{width:44px;height:44px;display:grid;place-items:center;background:var(--orp);color:var(--or);transition:transform .4s var(--ease),background .3s,color .3s}
+.feat:hover .ic{transform:rotate(-8deg) scale(1.08);background:var(--or);color:#fff}
+.feat h4{font-size:18px}
+.feat p{font-size:15px;color:var(--ink2);line-height:1.5;margin-top:3px}
+.live-strip{display:flex;align-items:center;gap:16px;background:var(--ink);color:#fff;padding:16px 22px;font-size:16px}
+.live-strip .badge-live{color:var(--or)}
+
+/* hwp mock */
+.hwp{background:#fff;border:1px solid var(--hair);box-shadow:0 1px 0 var(--hair);padding:22px 24px;font-size:12.5px;line-height:1.5;position:relative}
+.hwp .tbox{border:2px solid var(--ink);border-bottom-width:4px;text-align:center;font-weight:700;font-size:17px;padding:8px}
+.hwp .meta{text-align:right;color:var(--grey);font-size:11px;margin:6px 0 10px}
+.hwp .l{position:relative;transition:background .3s}
+.hwp .l1{font-weight:700;font-size:14px;margin-top:12px}
+.hwp .l2{padding-left:16px;text-indent:-12px;margin-left:12px;margin-top:6px}
+.hwp .l3{padding-left:14px;text-indent:-10px;margin-left:28px;margin-top:4px;color:#444}
+.hwp .gap{position:absolute;right:-60px;font-size:11px;color:var(--or);font-weight:700;opacity:0;transition:opacity .3s}
+.hwp:hover .gap{opacity:1}
+.hwp:hover .l{background:linear-gradient(transparent 0,transparent calc(100% - 1px),rgba(238,109,29,.35) 0)}
+.hwp .att{border:1px solid var(--ink);padding:6px 10px;margin-top:14px;font-size:11.5px}
+
+/* catalog */
+.cat{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cat .chip{cursor:pointer;text-align:left;padding:14px 14px;border:1px solid var(--hair);background:#fff;font-size:15.5px;font-weight:700;transition:transform .3s var(--ease),border-color .3s,background .3s;position:relative}
+.cat .chip small{display:block;font-size:12px;color:var(--grey);font-weight:500;margin-top:4px}
+.cat .chip:hover,.cat .chip.on{border-color:var(--or);transform:translateY(-3px)}
+.cat .chip.on{background:var(--orp)}
+.cat .chip.d::after{content:"상세";position:absolute;right:10px;top:12px;font-size:11px;color:var(--navy);font-weight:700}
+.detail{border:1px solid var(--or);background:#fff;padding:18px 22px;min-height:120px}
+.detail h4{font-size:20px}
+.detail .ol{font-size:16px;margin-top:8px;line-height:1.55}
+.detail .ft{font-size:14px;color:var(--ink2);margin-top:6px}
+.tierbox{border-top:3px solid var(--navy);padding-top:12px}
+.tierbox h4{font-size:17px;margin-bottom:8px}
+.tierbox h4 small{color:var(--grey);font-weight:500;font-size:13px;margin-left:6px}
+
+/* code */
+pre.code{font-family:Consolas,'D2Coding',monospace;font-size:13.5px;line-height:1.6;background:#1d1d20;color:#e8e8ea;padding:18px 20px;overflow:hidden;white-space:pre}
+pre.code .k{color:#fad3bb}.code .s{color:#9cc2ff}.code .c{color:#8c8c92}.code .o{color:#ee6d1d}
+.code .ln{opacity:0;display:inline}
+.slide.active .code .ln{animation:slideIn .4s var(--ease) both;animation-delay:calc(var(--j) * 70ms + 500ms)}
+table.map{width:100%;border-collapse:collapse;font-size:15px}
+table.map th{text-align:left;font-size:13px;color:var(--grey);font-weight:500;padding:8px 10px;border-bottom:2px solid var(--ink)}
+table.map td{padding:10px 10px;border-bottom:1px solid var(--hair);line-height:1.4}
+table.map tr{transition:background .25s}
+table.map tbody tr:hover{background:var(--orp)}
+table.map td:first-child{font-weight:700}
+
+/* pack */
+.comp{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.comp .card{padding:18px 18px 16px}
+.comp .card h4{font-size:18px;display:flex;align-items:center;gap:8px}
+.comp .card h4 i{font-style:normal;font-size:12px;color:var(--or);border:1px solid var(--or);padding:1px 6px}
+.comp .card p{font-size:14px}
+.comp .card .eff{font-size:13.5px;color:var(--or);margin-top:10px;font-weight:700;opacity:.0;transform:translateY(4px);transition:.35s var(--ease)}
+.comp .card:hover .eff{opacity:1;transform:none}
+.tabs{display:flex;border-bottom:1px solid var(--hair)}
+.tabs .tab{cursor:pointer;padding:12px 18px;font-size:16px;color:var(--grey);position:relative;transition:color .3s}
+.tabs .tab::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--or);transform:scaleX(0);transition:transform .35s var(--ease)}
+.tabs .tab.on{color:var(--ink);font-weight:700}
+.tabs .tab.on::after,.tabs .tab:hover::after{transform:none}
+.packview{padding:18px 4px 0}
+.packview .row{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:10px 0;font-size:16px;line-height:1.55;border-bottom:1px dashed var(--hair)}
+.packview .row > span:first-child{color:var(--grey);font-size:14px}
+.eng-dots{display:flex;gap:8px}
+.eng-dots .tag{transition:all .3s}
+.eng-dots .tag.off{opacity:.35}
+
+/* layers */
+.stack{position:relative;height:470px;perspective:1400px}
+.stack .plane{position:absolute;left:40px;width:300px;height:180px;border:1.5px solid var(--ink);background:rgba(255,255,255,.88);transform:rotateX(62deg) rotateZ(calc(-38deg + var(--rz,0deg)));transform-origin:center;transition:transform .5s var(--ease),background .3s,border-color .3s,top .5s var(--ease);cursor:pointer}
+.stack .plane.lock{background:rgba(245,245,247,.95)}
+.stack .plane:hover,.stack .plane.on{background:var(--orp);border-color:var(--or)}
+.stack .lab{position:absolute;left:390px;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;transition:color .3s,transform .4s var(--ease);cursor:pointer;white-space:nowrap}
+.stack .lab::before{content:"";width:46px;height:1px;background:var(--ink2)}
+.stack .lab small{font-weight:500;color:var(--grey);font-size:13px}
+.stack .lab.on{color:var(--or);transform:translateX(6px)}
+.stack .lab.on::before{background:var(--or)}
+.stack .pin{position:absolute;left:218px;width:14px;height:14px;background:var(--or);border-radius:50%;transition:top .5s var(--ease)}
+.stack .beam{position:absolute;left:189px;width:2px;border-left:2px dashed var(--or);z-index:30;pointer-events:none;transition:top .5s var(--ease),height .5s var(--ease)}
+
+/* maker/inspect */
+.step{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;font-size:15.5px;line-height:1.5;padding:7px 0}
+.step i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--or);color:#fff;font-style:normal;font-size:12px;font-weight:700;margin-top:1px}
+.chk{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--hair);font-size:15px;line-height:1.5}
+.chk b{color:var(--navy)}
+
+/* timeline */
+.tl{position:relative;display:grid;grid-template-columns:repeat(8,1fr);margin-top:26px}
+.tl::before{content:"";position:absolute;left:0;right:0;top:19px;height:2px;background:var(--hair)}
+.tl .fillline{position:absolute;left:0;top:19px;height:2px;background:var(--or);transition:width .6s var(--ease)}
+.tl .tli{cursor:pointer;position:relative;text-align:left;padding-top:42px;font-size:15px;color:var(--grey)}
+.tl .tli::before{content:"";position:absolute;left:0;top:11px;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--hair);transition:all .35s var(--ease)}
+.tl .tli b{display:block;font-size:22px;color:var(--ink2);margin-bottom:2px;transition:color .3s}
+.tl .tli.on b,.tl .tli:hover b{color:var(--or)}
+.tl .tli.on::before{background:var(--or);border-color:var(--or);transform:scale(1.25)}
+.tl .tli.done::before{border-color:var(--or)}
+.tl .tli.on{color:var(--ink);font-weight:700}
+.scene{display:grid;grid-template-columns:690px 1fr;gap:40px;margin-top:22px;align-items:center}
+.scene .illu{height:330px;border:1px solid var(--hair)}
+.scene .illu img{transition:opacity .35s,transform .9s var(--ease)}
+.scene h3{font-size:30px;line-height:1.3}
+.scene p{font-size:18px;line-height:1.65;color:var(--ink2);margin-top:14px}
+.scene .time{font-size:15px;color:var(--or);font-weight:700;letter-spacing:.1em}
+.autoplay{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--grey);margin-top:18px;border:1px solid var(--hair);padding:6px 12px}
+.autoplay:hover{border-color:var(--or);color:var(--or)}
+
+/* readiness */
+.ready{display:grid;grid-template-columns:150px 1fr 90px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--hair);font-size:15px}
+.ready b{font-size:16px}
+.ready .meter{height:8px;background:var(--surface);position:relative}
+.ready .meter i{position:absolute;inset:0;transform-origin:left;transform:scaleX(var(--v));background:var(--or)}
+.ready .meter i.p{background:var(--hair)}
+.slide.active .ready .meter i{animation:barFill 1.1s var(--ease) both;animation-delay:.5s}
+.ready .st{font-size:13px;text-align:right;color:var(--grey)}
+.ready .st.ok{color:var(--or);font-weight:700}
+.ready small{display:block;color:var(--grey);font-size:12.5px}
+
+/* criteria */
+.crit{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.crit .card{padding:20px 22px}
+.crit .card .pt{font-size:13px;color:var(--grey)}
+.crit .card h4{font-size:20px;display:flex;justify-content:space-between;align-items:baseline}
+.crit .card h4 span{font-size:30px;color:var(--or)}
+.crit .card.on{border-color:var(--or);background:#fff;transform:translateY(-5px)}
+.crit .card.on::before{width:calc(100% + 2px)}
+
+/* closing */
+.wave{position:absolute;left:0;right:0;bottom:64px;height:150px;pointer-events:none;opacity:.9}
+.wave path{fill:none;stroke-width:2}
+
+/* cover: 셰브론 위 코쇠 아바타 */
+.cover-chevs .cv-group{position:absolute;inset:0}
+.cover-chevs .cv{position:absolute}
+.slide.active .cover-chevs .cv-group{animation:chevIn 1.2s var(--ease) both}
+.slide.active .cover-chevs .cv-group svg{animation:none}
+.cover-chevs .cv-or{animation:none}
+.slide.active .cover-chevs .cv-or{animation:chevIn 1.2s var(--ease) .24s both,cvNudge 3.6s ease-in-out 1.6s infinite}
+@keyframes cvNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+.kosoe{position:absolute;left:816px;top:252px;width:108px;height:212px;pointer-events:auto;cursor:pointer;opacity:0}
+.slide.active .kosoe{animation:kDrop .8s cubic-bezier(.3,.6,.4,1) .9s both}
+@keyframes kDrop{0%{opacity:0;transform:translateY(-54px)}55%{opacity:1}78%{transform:translateY(3px)}100%{opacity:1;transform:none}}
+.k-tilt{position:absolute;inset:0;transform-origin:50% 74%;rotate:calc(var(--mx,0) * 4deg);transition:rotate .5s var(--ease)}
+.slide.active .k-tilt{animation:kTeeter .6s ease-in-out 1.7s both}
+@keyframes kTeeter{0%,100%{transform:rotate(0)}15%{transform:rotate(2.5deg)}35%{transform:rotate(-2.5deg)}55%{transform:rotate(2deg)}75%{transform:rotate(-1.5deg)}}
+.k-bob{position:absolute;inset:0;transform-origin:50% 74%;animation:kBob 3.4s ease-in-out 2.4s infinite}
+@keyframes kBob{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-3px) rotate(-1.2deg)}65%{transform:translateY(-1px) rotate(1deg)}}
+.k-body,.k-legs{position:absolute;left:0;width:108px;display:block;user-select:none;-webkit-user-drag:none}
+.k-body{top:0;height:159px}
+.k-legs{top:155.6px;height:56.3px;transform-origin:52.5% 3%;animation:kSwing 1.15s ease-in-out infinite alternate}
+@keyframes kSwing{from{transform:rotate(9deg)}to{transform:rotate(-7deg)}}
+.kosoe:hover .k-bob{animation:kHop .55s cubic-bezier(.3,.7,.4,1) infinite}
+.kosoe:hover .k-legs{animation-duration:.45s}
+@keyframes kHop{0%,100%{transform:translateY(0)}45%{transform:translateY(-12px) rotate(-2deg)}}
+.k-say{position:absolute;left:96px;top:-30px;white-space:nowrap;font-size:14px;font-weight:700;line-height:1.45;background:#fff;color:var(--ink);border:1.5px solid var(--ink);padding:8px 12px;opacity:0;transform:translateY(6px) scale(.96);transform-origin:0 100%;transition:opacity .3s,transform .35s var(--ease);pointer-events:none}
+.k-say::after{content:"";position:absolute;left:-1.5px;bottom:-9px;border:8px solid transparent;border-left-color:var(--ink);border-bottom:0}
+.kosoe:hover .k-say,.kosoe.say .k-say{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.k-bob,.k-legs,.cover-chevs .cv-or{animation:none!important}}
+
+/* layered illustrations: 배경 · 코쇠(몸통·꺾쇠·눈) · 화살표/라벨 덩어리 */
+.lay{position:absolute;pointer-events:none;transition:transform .9s var(--ease)}
+.lay img,.lay .K,.lay .K-lid{position:absolute;display:block;max-width:none;user-select:none}
+.illu img.lay-src{visibility:hidden}
+.illu:hover .lay{transform:scale(1.04)}
+.slide:is(.navy,.black) .illu{background:transparent}
+.lay .K{translate:calc(var(--mx,0) * 6px) calc(var(--my,0) * 4px);transition:translate .35s linear}
+.lay .G{translate:calc(var(--mx,0) * -3px) calc(var(--my,0) * -2px);transition:translate .35s linear}
+.lay .K-lid{border-radius:50%;transform:scaleY(0);transform-origin:50% 30%}
+.K.bTilt{--km:bTilt;--kd:2.8s}.K.bNod{--km:bNod;--kd:2.6s}.K.bPress{--km:bPress;--kd:1.8s}.K.bRock{--km:bRock;--kd:1.6s}
+.K.bPush{--km:bPush;--kd:1.8s}.K.bPeer{--km:bPeer;--kd:3s}.K.bBreathe{--km:bBreathe;--kd:3.2s}
+.slide.active .lay .L-bg{animation:fadeIn .45s ease both}
+.slide.active .lay .K{animation:kIn .6s cubic-bezier(.3,1.4,.5,1) .2s both,var(--km) var(--kd) ease-in-out 1.1s infinite}
+.slide.active .lay .K-crest{animation:crestIn .7s cubic-bezier(.3,1.7,.5,1) .55s both,crestWiggle 3.4s ease-in-out 1.6s infinite}
+.slide.active .lay .K-lid{animation:blink 4.4s linear calc(1.9s + var(--ki,0) * .8s) infinite}
+.slide.active .lay .G.A-pop{animation:gPop .55s cubic-bezier(.3,1.6,.5,1) calc(.7s + var(--gi) * .11s) both}
+.slide.active .lay .G.A-wx{animation:wipeX .75s var(--ease) calc(.7s + var(--gi) * .11s) both}
+.slide.active .lay .G.A-wy{animation:wipeY .75s var(--ease) calc(.7s + var(--gi) * .11s) both}
+.slide.active .lay .G-r.A-pop{animation:gPop .55s cubic-bezier(.3,1.6,.5,1) calc(.7s + var(--gi) * .11s) both,redPulse 2.6s ease-in-out calc(2.4s + var(--gi) * .11s) infinite}
+.illu:hover .lay .K-crest{animation:crestWiggle 1s ease-in-out infinite}
+@keyframes kIn{from{opacity:0;transform:scale(.88)}}
+@keyframes crestIn{from{opacity:0;transform:scale(0) rotate(-30deg)}}
+@keyframes crestWiggle{0%,46%,100%{transform:rotate(0)}8%{transform:rotate(-14deg)}17%{transform:rotate(10deg)}26%{transform:rotate(-6deg)}35%{transform:rotate(3deg)}}
+@keyframes blink{0%,91%,100%{transform:scaleY(0)}94%,96%{transform:scaleY(1)}}
+@keyframes gPop{0%{opacity:0;transform:scale(.35)}65%{opacity:1;transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes wipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes wipeY{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes redPulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes bTilt{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes bNod{0%,60%,100%{transform:rotate(0)}30%{transform:rotate(3.5deg) translateY(1px)}}
+@keyframes bPress{0%,100%{transform:none}40%,55%{transform:translateY(3px) scaleY(.97)}}
+@keyframes bRock{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes bPush{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(-4px) rotate(-1.5deg)}}
+@keyframes bPeer{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(4px) rotate(2deg)}}
+@keyframes bBreathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.015,.975)}}
+body.editing .lay *{animation:none!important}
+@media (prefers-reduced-motion:reduce){.lay *{animation:none!important}}
+
+/* side pages (부록) */
+.side-links{position:absolute;top:92px;right:72px;display:flex;gap:8px;z-index:6}
+.side-link{font-size:13.5px;font-weight:700;color:var(--or);border:1px solid var(--or);background:#fff;padding:7px 12px;transition:background .25s,color .25s,transform .3s var(--ease)}
+.side-link:hover{background:var(--or);color:#fff;transform:translateY(-2px)}
+:is(.navy,.black) .side-link{background:transparent}
+.side-scrim{position:absolute;inset:0;z-index:38;background:rgba(20,20,24,.4);opacity:0;pointer-events:none;transition:opacity .35s}
+.side-scrim.on{opacity:1;pointer-events:auto}
+.side-page{position:absolute;top:0;right:0;bottom:0;width:940px;z-index:40;background:#fff;color:var(--ink);box-shadow:-14px 0 40px rgba(0,0,0,.2);display:flex;flex-direction:column;transform:translateX(102%);visibility:hidden;transition:transform .55s var(--ease),visibility 0s .55s}
+.side-page.on{transform:none;visibility:visible;transition:transform .55s var(--ease),visibility 0s}
+.sp-head{position:relative;padding:34px 48px 18px;border-bottom:2px solid var(--ink)}
+.sp-head h2{font-size:34px;line-height:1.25;padding-right:60px}
+.sp-head .lead{font-size:16.5px;margin-top:8px}
+.sp-close{position:absolute;right:28px;top:26px;width:42px;height:42px;border:1px solid var(--hair);display:grid;place-items:center;font-size:18px;color:var(--ink2);transition:transform .35s var(--ease),border-color .25s,color .25s}
+.sp-close:hover{border-color:var(--or);color:var(--or);transform:rotate(90deg)}
+.sp-body{flex:1;overflow:auto;padding:24px 48px 44px;overscroll-behavior:contain}
+.side-page.on .sp-body>*{animation:slideIn .6s var(--ease) both;animation-delay:calc(var(--i,0) * 55ms + 160ms)}
+.sp-body h3{display:flex;align-items:center;gap:10px;font-size:20px;margin:30px 0 12px}
+.sp-body h3::before{content:"";width:6px;height:20px;background:var(--or)}
+.sp-body>h3:first-child,.sp-body>.flt+h3{margin-top:0}
+.sp-p{font-size:15.5px;line-height:1.7;color:var(--ink2);margin-top:12px}
+.sp-box{background:var(--surface);border-left:3px solid var(--or);padding:16px 18px;font-size:15px;line-height:1.75}
+.sp-box b{color:var(--or);margin-right:6px}
+.tg{display:inline-block;font-size:12px;font-weight:700;padding:3px 8px;border:1px solid;white-space:nowrap;line-height:1.3}
+.tg.m{background:var(--or);border-color:var(--or);color:#fff}
+.tg.x{color:var(--navy);border-color:var(--navy)}
+.tg.a{color:var(--ink2);border-color:var(--hair);background:var(--surface)}
+.tg.c{color:var(--ink);border-color:var(--ink)}
+.tg.v{color:#b85415;border-color:var(--ort);background:var(--orp)}
+.tg.n{color:var(--ink2);border-color:var(--grey)}
+.tg.o{background:var(--navy);border-color:var(--navy);color:#fff}
+.tg.s{color:var(--ink);border-color:var(--hair)}
+.formula{display:flex;align-items:stretch;gap:8px}
+.formula .fb{flex:1;border:1px solid var(--hair);background:var(--surface);padding:16px 10px;text-align:center;transition:transform .3s var(--ease),border-color .3s}
+.formula .fb:hover{transform:translateY(-4px);border-color:var(--or)}
+.formula .fb b{display:block;font-size:30px;line-height:1.1}
+.formula .fb small{display:block;font-size:12.5px;color:var(--ink2);margin-top:6px}
+.formula .fb.res{background:var(--or);border-color:var(--or);color:#fff}
+.formula .fb.res small{color:var(--ort)}
+.formula .op{align-self:center;font-size:22px;font-weight:700;color:var(--grey)}
+.mtl{margin-top:4px}
+.mtl-t{position:relative;height:44px;margin:0 50px 6px 0}
+.mtl-t span{position:absolute;left:0;top:0;transform:translateX(-50%);font-size:12.5px;color:var(--ink2);text-align:center;white-space:nowrap}
+.mtl-t span:first-child{transform:none;text-align:left}
+.mtl-t span:last-child{transform:translateX(-100%);text-align:right}
+.mtl-t b{display:block;font-size:16px;color:var(--ink)}
+.mtl-bar{display:flex;height:30px;margin-right:50px}
+.mtl-bar i{width:var(--w);display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:700;color:#fff;transform-origin:left}
+.mtl-bar i.or{background:var(--or)}
+.mtl-bar i.nv{background:var(--navy2)}
+.side-page.on .mtl-bar i{animation:barFill .9s var(--ease) both;animation-delay:.4s}
+.side-page.on .mtl-bar i.nv{animation-delay:.9s}
+.mtl .note{margin-top:8px}
+.cmp{margin-top:18px;display:grid;gap:10px}
+.cmp-row{display:grid;grid-template-columns:120px 1fr 110px;gap:12px;align-items:center;font-size:15px}
+.cmp-row b{text-align:right}
+.cbar{height:16px;background:var(--surface);position:relative}
+.cbar i{position:absolute;left:0;top:0;bottom:0;width:var(--w);transform-origin:left}
+.cbar i.g{background:var(--hair)}
+.cbar i.nv{background:var(--navy2)}
+.cbar i.or{background:var(--or)}
+.side-page.on .cbar i{animation:barFill 1.1s var(--ease) both;animation-delay:.5s}
+table.ftab td{font-size:14.5px}
+table.ftab td:nth-child(2){white-space:nowrap}
+table.sens{border-collapse:collapse;width:100%;font-size:15px;text-align:center}
+table.sens th{font-size:13.5px;color:var(--ink2);font-weight:700;padding:10px;background:var(--surface);border:1px solid #fff}
+table.sens td{padding:12px;border:1px solid var(--hair);font-weight:700;transition:background .2s,color .2s}
+table.sens td.pick{background:var(--or);color:#fff}
+table.sens :is(td,th).hl:not(.pick){background:var(--orp)}
+.flt{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.flt button{font-size:13px;padding:6px 12px;border:1px solid var(--hair);color:var(--ink2);transition:all .2s}
+.flt button:hover{border-color:var(--or);color:var(--or)}
+.flt button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.srcs .it{display:grid;grid-template-columns:1fr auto 54px;gap:14px;align-items:start;padding:12px 0;border-bottom:1px solid var(--hair);transition:background .2s}
+.srcs .it:hover{background:var(--surface)}
+.srcs .it.hide{display:none}
+.srcs .t{font-size:15.5px;font-weight:700;line-height:1.5}
+.srcs .s{font-size:13.5px;color:var(--ink2);margin-top:3px;line-height:1.5}
+.srcs a{color:var(--navy);text-decoration:none;border-bottom:1px solid rgba(0,51,141,.3)}
+.srcs a:hover{color:var(--or);border-color:var(--or)}
+.srcs .pg{font-size:13px;color:var(--grey);text-align:right;padding-top:2px}
+.qa-bar{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.qa-all{font-size:13px;padding:6px 12px;border:1px solid var(--ink);font-weight:700}
+.qa-all:hover{background:var(--ink);color:#fff}
+.qa{border-top:2px solid var(--ink)}
+.qa .q{border-bottom:1px solid var(--hair)}
+.qa summary{list-style:none;display:grid;grid-template-columns:46px 1fr auto 28px;gap:10px;align-items:center;padding:16px 4px;cursor:pointer;transition:background .2s}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary:hover{background:var(--surface)}
+.qa .qn{font-size:18px;font-weight:700;color:var(--or)}
+.qa .qt{font-size:17px;font-weight:700;line-height:1.45}
+.qa .qa-tag{font-size:12px;color:var(--ink2);border:1px solid var(--hair);padding:3px 8px;white-space:nowrap}
+.qa .pm{font-size:22px;color:var(--grey);text-align:center;transition:transform .3s var(--ease),color .3s}
+.qa details[open] .pm{transform:rotate(45deg);color:var(--or)}
+.qa .ans{padding:0 8px 18px 60px}
+.qa details[open] .ans{animation:slideIn .4s var(--ease) both}
+.qa .ans ul{margin:0;padding-left:18px}
+.qa .ans li{font-size:15.5px;line-height:1.75;color:var(--ink2);margin:2px 0}
+.qa .ans li b{color:var(--ink)}
+.sp-go{margin-top:10px;font-size:13px;font-weight:700;color:var(--or);border:1px solid var(--or);padding:6px 12px;transition:background .2s,color .2s}
+.sp-go:hover{background:var(--or);color:#fff}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gal .shot{position:relative;padding:0;border:1px solid var(--hair);background:#fff;overflow:hidden;aspect-ratio:16/9;cursor:zoom-in;transition:border-color .25s,transform .3s var(--ease)}
+.gal .shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+.gal .shot:hover{border-color:var(--or);transform:translateY(-3px)}
+.gal .shot:hover img{transform:scale(1.07)}
+.gal .shot span{position:absolute;left:6px;bottom:6px;font-size:11px;font-weight:700;background:rgba(0,0,0,.65);color:#fff;padding:2px 6px}
+.hwpshots{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.hwpshots figure{margin:0}
+.hwpshots .illu{height:520px;border:1px solid var(--hair);cursor:zoom-in;background:#fafafa}
+.hwpshots .illu img{object-fit:contain}
+.hwpshots figcaption{font-size:13.5px;color:var(--ink2);margin-top:8px}
+.lb{position:absolute;inset:0;z-index:5;background:rgba(14,14,18,.94);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.lb.on{display:flex;animation:fadeIn .25s ease both}
+@keyframes fadeIn{from{opacity:0}}
+.lb img{max-width:82%;max-height:76%;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff}
+.lb-cap{color:#d8d8dc;font-size:14px}
+.lb button{position:absolute;color:#fff;font-size:34px;width:56px;height:56px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.25);transition:background .2s,border-color .2s}
+.lb button:hover{background:var(--or);border-color:var(--or)}
+.lb .lb-x{top:24px;right:24px;font-size:20px;width:44px;height:44px}
+.lb .lb-p{left:24px;top:50%;margin-top:-28px}
+.lb .lb-n{right:24px;top:50%;margin-top:-28px}
+.rail{z-index:39}
+.rail-apx{margin-top:6px;padding-top:14px;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:8px;width:84px}
+.rail-apx .ttl{font-size:11.5px;letter-spacing:.2em;color:var(--grey);margin-bottom:2px}
+.rail-apx button{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--grey);white-space:nowrap;transition:color .25s,transform .3s var(--ease)}
+.rail-apx .k{display:inline-grid;place-items:center;width:17px;height:17px;border:1px solid currentColor;font-size:10.5px;font-weight:700}
+.rail-apx button:hover{color:var(--ink);transform:translateX(3px)}
+.rail-apx button.on{color:var(--or);font-weight:700}
+#stage:is([data-theme=navy],[data-theme=black]) .rail-apx{border-color:rgba(255,255,255,.18)}
+#stage:is([data-theme=navy],[data-theme=black]) :is(.rail-apx .ttl,.rail-apx button){color:var(--bt)}
+#stage:is([data-theme=navy],[data-theme=black]) .rail-apx button.on{color:var(--or)}
+body.editing .side-page .sp-body>*{animation:none}
+
+/* edit mode */
+#editBtn.on{background:var(--or);border-color:var(--or);color:#fff}
+body.editing #cursor{display:none}
+body.editing .slide.active .a{animation:none;opacity:1}
+body.editing .card:hover{transform:none}
+body.editing #stage [contenteditable]{outline:1px dashed rgba(238,109,29,.5);outline-offset:3px;cursor:text;border-radius:2px;transition:none}
+body.editing #stage [contenteditable]:hover{outline-color:var(--or);background-color:rgba(253,238,228,.55)}
+body.editing #stage [contenteditable]:focus{outline:2px solid var(--or);background-color:#fff;color:var(--ink)}
+body.editing #stage :is(.navy,.black) [contenteditable]:hover{background-color:rgba(255,255,255,.08)}
+body.editing #stage :is(.navy,.black) [contenteditable]:focus{background-color:rgba(255,255,255,.12);color:#fff}
+body.editing #stage .illu:has(img[data-ik])::after{content:"더블클릭해 이미지 바꾸기";position:absolute;left:10px;top:10px;font-size:13px;background:var(--ink);color:#fff;padding:5px 10px;opacity:.85;pointer-events:none}
+body.editing #stage [data-eng]{cursor:pointer}
+.chart-edit{display:none;position:absolute;right:0;top:-6px;z-index:5;font-size:13px;font-weight:700;background:var(--ink);color:#fff;padding:7px 12px}
+.chart-edit:hover{background:var(--or)}
+body.editing .chart-edit{display:block}
+#editbar{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:120;display:flex;align-items:center;gap:6px;background:#1d1d20;color:#fff;padding:8px 10px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-size:14px;white-space:nowrap}
+#editbar[hidden]{display:none}
+#editbar button{padding:7px 11px;color:#e8e8ea;border:1px solid transparent}
+#editbar button:hover{border-color:#55555a;color:#fff}
+#editbar button.primary{background:var(--or);color:#fff}
+#editbar button.primary:hover{background:var(--or2)}
+#editbar .eb-badge{color:var(--or);font-weight:700;padding:0 8px 0 4px;display:flex;align-items:center;gap:8px}
+#editbar .eb-badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--or)}
+#editbar .eb-sep{width:1px;height:20px;background:#3a3a3f;margin:0 4px}
+#editbar .eb-state{font-size:12.5px;color:#a0a0a6;padding:0 6px;min-width:120px;text-align:center}
+#editbar .eb-state.dirty{color:var(--ort)}
+#cpanel{position:fixed;right:0;top:0;bottom:0;width:min(560px,100vw);z-index:110;background:#fff;color:var(--ink);box-shadow:-8px 0 30px rgba(0,0,0,.18);display:flex;flex-direction:column;font-size:14px}
+#cpanel[hidden]{display:none}
+#cpanel header{display:flex;align-items:center;justify-content:space-between;padding:70px 20px 14px;border-bottom:2px solid var(--ink);font-size:17px}
+#cpanel header button{font-size:18px;color:var(--grey);padding:4px 8px}
+#cpBody{flex:1;overflow:auto;padding:12px 20px}
+#cpBody table{width:100%;border-collapse:collapse}
+#cpBody th{text-align:left;font-size:12px;color:var(--grey);font-weight:500;padding:6px 4px;border-bottom:1px solid var(--hair)}
+#cpBody td{padding:4px;border-bottom:1px solid var(--surface)}
+#cpBody input,#cpBody select{width:100%;font:inherit;font-size:13.5px;padding:6px 7px;border:1px solid var(--hair);background:#fff;color:var(--ink)}
+#cpBody input:focus,#cpBody select:focus{outline:2px solid var(--or);border-color:var(--or)}
+#cpBody td:last-child{width:30px}
+#cpBody td:first-child{width:42%}
+#cpBody [data-del]{color:var(--grey);padding:4px 6px}
+#cpBody [data-del]:hover{color:var(--or)}
+#cpanel footer{padding:14px 20px 20px;border-top:1px solid var(--hair);display:flex;align-items:center;gap:14px}
+#cpanel footer button{border:1px solid var(--or);color:var(--or);padding:8px 14px;font-weight:700}
+#cpanel footer button:hover{background:var(--or);color:#fff}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(20px);z-index:130;background:#1d1d20;color:#fff;padding:12px 16px;font-size:14px;display:flex;align-items:center;gap:14px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s var(--ease);max-width:calc(100vw - 32px)}
+#toast.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+#toast button{color:var(--or);font-weight:700}
+
+/* print */
+@media print{html,body{overflow:visible;background:#fff}#stage{position:relative;transform:none!important}}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="stage" data-theme="light">
+
+  <!-- chrome -->
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 120 200" aria-hidden="true"><polygon points="0,0 60,0 120,100 60,200 0,200 60,100" fill="#ee6d1d"/></svg>
+      코쇠 문서팩<span class="div"></span><small>KOSCOM DOC PACK</small>
+    </div>
+    <div class="right">
+      <span class="pill"><i>ㅋㅋ</i>ㅋㅋ톤 2026 · 참가 기획서</span>
+      <button class="iconbtn" id="editBtn" title="편집 모드 (E)" aria-label="편집 모드">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"/></svg>
+      </button>
+      <button class="iconbtn" id="fsBtn" title="전체 화면 (F)" aria-label="전체 화면">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      </button>
+    </div>
+  </header>
+  <nav class="rail" id="rail"></nav>
+  <footer class="bottombar">
+    <div class="progress" id="prog"></div>
+    <div class="pager"><b id="pgCur">01</b><span>/ <span id="pgTot">21</span></span><span class="lab" id="pgLab"></span></div>
+    <div class="right">
+      <span><span class="kbd">←</span><span class="kbd">→</span> 키 · 스크롤로 넘기기 · <span class="kbd">E</span> 편집</span>
+      <button class="navbtn prev" id="prevBtn" aria-label="이전"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button class="navbtn next" id="nextBtn" aria-label="다음"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+  </footer>
+
+  <!-- 01 COVER -->
+  <section class="slide cover" data-sec="0" data-label="표지">
+    <!-- PPT 표지와 같은 셰브론 배치(960×540pt → ×1.5). 코쇠 아바타는 회색 셰브론 윗변에 앉는다 -->
+    <div class="chevs cover-chevs">
+      <div class="cv-group px" style="--d:-10">
+        <svg class="cv" style="left:787px;top:405px;width:384px;height:518px" viewBox="0 0 1000 1345" preserveAspectRatio="none"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#ececee"/></svg>
+        <div class="kosoe" id="kosoe" title="코쇠">
+          <div class="k-tilt"><div class="k-bob">
+            <img class="k-legs" src="assets/kosoe/kosoe-legs.png" alt="">
+            <img class="k-body" src="assets/kosoe/kosoe-body.png" alt="휴대폰으로 대화하며 문서를 맡기는 코쇠">
+          </div></div>
+          <div class="k-say">PPT · 웹 · 한글,<br>제가 맞춰 드릴게요</div>
+        </div>
+      </div>
+      <svg class="cv px" style="--d:-22;left:1182px;top:282px;width:501px;height:675px;animation-delay:.12s" viewBox="0 0 1000 1345" preserveAspectRatio="none"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#fdeee4"/></svg>
+      <svg class="cv cv-or px" style="--d:-34;left:978px;top:-22px;width:501px;height:675px;animation-delay:.24s" viewBox="0 0 1000 1345" preserveAspectRatio="none"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#f26522"/></svg>
+    </div>
+    <div style="position:relative;display:flex;flex-direction:column;justify-content:center;height:100%;max-width:640px">
+      <div class="kick a"><span class="bar"></span>ㅋㅋ톤 2026 · 참가 기획서</div>
+      <h1 class="a">코쇠 <em>문서팩</em></h1>
+      <p class="sub a">코스콤 맞춤형 PPT · 웹슬라이드 · 한글<br>문서 제작 패키지 솔루션</p>
+      <p class="line a">우리 부서 양식 그대로, 세 가지 문서를 AI가 만든다</p>
+      <div class="chip-row a" style="margin-top:26px">
+        <span class="tag solid">PPT · .pptx</span><span class="tag solid">WEBSLIDE · .html</span><span class="tag solid">한글 · .hwp</span><span class="tag or">부서 문서팩</span>
+      </div>
+      <div class="a"><button class="cta" data-go="1">기획서 펼치기 <span>↗</span></button><button class="cta ghost" data-side="video"><i>▶</i> 111초 요약 영상</button><button class="cta ghost" data-side="live">화면 시안 · 본선 준비</button></div>
+    </div>
+  </section>
+
+  <!-- 02 AGENDA -->
+  <section class="slide" data-sec="0" data-label="목차">
+    <div class="kick a"><span class="no">02</span>CONTENTS</div>
+    <h2 class="t a">다섯 장면으로 <em>말씀드립니다</em></h2>
+    <div class="agenda a">
+      <div class="agrow" role="button" tabindex="0" data-go="2"><span class="n">01</span><span class="h">문제</span><span class="d">같은 내용을 형식과 부서 양식 때문에 다시 쓴다</span><span class="p">03–06</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="6"><span class="n">02</span><span class="h">해법</span><span class="d">공통 엔진 셋 위에 부서 문서팩을 끼운다</span><span class="p">07–08</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="8"><span class="n">03</span><span class="h">엔진 3종</span><span class="d">PPT · 웹슬라이드 · 한글, 그리고 공통 설계도</span><span class="p">09–13</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="13"><span class="n">04</span><span class="h">문서팩</span><span class="d">한 번 등록하면 전원에게, 고치면 일괄 반영</span><span class="p">14–16</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="16"><span class="n">05</span><span class="h">실행과 효과</span><span class="d">시연 장면 · 준비 상태 · 로드맵 · 기대 효과 · 심사 기준</span><span class="p">17–20</span><span class="ar">→</span></div>
+    </div>
+  </section>
+
+  <!-- 03 PROBLEM numbers -->
+  <section class="slide" data-sec="1" data-label="문제 · 보고서 부담" data-hook="c3">
+    <div class="side-links"><button class="side-link" data-side="sources">출처 보기 ↗</button></div>
+    <div class="kick a"><span class="no">03</span>THE PROBLEM</div>
+    <h2 class="t a">업무시간의 <em>3분의 1</em>이 보고서에 들어간다</h2>
+    <p class="lead a">문제의 크기는 이미 조사로 확인됐습니다. 우리가 줄이려는 것은 그중 <b>양식 맞추기</b>와 <b>다시 쓰기</b>입니다.</p>
+    <div style="display:grid;grid-template-columns:1fr 330px;gap:48px;margin-top:22px">
+      <div class="a">
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px">직장인 보고서 인식 <span class="note">(단위 %)</span></div>
+        <div class="chart-box" style="height:300px"><canvas id="c3bar"></canvas></div>
+      </div>
+      <div class="a" style="text-align:center">
+        <div class="chart-box" style="height:250px"><canvas id="c3ring"></canvas>
+          <div data-gen style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none"><div><div style="font-size:58px;font-weight:700;line-height:1"><span id="c3ringVal" data-count="35">0</span><small style="font-size:22px">%</small></div><div class="note" style="margin-top:6px" id="c3ringLab">업무시간 중 보고서</div></div></div>
+        </div>
+        <h4 style="font-size:20px;margin-top:12px">하루 8시간 중 약 2.8시간</h4>
+        <p class="note" style="margin-top:4px">사람인, 직장인 1,227명 (2021.8 보도)</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:22px">
+      <div class="kpi a"><div class="v"><span data-count="251">0</span><small>억 시간</small></div><div class="d">한국 직장인의 반복·비핵심 업무, 연간 (드롭박스·유고브, 2025.7)</div></div>
+      <div class="kpi navy a"><div class="v"><span data-count="36.8" data-dec="1">0</span><small>%</small></div><div class="d">보고서 작성 요령 1위 — '잘 쓴 과거 양식 재활용'</div></div>
+      <div class="kpi grey a"><div class="v"><span data-count="20.8" data-dec="1">0</span><small>%</small></div><div class="d">보고서 스트레스 원인 — '복잡한 양식'</div></div>
+    </div>
+  </section>
+
+  <!-- 04 PROBLEM scene -->
+  <section class="slide" data-sec="1" data-label="문제 · 다시 쓰기">
+    <div class="kick a"><span class="no">04</span>PAIN POINTS</div>
+    <h2 class="t a">같은 내용을, <em>양식 때문에</em> 또 쓴다</h2>
+    <div style="display:grid;grid-template-columns:700px 1fr;gap:48px;margin-top:26px;align-items:start">
+      <div class="a rv">
+        <div class="illu tilt" data-tilt style="height:420px;border:1px solid var(--hair)"><img src="assets/illust/k2-pain-ruler.webp" alt="장표마다 여백과 색을 자로 재며 다시 맞추는 코쇠"></div>
+        <p class="cap">여백 1mm, 색, 서체 — 내용이 아니라 양식을 맞추느라 시간이 간다</p>
+      </div>
+      <div style="border-top:2px solid var(--ink)">
+        <div class="pain a"><span class="n">1</span><h4>형식이 셋</h4><p>결재는 <b>한글</b>, 발표는 <b>PPT</b>, 공유는 <b>링크</b>. 같은 내용을 세 번 옮겨 적는다.</p></div>
+        <div class="pain a"><span class="n">2</span><h4>부서마다 다른 규칙</h4><p>목차·고정 문구·용어·결재라인이 부서마다 다르고, 그 규칙은 사람 머릿속과 지난 파일에만 있다.</p></div>
+        <div class="pain a"><span class="n">3</span><h4>규칙이 바뀌면 각자 다시</h4><p>공지 → 교육 → 각자 수정. 행안부 'AI 친화 보고서'(2026.8 확대)처럼 보고 규칙은 계속 바뀐다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 COMPETITION -->
+  <section class="slide" data-sec="1" data-label="문제 · 경쟁 환경" data-hook="c5">
+    <div class="side-links"><button class="side-link" data-side="sources">출처 보기 ↗</button></div>
+    <div class="kick a"><span class="no">05</span>LANDSCAPE</div>
+    <h2 class="t a">'AI가 문서를 써 준다'는 <em>더 이상 차별점이 아니다</em></h2>
+    <div style="display:grid;grid-template-columns:640px 1fr;gap:44px;margin-top:20px">
+      <div class="a">
+        <div class="chart-box" style="height:430px"><canvas id="c5"></canvas></div>
+        <p class="note" style="margin-top:6px">축 위치는 공개 자료를 바탕으로 한 자체 판단 · 원 크기 = 지원하는 문서 형식 수</p>
+      </div>
+      <div>
+        <div class="fact a"><b>케이뱅크 K/THON 26</b><span>팀전 1위가 '이상 징후 탐지 + <b>보고서 자동 작성</b>' 에이전트</span></div>
+        <div class="fact a"><b>빗썸 사내 AI 공모전</b><span>110명 참가, 107건 접수 (2026.10 보도)</span></div>
+        <div class="fact a"><b>MS PowerPoint</b><span>조직 브랜드 템플릿을 Copilot 생성에 연결 (2026.8~9 배포)</span></div>
+        <div class="fact a"><b>한컴 × LG AI연구원</b><span>대화창에서 양식을 적용한 기획서 초안 작성 (2026.5)</span></div>
+        <div class="fact a"><b>오픈소스 hwpx_new</b><span>한글 서식 블록 약 87% 재현 (자체 발표), .hwpx 기본</span></div>
+        <div class="a" style="margin-top:18px;background:var(--ink);color:#fff;padding:18px 20px;font-size:16px;line-height:1.6">
+          차별점은 두 가지 — <em>① 코스콤 양식의 정밀 재현</em>과 <em>② 부서 규칙을 한 번 등록해 일괄 반영하는 운영 체계</em>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 PRECEDENTS -->
+  <section class="slide" data-sec="1" data-label="문제 · 해외·국내 선례" data-hook="c6">
+    <div class="side-links"><button class="side-link" data-side="sources">출처 보기 ↗</button></div>
+    <div class="kick a"><span class="no">06</span>PRECEDENTS</div>
+    <h2 class="t a">조직 템플릿 + AI, <em>이미 검증된 방향</em></h2>
+    <p class="lead a">템플릿을 중앙에서 관리하고 AI 생성에 연결하면 시간과 요청이 함께 준다. 다만 누구도 HWP와 한국식 보고 문법은 다루지 않는다.</p>
+    <div style="display:grid;grid-template-columns:690px 1fr;gap:44px;margin-top:18px">
+      <div class="a">
+        <div style="font-size:15px;font-weight:700">도입 후 감소율 <span class="note">(%, 오렌지 = 문서 작성 직접 지표)</span></div>
+        <div class="chart-box" style="height:330px;margin-top:6px"><canvas id="c6"></canvas></div>
+        <p class="src">Forrester TEI 2019(Templafy 의뢰) · Templafy·Canva 고객 사례 · 삼성SDS 자체 발표(2024.5) — 모두 벤더·자체 발표 수치</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start">
+        <div class="card a"><h4>Templafy</h4><p>전사 템플릿 중앙 관리. BDO 계약서 템플릿 24종 → 4종</p></div>
+        <div class="card a"><h4>MS 조직 템플릿</h4><p>브랜드 매니저가 게시 → Copilot 사용자에게 노출</p></div>
+        <div class="card a"><h4>Canva Enterprise</h4><p>팀별 브랜드 키트, 승인된 템플릿. ROI 414%</p></div>
+        <div class="card a"><h4>Claude 조직 스킬</h4><p>스킬 = 엔진, 그룹별 플러그인 = <em>부서팩</em>으로 그대로 대응</p></div>
+        <div class="a" style="grid-column:span 2;border-top:2px solid var(--ink);padding-top:14px;font-size:16px;line-height:1.7">
+          <b>설계 원칙</b> — 템플릿은 중앙에서, 내용은 현장에서 · 권한은 부서 단위 · <em>규칙은 데이터로</em>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 STATEMENT -->
+  <section class="slide navy" data-sec="2" data-label="해법 · 한 줄 정의" data-theme="navy">
+    <div class="chevs">
+      <svg class="px" style="--d:-14;right:-260px;top:-40px" width="620" height="900" viewBox="0 0 120 200"><polygon points="0,0 60,0 120,100 60,200 0,200 60,100" fill="#1f4b9b"/></svg>
+      <svg class="px" style="--d:-26;right:-60px;top:120px;animation-delay:.12s" width="380" height="580" viewBox="0 0 120 200"><polygon points="0,0 60,0 120,100 60,200 0,200 60,100" fill="#0f499c"/></svg>
+      <svg class="px" style="--d:-40;left:-30px;top:560px;animation-delay:.24s" width="110" height="180" viewBox="0 0 120 200"><polygon points="0,0 60,0 120,100 60,200 0,200 60,100" fill="#f26522"/></svg>
+    </div>
+    <div style="position:relative;display:grid;grid-template-columns:1fr 620px;gap:40px;height:100%;align-items:center">
+      <div style="padding-left:20px">
+        <div class="kick a"><span class="bar"></span>CHAPTER 02 · SOLUTION</div>
+        <h2 class="a" style="font-size:62px;line-height:1.2">엔진은 회사가 <em>하나</em>,<br>팩은 <em>부서마다</em>.</h2>
+        <p class="lead a" style="font-size:20px;margin-top:22px">공통 엔진 3종 — PPT · 웹슬라이드 · 한글 — 위에 부서별 <b style="color:#fff">문서팩</b>을 끼운다. 부서 관리자가 한 번 등록하면 부서원 전원이 같은 규칙으로 만든다.</p>
+      </div>
+      <div class="a r">
+        <div class="illu tilt" data-tilt style="height:380px;padding:16px"><img src="assets/illust/01-engine-pack.webp" alt="공통 엔진에 부서 팩 카트리지를 끼우는 코쇠"></div>
+        <p class="cap" style="color:var(--bt)">끼우면 끝 — 카트리지만 바꾸면 같은 엔진에서 부서 문서가 나온다</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 ARCHITECTURE -->
+  <section class="slide" data-sec="2" data-label="해법 · 솔루션 구조">
+    <div class="kick a"><span class="no">08</span>ARCHITECTURE</div>
+    <h2 class="t a">요청 하나, <em>라우터가 형식을 정한다</em></h2>
+    <p class="lead a">엔진 위에 마우스를 올리면 그 경로가 보입니다. 세 엔진은 같은 설계도·삽화·검수·문서팩을 함께 씁니다.</p>
+    <div style="display:grid;grid-template-columns:860px 1fr;gap:30px;margin-top:14px">
+      <div class="a">
+        <svg id="arch" viewBox="0 0 860 470" width="860" height="470">
+          <path class="flow live" d="M170 215 L225 215"/>
+          <path class="flow e" data-e="ppt" d="M385 215 C430 215 430 85 470 85"/>
+          <path class="flow e" data-e="web" d="M385 215 L470 215"/>
+          <path class="flow e" data-e="hwp" d="M385 215 C430 215 430 345 470 345"/>
+          <path class="flow e" data-e="ppt" d="M680 85 L720 85"/>
+          <path class="flow e" data-e="web" d="M680 215 L720 215"/>
+          <path class="flow e" data-e="hwp" d="M680 345 L720 345"/>
+          <path class="flow live" d="M305 118 L305 160"/>
+          <g class="node"><rect x="20" y="165" width="150" height="100"/><text x="95" y="208" text-anchor="middle" font-weight="700" font-size="19">요청</text><text x="95" y="234" text-anchor="middle" font-size="13" fill="#6e6e73">메모 · 엑셀 · 회의록</text></g>
+          <g class="node"><rect x="245" y="70" width="120" height="48" style="fill:#fdeee4;stroke:#ee6d1d"/><text x="305" y="100" text-anchor="middle" font-weight="700" font-size="15" fill="#ee6d1d">부서 문서팩</text></g>
+          <g class="node"><rect x="225" y="160" width="160" height="110" style="stroke:#2b2b2e;stroke-width:2"/><text x="305" y="207" text-anchor="middle" font-weight="700" font-size="19">문서 라우터</text><text x="305" y="233" text-anchor="middle" font-size="13" fill="#6e6e73">형식 결정 · 템플릿 선택</text></g>
+          <g class="eng" data-e="ppt"><rect class="box" x="470" y="45" width="210" height="80" style="fill:#fff;stroke:#dcdce0;stroke-width:1.5"/><text x="490" y="80" font-weight="700" font-size="19">PPT 엔진</text><text x="490" y="104" font-size="13" fill="#6e6e73">원고 → 설계도 → 네이티브 PPTX</text></g>
+          <g class="eng" data-e="web"><rect class="box" x="470" y="175" width="210" height="80" style="fill:#fff;stroke:#dcdce0;stroke-width:1.5"/><text x="490" y="210" font-weight="700" font-size="19">WEBSLIDE 엔진</text><text x="490" y="234" font-size="13" fill="#6e6e73">설계도 → 반응형 HTML · 차트</text></g>
+          <g class="eng" data-e="hwp"><rect class="box" x="470" y="305" width="210" height="80" style="fill:#fff;stroke:#dcdce0;stroke-width:1.5"/><text x="490" y="340" font-weight="700" font-size="19">한글 엔진</text><text x="490" y="364" font-size="13" fill="#6e6e73">report.json → 원형 블록 복제</text></g>
+          <g class="eng" data-e="ppt"><rect class="box" x="720" y="62" width="120" height="46" style="fill:#2b2b2e;stroke:#2b2b2e"/><text x="780" y="91" text-anchor="middle" fill="#fff" font-weight="700" font-size="16">.pptx</text></g>
+          <g class="eng" data-e="web"><rect class="box" x="720" y="192" width="120" height="46" style="fill:#2b2b2e;stroke:#2b2b2e"/><text x="780" y="221" text-anchor="middle" fill="#fff" font-weight="700" font-size="16">.html 링크</text></g>
+          <g class="eng" data-e="hwp"><rect class="box" x="720" y="322" width="120" height="46" style="fill:#2b2b2e;stroke:#2b2b2e"/><text x="780" y="351" text-anchor="middle" fill="#fff" font-weight="700" font-size="16">.hwp</text></g>
+          <rect x="20" y="410" width="820" height="56" fill="#f5f5f7" stroke="#dcdce0"/>
+          <text x="40" y="444" font-size="14" fill="#8c8c92">함께 쓰는 층</text>
+          <g font-size="15" font-weight="700">
+            <text x="160" y="444">공통 설계도 doc.json</text><text x="370" y="444">코쇠 삽화</text><text x="490" y="444">자동 검수</text><text x="610" y="444" fill="#ee6d1d">보고 문법 · CI 잠금</text>
+          </g>
+        </svg>
+      </div>
+      <div class="a">
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px">언제 무엇으로 — 라우팅 규칙</div>
+        <div style="border-top:2px solid var(--ink)">
+          <div class="rule" data-e="ppt"><i></i><div><h4>PPT</h4><p>장표·발표자료·제안서. PowerPoint에서 바로 고친다</p></div></div>
+          <div class="rule" data-e="web"><i></i><div><h4>WEBSLIDE</h4><p>링크로 공유·열람, 움직이는 설명, 차트가 많은 브리핑</p></div></div>
+          <div class="rule" data-e="hwp"><i></i><div><h4>한글</h4><p>보고·결재·공문. '보고서'만 말하면 한글(코스콤 보고 관례)</p></div></div>
+          <div class="rule" data-e="all"><i></i><div><h4>둘 이상</h4><p>공통 설계도 한 장으로 여러 형식을 함께 만든다</p></div></div>
+        </div>
+        <p class="note" style="margin-top:12px;line-height:1.6">형식이 애매할 때만 질문 한 번: "한글, PPT, 웹 중 무엇인가요?"<br><b style="color:var(--ink)">AI 모델은 설정 한 줄로 교체</b> — 사내 GPU Qwen 3.8 27B → H200 400B급 · AWS Bedrock Claude · 본선은 외부망 상용 AI</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 PPT ENGINE -->
+  <section class="slide" data-sec="3" data-label="엔진 ① PPT" data-hook="c9">
+    <div class="side-links"><button class="side-link" data-side="basis">43분 실측 근거 ↗</button><button class="side-link" data-side="gallery">실물 보기 ↗</button></div>
+    <div class="kick a"><span class="no">09</span>ENGINE 01 · PPT</div>
+    <h2 class="t a">코스콤 양식 그대로, <em>고칠 수 있는 .pptx</em></h2>
+    <div class="pipe a" style="margin-top:24px">
+      <div class="st"><b>원고</b><small>메모·md·pdf</small></div>
+      <div class="st"><b>장표 설계도</b><small>Strategist가 구성</small></div>
+      <div class="st"><b>템플릿 조판</b><small>Koscom Chevron 등 덱 n종</small></div>
+      <div class="st"><b>네이티브 PPTX</b><small>도형·글자·차트 그대로 편집</small></div>
+    </div>
+    <div style="display:grid;grid-template-columns:560px 1fr;gap:48px;margin-top:28px">
+      <div class="a">
+        <div class="tilt" data-tilt style="border:1px solid var(--hair);background:#fff">
+          <svg viewBox="0 0 1280 720" width="100%" style="display:block">
+            <rect width="1280" height="720" fill="#fff"/>
+            <polygon points="760,0 1020,0 1280,360 1020,720 760,720 1020,360" fill="#ececee"/>
+            <polygon points="900,120 1060,120 1240,360 1060,600 900,600 1080,360" fill="#f26522"/>
+            <rect x="80" y="206" width="8" height="26" fill="#ee6d1d"/>
+            <text x="102" y="226" font-size="22" fill="#8c8c92" letter-spacing="5" font-family="KoPub Dotum">PROPOSAL 2026</text>
+            <text x="80" y="320" font-size="62" font-weight="700" fill="#2b2b2e" font-family="KoPub Dotum">우리 부서 양식으로</text>
+            <text x="80" y="400" font-size="62" font-weight="700" fill="#ee6d1d" font-family="KoPub Dotum">만든 제안서</text>
+            <text x="80" y="460" font-size="24" fill="#6e6e73" font-family="KoPub Dotum">KoPub돋움체 Bold · Medium / 오렌지 셰브론</text>
+            <text x="80" y="674" font-size="18" font-weight="700" fill="#2b2b2e" font-family="KoPub Dotum">KOSCOM</text>
+          </svg>
+        </div>
+        <p class="cap">Koscom Chevron 템플릿 표지 — 공식 샘플 3종(Black·Blue·Orange)을 측정해 다시 그렸다</p>
+        <div class="chip-row" style="margin-top:14px"><span class="tag">덱 템플릿 n종</span><span class="tag">브랜드 n종</span><span class="tag or">품질 검사 70/70</span><span class="tag">기존 .pptx 채우기</span></div>
+      </div>
+      <div class="a">
+        <div style="font-size:15px;font-weight:700">22장 기획서 작성 시간 <span class="note">(분)</span></div>
+        <div class="chart-box" style="height:250px;margin-top:6px"><canvas id="c9"></canvas></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:12px">
+          <div class="kpi"><div class="v"><span data-count="43">0</span><small>분</small></div><div class="d">첫 완성본 (실측)</div></div>
+          <div class="kpi navy"><div class="v">1/3</div><div class="d">수정 3회 포함 최종본 ÷ 수작업 가정</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 WEBSLIDE ENGINE -->
+  <section class="slide" data-sec="3" data-label="엔진 ② WEBSLIDE">
+    <div class="kick a"><span class="no">10</span>ENGINE 02 · WEBSLIDE</div>
+    <h2 class="t a">링크 하나로 여는, <em>움직이는 발표자료</em></h2>
+    <div style="display:grid;grid-template-columns:620px 1fr;gap:48px;margin-top:22px">
+      <div class="a rv">
+        <div class="illu tilt" data-tilt style="height:390px;border:1px solid var(--hair)"><img src="assets/illust/11-webslide.webp" alt="브라우저 안에서 슬라이드를 미는 코쇠와 마우스 커서, 링크로 공유받는 사람들"></div>
+        <p class="cap">브라우저만 있으면 열리고, 마우스에 반응하고, 링크 하나로 공유된다</p>
+      </div>
+      <div>
+        <div class="feat a"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></div><div><h4>설치 없이 링크로</h4><p>사내 포털·메일·메신저에 주소만 붙이면 누구나 연다</p></div></div>
+        <div class="feat a"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><div><h4>살아 있는 차트</h4><p>Chart.js 차트가 장에 들어올 때 그려지고, 올리면 값을 보여 준다</p></div></div>
+        <div class="feat a"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 8-6 2-2 6z"/></svg></div><div><h4>마우스 반응</h4><p>삽화 기울기·패럴랙스, 구조도 경로 강조, 탭·타임라인 전환</p></div></div>
+        <div class="feat a"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div><div><h4>같은 코스콤 서체·색</h4><p>KoPub돋움체, 오렌지·네이비 잠금 색, 단어 단위 줄바꿈</p></div></div>
+        <div class="feat a"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="12"/><path d="M8 21h8"/></svg></div><div><h4>화면에 맞춰 자동 배율</h4><p>노트북·대형 모니터·전체 화면 어디서나 16:9 그대로</p></div></div>
+      </div>
+    </div>
+    <div class="live-strip a" style="margin-top:18px"><span class="badge-live">LIVE</span>지금 보고 계신 이 기획서가 웹슬라이드 엔진의 결과물입니다. 마우스를 움직여 보세요.</div>
+  </section>
+
+  <!-- 11 HWP ENGINE -->
+  <section class="slide" data-sec="3" data-label="엔진 ③ 한글" data-hook="c11">
+    <div class="side-links"><button class="side-link" data-side="gallery">실물 보기 ↗</button></div>
+    <div class="kick a"><span class="no">11</span>ENGINE 03 · HANGUL</div>
+    <h2 class="t a">한글 프로그램 없이, <em>.hwp를 직접</em> 만든다</h2>
+    <div style="display:grid;grid-template-columns:540px 330px 1fr;gap:40px;margin-top:22px">
+      <div>
+        <div class="illu a rv" style="height:240px;border:1px solid var(--hair)"><img src="assets/illust/13-hwp-typeset.webp" alt="활자판에 단계 기호와 간격 막대를 끼워 .hwp를 짜는 코쇠"></div>
+        <ul style="list-style:none;margin-top:14px">
+          <li class="step a"><i>1</i><span><b>HWP 5.0 바이너리를 직접</b> 쓴다 (hwplib, Java)</span></li>
+          <li class="step a"><i>2</i><span>코스콤 표준 템플릿의 <b>원형 블록을 복제</b>해 서식이 흔들리지 않는다</span></li>
+          <li class="step a"><i>3</i><span><b>□ ㅇ - ·</b> 단계, 4·6·8·12pt 간격, 둘째 줄 내어쓰기, 제목·첨부 박스, 병합 셀 표</span></li>
+          <li class="step a"><i>4</i><span>글자 폭으로 줄 수를 추정 — 함초롬바탕 15pt 한 줄 33자 실측</span></li>
+        </ul>
+      </div>
+      <div class="a">
+        <div class="hwp tilt" data-tilt>
+          <div class="tbox">○○ 서비스 개선 결과 보고</div>
+          <div class="meta">2026. 10. 28 · ○○팀</div>
+          <div class="l l1">□ 추진 개요<span class="gap" style="top:2px">12pt</span></div>
+          <div class="l l2">ㅇ 대상: 고객 문의 응대 화면 3종<span class="gap">6pt</span></div>
+          <div class="l l3">- 기간: 2026. 9. 1 ~ 10. 15</div>
+          <div class="l l2">ㅇ 목적: 응답 단계 축소와 안내 문구 정비로 처리 시간 단축</div>
+          <div class="l l1">□ 주요 성과<span class="gap" style="top:2px">12pt</span></div>
+          <div class="l l2">ㅇ 평균 처리 시간 18% 단축(가상)<span class="gap">6pt</span></div>
+          <div class="l l3">- 재문의 비율 감소, 상담 이관 건수 감소<span class="gap">4pt</span></div>
+          <div class="l l1">□ 향후 계획</div>
+          <div class="l l2">ㅇ 11월 중 2차 화면 적용, 12월 효과 점검</div>
+          <div class="att">※ 첨부: 화면별 개선 내역 1부</div>
+        </div>
+        <p class="cap">요약보고 예시(가상 내용) — 올려 보면 간격 규칙이 보인다</p>
+      </div>
+      <div class="a">
+        <div style="font-size:15px;font-weight:700">보고서 작성 평가 3과제 <span class="note">(통과율 %)</span></div>
+        <div class="chart-box" style="height:280px;margin-top:6px"><canvas id="c11"></canvas></div>
+        <div class="kpi" style="margin-top:16px"><div class="v">+<span data-count="21">0</span><small>%p</small></div><div class="d">스킬 사용 100% vs 미사용 79% — 요약보고 샘플은 원본 1쪽 배치와 일치</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 HWP CATALOG -->
+  <section class="slide" data-sec="3" data-label="엔진 ③ 한글 템플릿" data-hook="c12">
+    <div class="side-links"><button class="side-link" data-side="gallery">실물 보기 ↗</button></div>
+    <div class="kick a"><span class="no">12</span>HANGUL TEMPLATES</div>
+    <h2 class="t a">보고 유형 <em>n종</em>, 새 양식, 가진 양식까지</h2>
+    <p class="lead a">유형을 고르면 구성·라벨·표·작성 규칙이 함께 따라온다. 엔진은 그대로, 프리셋만 늘린다.</p>
+    <div style="display:grid;grid-template-columns:840px 1fr;gap:40px;margin-top:18px">
+      <div>
+        <div class="tierbox a"><h4>Tier 1 · 문서 유형 템플릿<small>요약 base n종 · 상세 base n종</small></h4></div>
+        <div class="cat a" id="cat" data-gen></div>
+        <div class="detail a" id="catDetail" data-gen style="margin-top:14px"></div>
+      </div>
+      <div>
+        <div class="a" style="position:relative"><div class="chart-box" style="height:200px"><canvas id="c12"></canvas></div>
+          <div data-gen style="position:absolute;left:0;right:0;top:0;height:200px;display:grid;place-items:center;pointer-events:none;text-align:center"><div><div style="font-size:40px;font-weight:700;line-height:1" id="c12Sum">n</div><div class="note">종</div></div></div>
+          <div data-gen id="c12Leg" style="display:flex;justify-content:center;gap:18px;margin-top:10px;font-size:14px"></div></div>
+        <div class="tierbox a" style="margin-top:18px"><h4>Tier 2 · 새 양식<small>원본 확보 후</small></h4>
+          <div class="chip-row"><span class="tag">공문(시행문)</span><span class="tag">대고객 안내문</span><span class="tag">계약서(조항형)</span><span class="tag">회의록 서식</span></div></div>
+        <div class="tierbox a" style="margin-top:18px"><h4>Tier 3 · 가진 양식 채우기<small>제한 없음</small></h4>
+          <p style="font-size:15px;color:var(--ink2);line-height:1.55">주최 측 신청서처럼 받은 .hwp 양식의 빈칸을 찾아 원본 서식 그대로 채운다. 원본은 덮어쓰지 않는다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 BLUEPRINT -->
+  <section class="slide" data-sec="3" data-label="공통 설계도">
+    <div class="kick a"><span class="no">13</span>ONE BLUEPRINT</div>
+    <h2 class="t a">설계도 한 장으로 <em>세 형식</em>을</h2>
+    <div style="display:grid;grid-template-columns:560px 1fr;gap:44px;margin-top:22px">
+      <div>
+        <div class="illu a rv tilt" data-tilt style="height:300px;border:1px solid var(--hair)"><img src="assets/illust/12-blueprint.webp" alt="설계도 한 장에서 PPT·웹·한글 세 문서가 세워지는 모습"></div>
+<pre class="code a" style="margin-top:14px"><span class="ln" style="--j:0">{ <span class="k">"key_message"</span>: <span class="s">"엔진은 회사가 하나, 팩은 부서마다"</span>,</span>
+<span class="ln" style="--j:1">  <span class="k">"sections"</span>: [{ <span class="k">"heading"</span>: <span class="s">"추진 배경"</span>, <span class="k">"items"</span>: [</span>
+<span class="ln" style="--j:2">    { <span class="k">"level"</span>: <span class="o">1</span>, <span class="k">"text"</span>: <span class="s">"…"</span> },</span>
+<span class="ln" style="--j:3">    { <span class="k">"table"</span>: { <span class="k">"columns"</span>: [<span class="s">"구분"</span>, <span class="s">"내용"</span>] } },</span>
+<span class="ln" style="--j:4">    { <span class="k">"figure"</span>: <span class="s">"illustrations/01-engine-pack.png"</span> } ]}],</span>
+<span class="ln" style="--j:5">  <span class="k">"targets"</span>: { <span class="k">"hwp"</span>: {<span class="s">"preset"</span>:<span class="s">"plan-report"</span>}, <span class="k">"pptx"</span>: {…}, <span class="k">"web"</span>: {…} } }</span></pre>
+      </div>
+      <div class="a">
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px">같은 항목이 형식마다 이렇게 바뀐다</div>
+        <table class="map">
+          <thead><tr><th>설계도</th><th>한글 .hwp</th><th>PPT .pptx</th><th>웹 .html</th></tr></thead>
+          <tbody>
+            <tr><td>key_message</td><td>요약 박스</td><td>표지 · 첫 장</td><td>표지 헤드라인</td></tr>
+            <tr><td>heading</td><td>□ 대제목</td><td>장표 제목</td><td>슬라이드 제목</td></tr>
+            <tr><td>level 1 · 2</td><td>ㅇ · - 단계</td><td>글머리표</td><td>카드 · 목록</td></tr>
+            <tr><td>table</td><td>병합 셀 표</td><td>네이티브 표</td><td>표 · Chart.js 차트</td></tr>
+            <tr><td>figure</td><td>그림 + 캡션</td><td>이미지 슬롯</td><td>반응형 삽화</td></tr>
+            <tr><td>targets</td><td>프리셋 선택</td><td>덱 · 장 수</td><td>테마 · 공유 범위</td></tr>
+          </tbody>
+        </table>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px">
+          <div class="card"><h4>PPT는 핵심만</h4><p>장 수는 Strategist가 정한다. 상류 코드는 고치지 않고 원고 md로 넘긴다</p></div>
+          <div class="card"><h4>한글은 전체를</h4><p>설계도 → report.json 결정적 변환. 삽화는 한 번 그려 세 형식에서 재사용</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 PACK -->
+  <section class="slide" data-sec="4" data-label="문서팩 · 구성">
+    <div class="kick a"><span class="no">14</span>DEPARTMENT PACK ★</div>
+    <h2 class="t a">부서 규칙을 <em>팩 하나</em>로 묶는다</h2>
+    <p class="lead a">부서원은 팩만 고르면 양식·문구·구성이 맞는다. 카드에 올리면 효과가, 탭을 누르면 부서별 예시(가상)가 보인다.</p>
+    <div style="display:grid;grid-template-columns:820px 1fr;gap:40px;margin-top:18px">
+      <div class="comp">
+        <div class="card a"><h4>양식</h4><p>부서 PPT 템플릿, 한글 base, 웹 테마</p><div class="eff">→ 서식 맞추는 시간 0</div></div>
+        <div class="card a"><h4>보고 유형</h4><p>주간 보고·제안서·경위서의 목차와 문장 규칙</p><div class="eff">→ 구성을 새로 짜지 않는다</div></div>
+        <div class="card a"><h4>고정 콘텐츠</h4><p>회사·부서 소개, 서비스 설명, 표준·면책 문구</p><div class="eff">→ 지난 문서 복사 끝</div></div>
+        <div class="card a"><h4>용어 사전</h4><p>약어 풀이, 사내 표기 통일, 금지어</p><div class="eff">→ 표기가 흔들리지 않는다</div></div>
+        <div class="card a"><h4>결재라인</h4><p>담당·팀장·부서장 기본값</p><div class="eff">→ 제목 박스 자동 완성</div></div>
+        <div class="card a"><h4>삽화 태그</h4><p>부서 주제에 맞는 코쇠 그림</p><div class="eff">→ 그림 찾는 시간 절감</div></div>
+        <div class="card a"><h4>검수 규칙<i>추가</i></h4><p>고객사명 오기, 대외비 문구 금지</p><div class="eff">→ 부서 사고 유형 예방</div></div>
+        <div class="card a" style="background:var(--ink);border-color:var(--ink);color:#fff"><h4 style="color:var(--or)">버전·승인</h4><p style="color:#ddd">팩마다 버전과 승인 기록, 되돌리기</p><div class="eff" style="color:var(--ort)">→ 관리되는 규칙</div></div>
+      </div>
+      <div class="a">
+        <div class="tabs" id="packTabs" data-gen></div>
+        <div class="packview" id="packView" data-gen></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 INHERITANCE -->
+  <section class="slide" data-sec="4" data-label="문서팩 · 상속과 일괄 반영">
+    <div class="kick a"><span class="no">15</span>INHERIT &amp; PROPAGATE</div>
+    <h2 class="t a">한 곳만 고치면, <em>전원에게</em></h2>
+    <div style="display:grid;grid-template-columns:640px 1fr;gap:40px;margin-top:16px">
+      <div class="a">
+        <div class="stack" id="stack" data-gen></div>
+        <p class="note">아래가 위를 덮어쓴다 · 전사 CI·등급 표기는 잠가서 부서가 바꿀 수 없다 · 층에 올려 보세요</p>
+      </div>
+      <div>
+        <div class="illu a rv" style="height:200px;border:1px solid var(--hair)"><img src="assets/illust/03-one-line-all.webp" alt="팩 한 줄을 고치면 다음 문서부터 전원에게 반영되는 모습"></div>
+        <p class="cap a">팩 v1.4의 한 줄 수정 → 다음 문서부터 부서원 전원에게</p>
+<pre class="code a" style="margin-top:12px"><span class="ln" style="--j:0"><span class="k">pack</span>: sales-team            <span class="c"># 영업 팩(가상)</span></span>
+<span class="ln" style="--j:1"><span class="k">extends</span>: koscom-common      <span class="c"># 전사 공통 팩 상속</span></span>
+<span class="ln" style="--j:2"><span class="k">version</span>: <span class="o">1.4</span></span>
+<span class="ln" style="--j:3"><span class="k">documents</span>:</span>
+<span class="ln" style="--j:4">  <span class="k">proposal</span>:     { <span class="k">engine</span>: <span class="s">pptx</span>, <span class="k">template</span>: <span class="s">koscom-chevron</span> }</span>
+<span class="ln" style="--j:5">  <span class="k">briefing</span>:     { <span class="k">engine</span>: <span class="s">web</span>,  <span class="k">share</span>: <span class="s">사내</span> }</span>
+<span class="ln" style="--j:6">  <span class="k">visit_report</span>: { <span class="k">engine</span>: <span class="s">hwp</span>,  <span class="k">template</span>: <span class="s">summary_base</span> }</span>
+<span class="ln" style="--j:7"><span class="k">checks</span>: { <span class="k">add</span>: [<span class="s">고객사명 오기</span>, <span class="s">대외비 문구 금지</span>] }</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 MAKER + INSPECTOR -->
+  <section class="slide" data-sec="4" data-label="문서팩 · 도우미와 검수">
+    <div class="kick a"><span class="no">16</span>HUMAN IN THE LOOP</div>
+    <h2 class="t a">AI는 <em>제안</em>하고, 사람이 <em>승인</em>한다</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:22px">
+      <div>
+        <div class="illu a rv tilt" data-tilt style="height:230px;border:1px solid var(--hair)"><img src="assets/illust/04-pack-maker.webp" alt="기존 문서 3건을 깔때기에 넣어 팩 초안을 뽑고 승인 도장을 받는 코쇠"></div>
+        <h3 class="a" style="font-size:24px;margin-top:16px">팩 만들기 도우미</h3>
+        <div class="step a"><i>1</i><span>부서의 기존 문서 <b>3~5건</b>을 올린다</span></div>
+        <div class="step a"><i>2</i><span>AI가 공통 목차·반복 문구·자주 쓰는 용어·쓰는 양식을 뽑아 <b>팩 초안</b>을 만든다</span></div>
+        <div class="step a"><i>3</i><span>부서 관리자가 검토·승인하면 <b>버전이 붙어 게시</b>된다</span></div>
+      </div>
+      <div>
+        <div class="illu a rv tilt" data-tilt style="height:230px;border:1px solid var(--hair)"><img src="assets/illust/k4-inspector.webp" alt="컨베이어 위 장표를 돋보기로 검수하는 코쇠"></div>
+        <h3 class="a" style="font-size:24px;margin-top:16px">자동 검수 — 사람이 쓴 문서도</h3>
+        <div class="chk a"><b>한글</b><span>한 항목 3줄 이내 · 명사형 종결 · 단계 기호 순서 · 날짜 <b>2026. 4. 23</b> 형식</span></div>
+        <div class="chk a"><b>PPT · 웹</b><span>색 · 서체 · 글자 넘침 · 겹침 · 출처 누락 · 문서 등급 표기</span></div>
+        <div class="chk a"><b>팩 규칙</b><span>부서가 추가한 규칙 — 고객사명 오기, 대외비 문구 금지</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 DEMO TIMELINE -->
+  <section class="slide" data-sec="5" data-label="실행 · 본선 시연 3분" data-hook="tl">
+    <div class="kick a"><span class="no">17</span>LIVE DEMO · 3 MIN</div>
+    <h2 class="t a">본선 3분, <em>심사위원이 기억할 장면</em></h2>
+    <div class="tl a" id="tl" data-gen><div class="fillline" id="tlFill"></div></div>
+    <div class="scene a" id="scene" data-gen>
+      <div class="illu tilt" data-tilt><img id="sceneImg" src="assets/illust/k2-pain-ruler.webp" alt=""></div>
+      <div>
+        <div class="time"><span id="sceneT">0:00</span> · <span id="sceneH"></span></div>
+        <h3 id="sceneTitle"></h3>
+        <p id="sceneText"></p>
+        <button class="autoplay" id="autoBtn">❚❚ 자동 재생 멈춤</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 READINESS + ROADMAP -->
+  <section class="slide" data-sec="5" data-label="실행 · 준비 상태와 로드맵" data-hook="c18">
+    <div class="kick a"><span class="no">18</span>READINESS &amp; ROADMAP</div>
+    <h2 class="t a">보유한 엔진 위에, <em>본선 하루</em>에 얹는다</h2>
+    <div style="display:grid;grid-template-columns:520px 1fr;gap:44px;margin-top:20px">
+      <div class="a" style="border-top:2px solid var(--ink)">
+        <div class="ready"><b>PPT 엔진</b><div class="meter"><i style="--v:1"></i></div><span class="st ok">보유</span></div>
+        <div class="ready"><b>한글 엔진</b><div class="meter"><i style="--v:.9"></i></div><span class="st ok">보유</span></div>
+        <div class="ready"><b>WEBSLIDE 엔진</b><div class="meter"><i style="--v:.8"></i></div><span class="st ok">보유</span></div>
+        <div class="ready"><b>코쇠 삽화</b><div class="meter"><i style="--v:1"></i></div><span class="st ok">보유</span></div>
+        <div class="ready"><b>AI 어댑터</b><div class="meter"><i class="p" style="--v:.1"></i></div><span class="st">본선 구현</span></div>
+        <div class="ready"><b>문서팩·도우미</b><div class="meter"><i class="p" style="--v:.1"></i></div><span class="st">본선 구현</span></div>
+        <p class="note" style="margin-top:12px;line-height:1.6">PPT·한글·WEBSLIDE 엔진과 삽화는 사전 보유한 개인 작업(스킬)이고, 서류 단계에서는 아이디어와 자료만 정리했다. 결과물 개발은 11/6 개발 환경 지원 이후에 한다.<br>MVP 컷라인 — 늦어지면 상세보고 → 도우미 → 웹 화면 → 상속 4단 순으로 줄인다. <b style="color:var(--ink)">엔진 3종, 팩 2개 이상, 즉시 반영, 자동 검수</b>는 끝까지 지킨다.</p>
+      </div>
+      <div class="a">
+        <div style="font-size:15px;font-weight:700">단계별 일정 <span class="note">(2026. 10. 27 ~ 11. 12 · 오렌지 = 서류·본선 당일)</span></div>
+        <div class="chart-box" style="height:400px;margin-top:6px"><canvas id="c18"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 EFFECT -->
+  <section class="slide" data-sec="5" data-label="실행 · 기대 효과" data-hook="c19">
+    <div class="side-links"><button class="side-link" data-side="basis">산정 근거 보기 ↗</button></div>
+    <div class="kick a"><span class="no">19</span>IMPACT</div>
+    <h2 class="t a">연 약 <em><span data-count="24000">0</span>시간</em>을 돌려준다</h2>
+    <div style="display:grid;grid-template-columns:720px 1fr;gap:44px;margin-top:18px">
+      <div class="a">
+        <div style="font-size:15px;font-weight:700">확산 1년차 누적 절감 시간 <span class="note">(시간 · 가정 기반, 파일럿 실측으로 확정)</span></div>
+        <div class="chart-box" style="height:330px;margin-top:6px"><canvas id="c19"></canvas></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:16px">
+          <div class="kpi"><div class="v">8→4<small>시간</small></div><div class="d">1인 월 문서 작성 시간 (가정)</div></div>
+          <div class="kpi navy"><div class="v"><span data-count="500">0</span><small>명</small></div><div class="d">확산 단계 문서 작성자 (가정)</div></div>
+          <div class="kpi grey"><div class="v">30~50<small>%</small></div><div class="d">외부 참고 범위 (벤더 발표)</div></div>
+        </div>
+      </div>
+      <div class="a">
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px">숫자 밖의 효과</div>
+        <div style="border-top:2px solid var(--ink)">
+          <div class="fact" style="grid-template-columns:130px 1fr"><b>규칙 개편 반영</b><span>공지·교육·각자 수정 → 팩 수정 1회</span></div>
+          <div class="fact" style="grid-template-columns:130px 1fr"><b>템플릿 정리</b><span>흩어진 양식 파일이 팩 하나로 (선례: 24종 → 4종)</span></div>
+          <div class="fact" style="grid-template-columns:130px 1fr"><b>검토 요청 감소</b><span>승인된 틀 안에서 만들면 브랜드·기획 검토가 준다</span></div>
+          <div class="fact" style="grid-template-columns:130px 1fr"><b>그림자 AI 감소</b><span>외부 AI에 사내 문서를 올릴 이유가 사라진다</span></div>
+          <div class="fact" style="grid-template-columns:130px 1fr"><b>지식 자산화</b><span>부서 소개·용어·보고 구성이 팩에 남는다</span></div>
+        </div>
+        <p class="note" style="margin-top:12px;line-height:1.6">파일럿 KPI — 문서 1건 작성 시간 · 양식 위반 건수 · 팩 재사용률 · 규칙 변경 반영 시간 · 만족도 (3개 부서, 30명, 4~6주)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 CRITERIA -->
+  <section class="slide" data-sec="5" data-label="실행 · 심사 기준 대응" data-hook="c20">
+    <div class="side-links"><button class="side-link" data-side="qa">예상 질문 Q&amp;A ↗</button></div>
+    <div class="kick a"><span class="no">20</span>EVALUATION</div>
+    <h2 class="t a">심사 기준에 <em>이렇게 답합니다</em></h2>
+    <div style="display:grid;grid-template-columns:420px 1fr;gap:44px;margin-top:22px;align-items:center">
+      <div class="a">
+        <div class="chart-box" style="height:400px"><canvas id="c20"></canvas></div>
+        <p class="note" style="text-align:center">배점 100점 · 영역에 올리면 답이 강조된다</p>
+      </div>
+      <div class="crit" id="crit">
+        <div class="card a" data-k="0"><div class="pt">창의성</div><h4>'문서 작성기'가 아니라 <span>30</span></h4><p>부서 규칙을 갈아 끼우는 문서 환경. 같은 메모가 팩마다 다르게 나오고, 기존 문서에서 팩을 뽑는다</p></div>
+        <div class="card a" data-k="1"><div class="pt">업무 도구 실용성</div><h4>전 부서가 매주 <span>30</span></h4><p>PPT·웹·한글 엔진을 각각 쓰거나 함께 쓴다. 사내 GPU(Qwen · H200)와 Bedrock Claude 어디서나 같은 팩이 동작</p></div>
+        <div class="card a" data-k="2"><div class="pt">구현 가능성</div><h4>보유 엔진 위에 얹는다 <span>20</span></h4><p>공모전 전 보유 엔진(PPT 43분 실측, .hwp 평가 100%)과 이 웹슬라이드, 환경이 바뀌어도 도는 AI 어댑터. 해외 선례로 검증된 구조와 MVP 컷라인</p></div>
+        <div class="card a" data-k="3"><div class="pt">기대 효과</div><h4>전사 규모로 곱해진다 <span>20</span></h4><p>연 약 24,000시간(가정 명시) + 규칙 반영·양식 정리·검토 요청 감소, 파일럿 KPI로 확정</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 CLOSING -->
+  <section class="slide black" data-sec="0" data-label="맺음" data-theme="black">
+    <div class="side-links"><button class="side-link" data-side="qa">예상 질문 Q&amp;A ↗</button></div>
+    <svg class="wave px" style="--d:-16" viewBox="0 0 1440 300" preserveAspectRatio="none" id="wave"></svg>
+    <div style="position:relative;display:grid;grid-template-columns:1fr 600px;gap:40px;height:100%;align-items:center">
+      <div style="padding-left:20px">
+        <div class="kick a"><span class="bar"></span>CLOSING</div>
+        <h2 class="a" style="font-size:56px;line-height:1.25">내용은 사람이 쓰고,<br><em>코스콤다움</em>은<br>코쇠 문서팩이 맞춘다.</h2>
+        <p class="lead a" style="margin-top:22px">PPT · WEBSLIDE · 한글 — 사내망에서, 전 부서가, 내일부터</p>
+        <div class="chip-row a" style="margin-top:28px"><span class="tag solid">공통 엔진 3종</span><span class="tag solid">부서 문서팩</span><span class="tag solid">자동 검수</span><span class="tag solid">사내 AI 우선</span></div>
+      </div>
+      <div class="a r">
+        <div class="illu tilt" data-tilt style="height:330px;padding:14px"><img src="assets/illust/k5-closing-relay.webp" alt="사람이 건넨 내용을 코쇠가 코스콤다운 장표로 바꿔 드는 모습"></div>
+        <p style="font-size:44px;font-weight:700;margin-top:26px;text-align:right">감사합니다</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 사이드 페이지(부록): 본편 흐름 밖에서 옆으로 열린다 -->
+  <div class="side-scrim" id="sideScrim"></div>
+  <aside class="side-page" id="side-basis" data-side="basis" data-key="A" data-short="수치 근거" data-label="부록 A · 수치 근거" aria-hidden="true">
+    <header class="sp-head">
+      <div class="kick"><span class="bar"></span>APPENDIX A · 수치 근거</div>
+      <h2>연 24,000시간은 이렇게 <em>계산했습니다</em></h2>
+      <p class="lead">실측·외부 조사·가정을 나눠 적고, 가정은 파일럿에서 실측으로 바꿉니다. 실측은 공모전 전부터 보유한 엔진으로 잰 개인 작업 기록입니다. 서류 제출본 「코쇠 덱」 부록 A와 같은 수치입니다.</p>
+      <button class="sp-close" aria-label="닫기">✕</button>
+    </header>
+    <div class="sp-body">
+      <h3>한 줄 산식</h3>
+      <div class="formula">
+        <div class="fb"><b>500명</b><small>문서 작성자 · 가정</small></div><span class="op">×</span>
+        <div class="fb"><b>8시간</b><small>1인 월 문서 작성 · 가정</small></div><span class="op">×</span>
+        <div class="fb"><b>50%</b><small>절감률 · 보수 가정</small></div><span class="op">×</span>
+        <div class="fb"><b>12개월</b><small>1년</small></div><span class="op">=</span>
+        <div class="fb res"><b>24,000</b><small>시간 / 년</small></div>
+      </div>
+      <h3>50%는 실측에서 낮춰 잡은 값입니다</h3>
+      <div class="mtl">
+        <div class="mtl-t"><span><b>14:58</b>원고 입력</span><span style="left:30.9%"><b>15:41</b>22장 첫 완성본</span><span style="left:100%"><b>17:17</b>최종본</span></div>
+        <div class="mtl-bar"><i class="or" style="--w:30.9%">43분</i><i class="nv" style="--w:69.1%">수정 3회 · 96분</i></div>
+        <p class="note">작업 기록 시각(프로젝트 생성 → 1차 내보내기 → 최종 내보내기). 공개 오픈소스 워크플로우와 코스콤 양식 템플릿으로 만든 22장 덱</p>
+      </div>
+      <div class="cmp">
+        <div class="cmp-row"><span>수작업 가정</span><div class="cbar"><i class="g" style="--w:100%"></i></div><b>7시간 20분</b></div>
+        <div class="cmp-row"><span>실측 최종본</span><div class="cbar"><i class="nv" style="--w:31.6%"></i></div><b>2시간 20분</b></div>
+        <div class="cmp-row"><span>실측 첫 완성본</span><div class="cbar"><i class="or" style="--w:9.8%"></i></div><b>43분</b></div>
+      </div>
+      <p class="sp-p">실측 최종본은 수작업 가정의 약 1/3(68% 절감)입니다. 그래도 내용 검토와 수정에 드는 시간은 그대로 남는다고 보고, 절감률은 <b>50%</b>로 낮춰 적용했습니다.</p>
+      <h3>산정 근거표</h3>
+      <table class="map ftab"><thead><tr><th>항목</th><th>값</th><th>근거</th><th>성격</th></tr></thead><tbody><tr><td>정기 업무에 시간을 쓰는 근로자</td><td><b>66%</b></td><td>드롭박스·유고브 7개국 조사(2025.7 보도)</td><td><span class="tg x">외부 조사</span></td></tr><tr><td>한국 반복·비핵심 업무 시간</td><td><b>연 251억 시간</b></td><td>같은 조사</td><td><span class="tg x">외부 조사</span></td></tr><tr><td>22장 기획서 첫 완성본</td><td><b>43분</b></td><td>작업 기록 시각 14:58 → 15:41</td><td><span class="tg m">실측</span></td></tr><tr><td>최종본(수정 3회 포함)</td><td><b>약 2시간 20분</b></td><td>작업 기록 시각 14:58 → 17:17</td><td><span class="tg m">실측</span></td></tr><tr><td>수작업 기준(22장)</td><td><b>약 7시간 20분</b></td><td>장당 20분 = 구성 10분 + 양식·정렬 10분</td><td><span class="tg a">가정</span></td></tr><tr><td>1인 월 문서 작성 시간</td><td><b>8시간</b></td><td>주간 보고 1건 + 월 1~2건 보고·제안</td><td><span class="tg a">가정</span></td></tr><tr><td>절감률</td><td><b>50%</b></td><td>실측은 약 1/3 수준이지만, 검토·수정 시간은 그대로 남는다고 보고 보수 적용</td><td><span class="tg a">가정</span></td></tr><tr><td>문서 작성자 수</td><td><b>500명</b></td><td>확산 단계 대상</td><td><span class="tg a">가정</span></td></tr><tr><td>연간 절감</td><td><b>약 24,000시간</b></td><td>500명 × 월 4시간 × 12개월</td><td><span class="tg c">계산</span></td></tr></tbody></table>
+      <h3>가정이 달라지면 — 연간 절감 시간</h3>
+      <table class="sens"><tr><th></th><th data-c="0">절감률 30%</th><th data-c="1">절감률 50%</th><th data-c="2">절감률 68%</th></tr><tr><th data-r="0">300명</th><td data-r="0" data-c="0" class="">8,640</td><td data-r="0" data-c="1" class="">14,400</td><td data-r="0" data-c="2" class="">19,584</td></tr><tr><th data-r="1">500명</th><td data-r="1" data-c="0" class="">14,400</td><td data-r="1" data-c="1" class="pick">24,000</td><td data-r="1" data-c="2" class="">32,640</td></tr><tr><th data-r="2">1,000명</th><td data-r="2" data-c="0" class="">28,800</td><td data-r="2" data-c="1" class="">48,000</td><td data-r="2" data-c="2" class="">65,280</td></tr></table>
+      <p class="note" style="margin-top:8px">연간 절감 = 인원 × 월 8시간 × 절감률 × 12개월. 68%는 실측 비율(1 − 2시간 20분 ÷ 7시간 20분). 칸에 올리면 같은 줄·같은 열이 강조됩니다.</p>
+      <h3>가정은 파일럿에서 확정합니다</h3>
+      <div class="sp-box"><b>확정 방법</b> 3개 부서 30명을 4~6주 운영하고, 도입 전 2주와 도입 후 4주의 작성 시간을 같은 보고 유형끼리 비교합니다.<br><b>함께 재는 KPI</b> 문서 1건 작성 시간 · 양식 위반 건수 · 팩 재사용률 · 규칙 변경 반영 시간 · 만족도</div>
+    </div>
+  </aside>
+  <aside class="side-page" id="side-sources" data-side="sources" data-key="B" data-short="출처" data-label="부록 B · 출처" aria-hidden="true">
+    <header class="sp-head">
+      <div class="kick"><span class="bar"></span>APPENDIX B · 출처</div>
+      <h2>숫자마다 <em>어디서 왔는지</em></h2>
+      <p class="lead">외부 수치는 출처의 성격을 함께 적었습니다. 벤더·자체 발표 수치는 방향을 보여 주는 근거로만 씁니다. 오른쪽 끝은 쓰인 장입니다.</p>
+      <button class="sp-close" aria-label="닫기">✕</button>
+    </header>
+    <div class="sp-body">
+      <div class="flt"><button data-f="" class="on">전체</button><button data-f="m">실측</button><button data-f="x">외부 조사</button><button data-f="n">언론 보도</button><button data-f="v">벤더 발표</button><button data-f="o">공식 문서</button><button data-f="s">오픈소스</button></div>
+      <h3>문제의 크기</h3><div class="srcs"><div class="it" data-k="x"><div><div class="t">직장인 보고서 스트레스 — 업무시간 35%, 스트레스 65.4%, 복잡한 양식 20.8%, 과거 양식 재활용 36.8%</div><div class="s">사람인, 직장인 1,227명 (2021.8 보도) · <a href="https://www.saramin.co.kr/zf_user/help/live/view?idx=108415&listType=news" target="_blank" rel="noopener">사람인</a></div></div><span class="tg x">외부 조사</span><span class="pg">3장</span></div><div class="it" data-k="x"><div><div class="t">정기 업무에 시간을 쓴다 66%, 한국 반복·비핵심 업무 연 251억 시간</div><div class="s">드롭박스·유고브 7개국 조사, 한경비즈니스 2025.7.30 보도</div></div><span class="tg x">외부 조사</span><span class="pg">3장</span></div><div class="it" data-k="o"><div><div class="t">행안부 'AI 친화 보고서' — 2026.8.24부터 실·국장 보고서로 확대</div><div class="s">행정안전부 · <a href="https://zdnet.co.kr/view/?no=20260823161702" target="_blank" rel="noopener">ZDNet Korea</a> · <a href="https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=128940" target="_blank" rel="noopener">행안부 보도자료</a></div></div><span class="tg o">공식 문서</span><span class="pg">4장</span></div></div><h3>경쟁 환경</h3><div class="srcs"><div class="it" data-k="n"><div><div class="t">케이뱅크 K/THON 26 — 팀전 1위 '이상 징후 탐지 + 보고서 자동 작성'</div><div class="s">더페어 · <a href="https://www.thefairnews.co.kr/news/articleView.html?idxno=91808" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">5장</span></div><div class="it" data-k="n"><div><div class="t">빗썸 첫 사내 AI 공모전 — 110명 참가, 107건 접수 (2026.10.26)</div><div class="s">뉴스1 · <a href="https://www.news1.kr/finance/blockchain-fintech/6331597" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">5장</span></div><div class="it" data-k="o"><div><div class="t">MS PowerPoint 조직 브랜드 템플릿 — Copilot 연결 (2026.8~9 배포)</div><div class="s">Microsoft 365 메시지 센터 MC1442612 · <a href="https://mc.merill.net/message/MC1442612" target="_blank" rel="noopener">MC1442612</a> · <a href="https://support.microsoft.com/en-US/Microsoft-365-Copilot/use-branded-templates-in-the-microsoft-365-copilot-app" target="_blank" rel="noopener">지원 문서</a></div></div><span class="tg o">공식 문서</span><span class="pg">5장</span></div><div class="it" data-k="n"><div><div class="t">한컴 × LG AI연구원 — 양식을 적용한 기획서 초안 작성 (2026.5.22)</div><div class="s">ZDNet Korea · <a href="https://zdnet.co.kr/view/?no=20260522105512" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">5장</span></div><div class="it" data-k="n"><div><div class="t">한컴어시스턴트 — 국회·행안부 사업 공급</div><div class="s">서울경제 · <a href="https://www.sedaily.com/article/14065162" target="_blank" rel="noopener">기사</a></div></div><span class="tg n">언론 보도</span><span class="pg">5장</span></div><div class="it" data-k="s"><div><div class="t">hwpx_new — 한글 서식 블록 약 87% 재현(자체 발표), .hwpx 기본</div><div class="s">GitHub · <a href="https://github.com/ZZombie04/hwpx_new" target="_blank" rel="noopener">저장소</a></div></div><span class="tg s">오픈소스</span><span class="pg">5장</span></div><div class="it" data-k="s"><div><div class="t">hwpx-report-skills — 공공 보고서용 Codex 스킬</div><div class="s">GitHub · <a href="https://github.com/pinetreelic/hwpx-report-skills" target="_blank" rel="noopener">저장소</a></div></div><span class="tg s">오픈소스</span><span class="pg">5장</span></div></div><h3>선례 수치 — 모두 벤더·자체 발표</h3><div class="srcs"><div class="it" data-k="v"><div><div class="t">Templafy — 문서 작성 30% 단축, 고위직 주 약 4시간 절감</div><div class="s">Forrester TEI 2019 (Templafy 의뢰) · <a href="https://www.templafy.com/news/templafy-saves-4-hours-per-week-in-document-creation" target="_blank" rel="noopener">발표</a></div></div><span class="tg v">벤더 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">Templafy BDO Canada — 계약서 템플릿 24종 → 4종</div><div class="s">Templafy 고객 사례 · <a href="https://www.templafy.com/case/bdo-canada/" target="_blank" rel="noopener">사례</a></div></div><span class="tg v">벤더 발표</span><span class="pg">6·19장</span></div><div class="it" data-k="v"><div><div class="t">Waterman Group — 제안서·보고서 작성 시간 50% 단축</div><div class="s">Templafy 고객 사례 · <a href="https://www.casestudies.com/company/templafy/case-study/waterman-group-cuts-proposal-and-report-creation-time-by-50-with-templafy" target="_blank" rel="noopener">사례</a></div></div><span class="tg v">벤더 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">Canva Enterprise — ROI 414%, 자산 수정 시간 68%↓, 제작 요청 54%↓</div><div class="s">Forrester TEI 2026.1 (Canva 의뢰) · <a href="https://www.canva.com/resources/forrester-tei/" target="_blank" rel="noopener">발표</a></div></div><span class="tg v">벤더 발표</span><span class="pg">6장</span></div><div class="it" data-k="v"><div><div class="t">삼성SDS 브리티 코파일럿 — 회의록 75%·메일 초안 66% 절감</div><div class="s">삼성SDS 자체 발표, 경제일보 (2024.5) · <a href="https://www.kyungjeilbo.com/view/20240502122617959" target="_blank" rel="noopener">기사</a></div></div><span class="tg v">벤더 발표</span><span class="pg">6장</span></div><div class="it" data-k="o"><div><div class="t">Claude 조직 스킬 — 관리자가 올리면 전원 활성, 그룹별 플러그인</div><div class="s">Anthropic · <a href="https://support.claude.com/en/articles/13119606-provision-and-manage-skills-for-your-organization" target="_blank" rel="noopener">지원 문서</a> · <a href="https://claude.com/blog/organization-skills-and-directory" target="_blank" rel="noopener">블로그</a></div></div><span class="tg o">공식 문서</span><span class="pg">6장</span></div></div><h3>우리 실측</h3><div class="srcs"><div class="it" data-k="m"><div><div class="t">22장 기획서 — 첫 완성본 43분, 수정 3회 포함 최종본 약 2시간 20분</div><div class="s">작업 기록 시각 14:58 → 15:41 → 17:17 (부록 A)</div></div><span class="tg m">실측</span><span class="pg">9·19장</span></div><div class="it" data-k="m"><div><div class="t">한글 보고서 작성 평가 3과제 — 스킬 사용 100%, 미사용 79%</div><div class="s">한글 스킬 평가 (2026.10)</div></div><span class="tg m">실측</span><span class="pg">11장</span></div><div class="it" data-k="m"><div><div class="t">요약보고 샘플 재현 — 원본 1쪽 배치와 일치</div><div class="s">한컴 뷰어 화면 확인</div></div><span class="tg m">실측</span><span class="pg">11장</span></div></div>
+    </div>
+  </aside>
+  <aside class="side-page" id="side-qa" data-side="qa" data-key="C" data-short="예상 질문" data-label="부록 C · 예상 질문" aria-hidden="true">
+    <header class="sp-head">
+      <div class="kick"><span class="bar"></span>APPENDIX C · 예상 질문</div>
+      <h2>질문을 받으면 <em>30초 안에</em></h2>
+      <p class="lead">상세 계획서의 예상 질문을 엔진 3종 기준으로 다듬었습니다. 질문을 누르면 답이 펼쳐지고, 관련 장으로 바로 갈 수 있습니다.</p>
+      <button class="sp-close" aria-label="닫기">✕</button>
+    </header>
+    <div class="sp-body">
+      <div class="qa-bar"><button class="qa-all">모두 펼치기</button><span class="note">창의성 2 · 실용성 3 · 구현 가능성 4 · 보안 1</span></div>
+      <div class="qa"><details class="q" open><summary><span class="qn">Q1</span><span class="qt">Copilot·한컴어시스턴트가 있는데 왜 따로 만드나?</span><span class="qa-tag">창의성</span><span class="pm">+</span></summary><div class="ans"><ul><li>범용 양식은 그들이 해결한다. <b>코스콤 보고 문법, 부서 고정 콘텐츠, 팩의 일괄 관리, 사내망 운영</b>은 하지 않는다.</li><li>MS 조직 템플릿은 외부 클라우드와 Copilot Premium 라이선스가 필요하고 HWP를 만들지 않는다.</li></ul><button class="sp-go" data-goto="4">관련 장 5장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q2</span><span class="qt">오픈소스 HWPX 스킬로도 되지 않나?</span><span class="qa-tag">창의성</span><span class="pm">+</span></summary><div class="ans"><ul><li>서식 복제 기술은 공개돼 있다. 우리는 세 가지를 더한다.</li><li>① 한글 정식판 없이 <b>.hwp 직접 생성</b> ② 코스콤 표준 양식의 <b>정밀 재현</b>(간격 리듬·내어쓰기·표) ③ <b>부서팩 관리</b>라는 운영 체계</li></ul><button class="sp-go" data-goto="10">관련 장 11장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q3</span><span class="qt">웹슬라이드는 왜 따로 필요한가? PPT로 충분하지 않나?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>결재·편집은 한글과 PPT가 맡는다. 웹슬라이드는 <b>링크로 공유·열람하는 문서</b>(고객 브리핑, 교육, 운영 현황판)를 맡는다.</li><li>설치 없이 열리고, 차트와 움직임으로 이해를 돕는다. 같은 설계도에서 나오므로 추가 작성 비용이 거의 없다.</li><li>지금 보는 이 기획서가 그 결과물이고, 편집 모드로 비개발자도 고친다.</li></ul><button class="sp-go" data-goto="9">관련 장 10장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q4</span><span class="qt">팩은 누가 만들고 관리하나?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>부서 관리자가 <b>팩 만들기 도우미</b>로 초안을 받아 승인한다. 전사 팩은 브랜드·기획 담당 부서가 관리한다.</li><li>팩마다 버전·승인 기록이 남고, 바꾸기 전으로 되돌릴 수 있다.</li></ul><button class="sp-go" data-goto="15">관련 장 16장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q5</span><span class="qt">팩이 부서마다 난립하면?</span><span class="qa-tag">실용성</span><span class="pm">+</span></summary><div class="ans"><ul><li>상속 구조라 부서 팩은 <b>전사 팩과 다른 부분만</b> 갖는다.</li><li>CI·문서 등급 표기 같은 전사 규칙은 잠가서 부서가 덮어쓸 수 없다.</li></ul><button class="sp-go" data-goto="14">관련 장 15장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q6</span><span class="qt">사내 Qwen 27B로 품질이 나오나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>LLM은 설계도의 <b>칸만 채운다</b>. 서식은 엔진이, 규칙은 팩과 검수가 맡는다.</li><li>그래서 모델이 바뀌어도 서식 품질은 같다. 모델은 설정 한 줄로 바꾼다.</li><li>지금은 <b>사내 GPU의 Qwen 3.8 27B</b>로 추천·요약·칸 채우기를, H200에 <b>400B급 오픈웨이트</b>가 올라오면 초안 작성까지 맡긴다. 대외 제출용처럼 품질이 중요한 문서는 승인받아 <b>AWS Bedrock Claude</b>(혁신금융서비스)를 쓴다.</li><li>모델별로 같은 평가 과제(보고 문법·숫자 보존·확인 필요 표시)를 돌려 어떤 일을 어느 모델에 맡길지 정한다.</li></ul><button class="sp-go" data-goto="7">관련 장 8장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q7</span><span class="qt">.hwp인가 .hwpx인가? AI 친화 문서 흐름과 맞나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>결재 시스템이 받는 형식을 기본으로 한다. 같은 설계도에서 <b>.hwpx·마크다운 출력</b>도 로드맵에 있다.</li><li>팩의 보고 규칙에 'AI 친화 원칙'을 넣으면 전 부서에 한 번에 적용된다.</li></ul><button class="sp-go" data-goto="11">관련 장 12장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q8</span><span class="qt">서류 단계에서 미리 개발한 것 아닌가?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>서류 단계에서는 <b>아이디어 구상과 자료 정리</b>만 했다. 화면은 설계 시안(가상 데이터)이다.</li><li>PPT·한글 엔진과 <b>WEBSLIDE 스킬</b>(이 기획서를 만든 엔진)은 <b>사전 보유한 개인 작업</b>이다. 부서팩·공통 설계도·사용 화면·도우미는 개발 환경 지원(11/6) 이후와 본선 당일 만든다.</li><li>보유 자산의 반입 범위는 주최 측 확인에 따른다.</li></ul><button class="sp-go" data-goto="17">관련 장 18장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q9</span><span class="qt">보안은 어떻게 하나?</span><span class="qa-tag">보안</span><span class="pm">+</span></summary><div class="ans"><ul><li>기본은 <b>사내 GPU 모델</b>(Qwen → H200 400B급)이라 문서가 사내를 벗어나지 않는다.</li><li>AWS Bedrock Claude는 혁신금융서비스 범위에서 <b>팀장 승인·기간제</b>로만 열고, 보내기 전에 고객사명·연락처·계좌번호를 자동으로 가린다. 대외비 문서는 보낼 수 없다.</li><li>업로드 원문은 보관 기간이 지나면 지운다.</li><li>팩과 생성 기록은 원문 없이 보관한다. 시연은 가상 데이터만 쓴다.</li></ul><button class="sp-go" data-goto="7">관련 장 8장 보기 →</button></div></details><details class="q"><summary><span class="qn">Q10</span><span class="qt">본선 당일 개발 환경이 정해지면 어떻게 하나?</span><span class="qa-tag">구현 가능성</span><span class="pm">+</span></summary><div class="ans"><ul><li>본선에는 사내 LLM이 없고 <b>외부망 상용 AI</b>로 개발한다. AI 호출은 어댑터 한 곳에 모아, 어떤 상용 AI가 주어져도 설정만 바꾼다.</li><li>표준 도구(브라우저·Python·Java)만 써서 설치 부담을 줄이고, 당일 받는 팀 GitHub 저장소에 첫 30분 안에 골격을 올린다.</li><li>AI가 막히면 규칙 기반 모드로, 시간이 모자라면 MVP 컷라인 순서로 줄인다.</li></ul><button class="sp-go" data-goto="17">관련 장 18장 보기 →</button></div></details></div>
+    </div>
+  </aside>
+  <aside class="side-page" id="side-gallery" data-side="gallery" data-key="D" data-short="실물" data-label="부록 D · 실물" aria-hidden="true">
+    <header class="sp-head">
+      <div class="kick"><span class="bar"></span>APPENDIX D · 실물</div>
+      <h2>말이 아니라 <em>이미 나온 결과물</em></h2>
+      <p class="lead">사전 보유한 엔진(PPT·한글·WEBSLIDE 스킬)의 결과물입니다. 서류에 낸 「코쇠 덱」은 PPT 엔진으로, 아래 보고서 화면은 한글 엔진으로 만들었습니다. 그림을 누르면 크게 봅니다.</p>
+      <button class="sp-close" aria-label="닫기">✕</button>
+    </header>
+    <div class="sp-body">
+      <h3>PPT 엔진 — 서류 제출본 「코쇠 덱」 24쪽</h3>
+      <div class="chip-row" style="margin-bottom:12px"><span class="tag solid">첫 완성본 43분 · 실측</span><span class="tag">네이티브 PPTX — PowerPoint에서 바로 수정</span><span class="tag">Koscom Chevron 템플릿</span></div>
+      <div class="gal"><button class="shot" data-lbi="1"><img loading="lazy" src="assets/gallery/ppt-01.webp" alt="코쇠 덱 1쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 1 / 24쪽"><span>1</span></button><button class="shot" data-lbi="2"><img loading="lazy" src="assets/gallery/ppt-02.webp" alt="코쇠 덱 2쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 2 / 24쪽"><span>2</span></button><button class="shot" data-lbi="3"><img loading="lazy" src="assets/gallery/ppt-03.webp" alt="코쇠 덱 3쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 3 / 24쪽"><span>3</span></button><button class="shot" data-lbi="4"><img loading="lazy" src="assets/gallery/ppt-04.webp" alt="코쇠 덱 4쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 4 / 24쪽"><span>4</span></button><button class="shot" data-lbi="5"><img loading="lazy" src="assets/gallery/ppt-05.webp" alt="코쇠 덱 5쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 5 / 24쪽"><span>5</span></button><button class="shot" data-lbi="6"><img loading="lazy" src="assets/gallery/ppt-06.webp" alt="코쇠 덱 6쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 6 / 24쪽"><span>6</span></button><button class="shot" data-lbi="7"><img loading="lazy" src="assets/gallery/ppt-07.webp" alt="코쇠 덱 7쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 7 / 24쪽"><span>7</span></button><button class="shot" data-lbi="8"><img loading="lazy" src="assets/gallery/ppt-08.webp" alt="코쇠 덱 8쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 8 / 24쪽"><span>8</span></button><button class="shot" data-lbi="9"><img loading="lazy" src="assets/gallery/ppt-09.webp" alt="코쇠 덱 9쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 9 / 24쪽"><span>9</span></button><button class="shot" data-lbi="10"><img loading="lazy" src="assets/gallery/ppt-10.webp" alt="코쇠 덱 10쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 10 / 24쪽"><span>10</span></button><button class="shot" data-lbi="11"><img loading="lazy" src="assets/gallery/ppt-11.webp" alt="코쇠 덱 11쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 11 / 24쪽"><span>11</span></button><button class="shot" data-lbi="12"><img loading="lazy" src="assets/gallery/ppt-12.webp" alt="코쇠 덱 12쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 12 / 24쪽"><span>12</span></button><button class="shot" data-lbi="13"><img loading="lazy" src="assets/gallery/ppt-13.webp" alt="코쇠 덱 13쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 13 / 24쪽"><span>13</span></button><button class="shot" data-lbi="14"><img loading="lazy" src="assets/gallery/ppt-14.webp" alt="코쇠 덱 14쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 14 / 24쪽"><span>14</span></button><button class="shot" data-lbi="15"><img loading="lazy" src="assets/gallery/ppt-15.webp" alt="코쇠 덱 15쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 15 / 24쪽"><span>15</span></button><button class="shot" data-lbi="16"><img loading="lazy" src="assets/gallery/ppt-16.webp" alt="코쇠 덱 16쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 16 / 24쪽"><span>16</span></button><button class="shot" data-lbi="17"><img loading="lazy" src="assets/gallery/ppt-17.webp" alt="코쇠 덱 17쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 17 / 24쪽"><span>17</span></button><button class="shot" data-lbi="18"><img loading="lazy" src="assets/gallery/ppt-18.webp" alt="코쇠 덱 18쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 18 / 24쪽"><span>18</span></button><button class="shot" data-lbi="19"><img loading="lazy" src="assets/gallery/ppt-19.webp" alt="코쇠 덱 19쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 19 / 24쪽"><span>19</span></button><button class="shot" data-lbi="20"><img loading="lazy" src="assets/gallery/ppt-20.webp" alt="코쇠 덱 20쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 20 / 24쪽"><span>20</span></button><button class="shot" data-lbi="21"><img loading="lazy" src="assets/gallery/ppt-21.webp" alt="코쇠 덱 21쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 21 / 24쪽"><span>21</span></button><button class="shot" data-lbi="22"><img loading="lazy" src="assets/gallery/ppt-22.webp" alt="코쇠 덱 22쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 22 / 24쪽"><span>22</span></button><button class="shot" data-lbi="23"><img loading="lazy" src="assets/gallery/ppt-23.webp" alt="코쇠 덱 23쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 23 / 24쪽"><span>23</span></button><button class="shot" data-lbi="24"><img loading="lazy" src="assets/gallery/ppt-24.webp" alt="코쇠 덱 24쪽" data-lb data-cap="「코쇠 덱」 서류 제출본 24 / 24쪽"><span>24</span></button></div>
+      <h3>한글 엔진 — 요약보고·상세보고 출력 예시</h3>
+      <div class="hwpshots">
+        <figure><div class="illu tilt-off"><img src="assets/gallery/hwp-summary.webp" alt="한글 엔진 요약보고 출력 화면" data-lb data-cap="한글 엔진 · 요약보고 출력 예시 (가명·가상 내용, 한컴 뷰어 화면)"></div><figcaption>요약보고 — □ ㅇ - · 단계, 제목 박스, 첨부 박스</figcaption></figure>
+        <figure><div class="illu tilt-off"><img src="assets/gallery/hwp-detail.webp" alt="한글 엔진 상세보고 출력 화면" data-lb data-cap="한글 엔진 · 상세보고 출력 예시 (가상 내용, 한컴 뷰어 화면)"></div><figcaption>상세보고 — 장절 제목, 번호 박스, 참고 박스</figcaption></figure>
+      </div>
+      <p class="note" style="margin-top:10px">가명·가상 내용으로 만든 출력을 한컴 뷰어로 연 화면입니다. 편집 모드에서 그림을 더블클릭하면 「코쇠 문서팩」 .hwp 화면 등으로 바꿀 수 있습니다.</p>
+      <h3>웹슬라이드 엔진 — 지금 이 화면</h3>
+      <div class="live-strip"><span class="badge-live">LIVE</span>이 기획서 전체가 웹슬라이드 엔진의 결과물입니다. 차트·애니메이션·편집 모드까지 한 HTML 파일에 들어 있습니다.</div>
+    </div>
+    <div class="lb" id="lb"><button class="lb-x" aria-label="닫기">✕</button><button class="lb-p" aria-label="이전">‹</button><img alt=""><button class="lb-n" aria-label="다음">›</button><div class="lb-cap"></div></div>
+  </aside>
+  <aside class="side-page" id="side-video" data-side="video" data-key="E" data-short="요약 영상" data-label="부록 E · 요약 영상" aria-hidden="true">
+    <header class="sp-head">
+      <div class="kick"><span class="bar"></span>APPENDIX E · 요약 영상</div>
+      <h2>111초로 보는 <em>코쇠 문서팩</em></h2>
+      <p class="lead">이 기획서의 슬라이드·삽화·수치로 만든 모션그래픽에, <b>본선 구현 범위를 보여 주는 화면 설계 시안</b>을 더했습니다. 소리는 없고, 장면마다 아래 자막으로 설명합니다.</p>
+      <button class="sp-close" aria-label="닫기">✕</button>
+    </header>
+    <div class="sp-body">
+      <div class="vbox" id="sumMotion"><iframe title="코쇠 문서팩 요약 모션" tabindex="-1"></iframe><button class="vbig" aria-label="재생">▶</button></div>
+      <div class="vctl"><button class="vtg" aria-label="재생·멈춤">▶</button><div class="vbar"><i></i><b></b></div><span class="vtm">0:00 / 1:51</span><button class="vfs" aria-label="크게 보기">⛶</button></div>
+      <div class="vchap" id="vchap">
+        <button data-t="0"><b>0:00</b>표지</button>
+        <button data-t="6.8"><b>0:07</b>문제 ① 보고서 부담</button>
+        <button data-t="16.8"><b>0:17</b>문제 ② 차별점</button>
+        <button data-t="23.8"><b>0:24</b>해법 한 줄</button>
+        <button data-t="32.8"><b>0:33</b>엔진 3종</button>
+        <button data-t="46.8"><b>0:47</b>공통 설계도</button>
+        <button data-t="55.8"><b>0:56</b>문서팩 구성</button>
+        <button data-t="61.8"><b>1:02</b>상속·일괄 반영</button>
+        <button data-t="68.8"><b>1:09</b>제안과 승인</button>
+        <button data-t="76.8"><b>1:17</b>화면 시안 ① 세 형식 생성</button>
+        <button data-t="85.8"><b>1:26</b>화면 시안 ② 등록·승인·AI</button>
+        <button data-t="94.8"><b>1:35</b>기대 효과</button>
+        <button data-t="103"><b>1:43</b>맺음</button>
+      </div>
+      <p class="note" style="margin-top:12px">Space로 재생·멈춤 · 막대·장면 이름을 누르면 그 자리로 이동 · 동영상 파일이 아니라 <b>모션 원본(HTML)을 그대로 재생</b>해 어떤 화면에서도 선명합니다. mp4가 필요하면 별도 파일(1920×1080, 111초)로 드립니다.</p>
+    </div>
+  </aside>
+
+  <aside class="side-page" id="side-live" data-side="live" data-key="F" data-short="시안·본선" data-label="부록 F · 화면 시안과 본선 준비" aria-hidden="true">
+    <header class="sp-head">
+      <div class="kick"><span class="bar"></span>APPENDIX F · 화면 시안 · 본선 준비</div>
+      <h2>본선에서 만들 화면, 그리고 <em>환경 대비</em></h2>
+      <p class="lead">서류 단계에서는 아이디어 구상과 자료 정리만 했습니다. 아래 화면은 본선 구현 범위를 정리한 <b>설계 시안</b>(가상 데이터)이고, 본선 당일 확정되는 개발 환경에 대비한 준비안을 함께 적었습니다.</p>
+      <button class="sp-close" aria-label="닫기">✕</button>
+    </header>
+    <div class="sp-body">
+      <h3>규정에 맞춘 일정</h3>
+      <div class="formula">
+        <div class="fb"><b>~11/5</b><small>서류 · 아이디어·자료 정리</small></div><span class="op">→</span>
+        <div class="fb"><b>11/6</b><small>본선 진출 · 개발 환경 지원 시작</small></div><span class="op">→</span>
+        <div class="fb"><b>11/6~11/11</b><small>환경 점검 · 구현 준비</small></div><span class="op">→</span>
+        <div class="fb res"><b>11/12</b><small>본선 · 팀 GitHub 저장소 · 구현·시연</small></div>
+      </div>
+      <h3>환경이 당일 정해져도 흔들리지 않게</h3>
+      <table class="map ftab"><thead><tr><th>항목</th><th>대비</th></tr></thead><tbody>
+        <tr><td>AI 모델</td><td>AI 어댑터 한 곳에서 교체한다. <b>본선은 외부망 상용 AI</b>(사내 LLM 미제공), 운영은 <b>사내 GPU</b>(현재 Qwen 3.8 27B → H200의 400B급 오픈웨이트)와 <b>AWS Bedrock Claude</b>(혁신금융서비스)</td></tr>
+        <tr><td>실행 환경</td><td>브라우저 + Python·Java 표준 도구만 쓴다. 설치가 막히면 화면은 정적 HTML로, 엔진은 명령줄로 시연한다</td></tr>
+        <tr><td>저장소</td><td>당일 받는 팀 GitHub 저장소에 첫 30분 안에 골격을 올린다. 템플릿 1개 = 폴더 1개 = 스킬 1개 구조</td></tr>
+        <tr><td>AI가 막히면</td><td>규칙 기반 대체 모드로 설계도를 만든다 — 시연은 멈추지 않는다</td></tr>
+        <tr><td>데이터</td><td>가상 조직·가상 문서만 쓴다. 사내 원본 서식·실데이터는 반입하지 않는다</td></tr>
+        <tr><td>보유 자산</td><td>PPT·한글 엔진, <b>WEBSLIDE 스킬</b>(이 기획서를 만든 엔진), 코쇠 삽화는 사전 보유한 개인 작업이다. 본선 반입 범위는 주최 측 확인 후 정한다</td></tr>
+      </tbody></table>
+      <h3>본선 당일 시간표 (안)</h3>
+      <div class="chip-row"><span class="tag solid">09:00 환경 확인 · 저장소 골격</span><span class="tag">10:00 AI 어댑터 · 공통 설계도</span><span class="tag">12:00 문서팩 · 자동 검수</span><span class="tag">14:00 화면 연결</span><span class="tag">16:00 리허설 · 컷라인 판단</span><span class="tag solid">17:00 시연 3분</span></div>
+      <p class="note" style="margin-top:8px">늦어지면 상세보고 → 도우미 → 웹 화면 → 상속 순으로 줄이고, 엔진 3종 · 팩 2개 · 즉시 반영 · 자동 검수는 끝까지 지킨다.</p>
+      <h3>화면 설계 시안 8장</h3>
+      <div class="gal"><button class="shot"><img loading="lazy" src="assets/platform/01-new.webp" alt="① 새 문서 — 요청과 첨부, 템플릿 추천" data-lb data-cap="화면 설계 시안 ① 새 문서 — 요청과 첨부, 템플릿 추천 (가상 데이터)"><span>1</span></button><button class="shot"><img loading="lazy" src="assets/platform/02-workspace.webp" alt="② 작업 화면 — 채팅 · 설계도 · 세 형식 생성과 검수" data-lb data-cap="화면 설계 시안 ② 작업 화면 — 채팅 · 설계도 · 세 형식 생성과 검수 (가상 데이터)"><span>2</span></button><button class="shot"><img loading="lazy" src="assets/platform/03-ppt.webp" alt="③ PPT 결과 미리보기" data-lb data-cap="화면 설계 시안 ③ PPT 결과 미리보기 (가상 데이터)"><span>3</span></button><button class="shot"><img loading="lazy" src="assets/platform/04-web.webp" alt="④ 웹슬라이드 결과 — 표가 차트로" data-lb data-cap="화면 설계 시안 ④ 웹슬라이드 결과 — 표가 차트로 (가상 데이터)"><span>4</span></button><button class="shot"><img loading="lazy" src="assets/platform/05-hwp.webp" alt="⑤ 한글 결과 — 보고 문법 그대로" data-lb data-cap="화면 설계 시안 ⑤ 한글 결과 — 보고 문법 그대로 (가상 데이터)"><span>5</span></button><button class="shot"><img loading="lazy" src="assets/platform/06-register.webp" alt="⑥ 부서 양식 등록 — 예시 문서에서 AI 추출" data-lb data-cap="화면 설계 시안 ⑥ 부서 양식 등록 — 예시 문서에서 AI 추출 (가상 데이터)"><span>6</span></button><button class="shot"><img loading="lazy" src="assets/platform/07-approve.webp" alt="⑦ 승인함 — 팀장 승인" data-lb data-cap="화면 설계 시안 ⑦ 승인함 — 팀장 승인 (가상 데이터)"><span>7</span></button><button class="shot"><img loading="lazy" src="assets/platform/08-inet.webp" alt="⑧ 외부 AI 사용 승인 · 민감정보 가림" data-lb data-cap="화면 설계 시안 ⑧ 외부 AI 사용 승인 · 민감정보 가림 (가상 데이터)"><span>8</span></button></div>
+      <p class="note" style="margin-top:10px">본선 구현 범위를 화면 단위로 정리한 시안입니다. 표시된 이름·숫자·시각은 모두 가상입니다.</p>
+    </div>
+    <div class="lb"><button class="lb-x" aria-label="닫기">✕</button><button class="lb-p" aria-label="이전">‹</button><img alt=""><button class="lb-n" aria-label="다음">›</button><div class="lb-cap"></div></div>
+  </aside>
+  <!-- /deck-content -->
+
+</div>
+
+<!-- 편집 모드 UI -->
+<div id="editbar" hidden>
+  <span class="eb-badge">편집 모드</span>
+  <button data-cmd="bold" title="굵게 (Ctrl+B)"><b>B</b></button>
+  <button data-cmd="accent" title="선택한 글자를 오렌지로 강조">강조</button>
+  <button data-cmd="plain" title="선택한 글자의 서식 지우기">서식 지우기</button>
+  <button data-cmd="undo" title="되돌리기 (Ctrl+Z)">되돌리기</button>
+  <span class="eb-sep"></span>
+  <span class="eb-state" id="ebState">변경 없음</span>
+  <button data-cmd="save" class="primary" title="HTML 저장 (Ctrl+S)">HTML 저장</button>
+  <button data-cmd="discard" title="저장하지 않은 편집을 모두 버리기">편집 버리기</button>
+  <button data-cmd="exit" title="편집 끝내기 (Esc)">완료</button>
+</div>
+<aside id="cpanel" hidden>
+  <header><b id="cpTitle"></b><button id="cpClose" aria-label="닫기">✕</button></header>
+  <div id="cpBody"></div>
+  <footer><button id="cpAdd">+ 행 추가</button><span class="note">값을 바꾸면 차트에 바로 반영됩니다</span></footer>
+</aside>
+<div id="toast"><span id="toastMsg"></span></div>
+<input type="file" id="imgPick" accept="image/*" hidden>
+
+<!-- 편집 가능한 데이터: 편집 모드에서 고치고 'HTML 저장'하면 이 블록이 다시 쓰인다 -->
+<!-- 삽화 레이어 지도: 배경과 움직일 요소의 위치(원본 픽셀) -->
+<script type="application/json" id="illu-layers">{"01-engine-pack":{"w":1523,"h":695,"K":[{"x":789,"y":87,"w":193,"h":198,"eyes":[[823.5,163.5,7.5,8.5],[892.5,174.0,8.5,9.0]],"fill":"#605d5a","m":"bPress","pivot":[886.0,279],"crest":{"x":883,"y":24,"w":59,"h":70,"ox":904.4,"oy":92}}],"G":[{"id":"o2","c":"o","x":44,"y":463,"w":89,"h":58,"a":"pop"},{"id":"o3","c":"o","x":96,"y":537,"w":60,"h":29,"a":"pop"},{"id":"o0","c":"o","x":578,"y":34,"w":123,"h":120,"a":"pop"},{"id":"o1","c":"o","x":608,"y":197,"w":92,"h":45,"a":"pop"},{"id":"b0","c":"b","x":90,"y":375,"w":95,"h":57,"a":"pop"},{"id":"b1","c":"b","x":90,"y":563,"w":137,"h":73,"a":"pop"}]},"02-same-memo":{"w":1467,"h":519,"K":[{"x":73,"y":197,"w":178,"h":179,"eyes":[[207.5,265.5,7.5,8.5],[137.0,277.5,8.0,8.5]],"fill":"#5e5b58","m":"bTilt","pivot":[162.0,370],"crest":{"x":126,"y":144,"w":48,"h":61,"ox":137.1,"oy":203}}],"G":[{"id":"o0","c":"o","x":326,"y":64,"w":108,"h":74,"a":"pop"},{"id":"o8","c":"o","x":696,"y":412,"w":51,"h":14,"a":"wx"},{"id":"o4","c":"o","x":698,"y":204,"w":50,"h":13,"a":"pop"},{"id":"o6","c":"o","x":763,"y":410,"w":89,"h":40,"a":"pop"},{"id":"o2","c":"o","x":764,"y":192,"w":88,"h":42,"a":"pop"},{"id":"o3","c":"o","x":869,"y":201,"w":61,"h":15,"a":"wx"},{"id":"o7","c":"o","x":869,"y":410,"w":65,"h":14,"a":"pop"},{"id":"o1","c":"o","x":961,"y":180,"w":94,"h":38,"a":"wx"},{"id":"o5","c":"o","x":965,"y":394,"w":125,"h":38,"a":"wx"},{"id":"b1","c":"b","x":1277,"y":402,"w":123,"h":44,"a":"wx"},{"id":"b0","c":"b","x":1321,"y":165,"w":103,"h":42,"a":"wx"}]},"03-one-line-all":{"w":1600,"h":512,"K":[{"x":68,"y":199,"w":170,"h":169,"eyes":[[177.5,270.5,5.5,8.5],[218.0,270.0,5.0,8.0]],"fill":"#5b5958","m":"bTilt","pivot":[152.5,363],"crest":{"x":135,"y":133,"w":52,"h":69,"ox":147.8,"oy":200}}],"G":[{"id":"o4","c":"o","x":414,"y":147,"w":98,"h":23,"a":"wx"},{"id":"o6","c":"o","x":422,"y":190,"w":77,"h":13,"a":"pop"},{"id":"o5","c":"o","x":514,"y":147,"w":180,"h":57,"a":"wx"},{"id":"o12","c":"o","x":596,"y":288,"w":892,"h":133,"a":"wx"},{"id":"o7","c":"o","x":784,"y":208,"w":41,"h":33,"a":"pop"},{"id":"o8","c":"o","x":951,"y":208,"w":40,"h":34,"a":"pop"},{"id":"o2","c":"o","x":977,"y":47,"w":35,"h":57,"a":"pop"},{"id":"o1","c":"o","x":1039,"y":45,"w":79,"h":52,"a":"pop"},{"id":"o9","c":"o","x":1119,"y":208,"w":40,"h":33,"a":"pop"},{"id":"o3","c":"o","x":1138,"y":47,"w":77,"h":50,"a":"pop"},{"id":"o0","c":"o","x":1244,"y":43,"w":32,"h":51,"a":"pop"},{"id":"o10","c":"o","x":1288,"y":208,"w":40,"h":33,"a":"pop"},{"id":"o11","c":"o","x":1460,"y":208,"w":39,"h":33,"a":"pop"},{"id":"b0","c":"b","x":403,"y":325,"w":95,"h":33,"a":"wx"},{"id":"b3","c":"b","x":950,"y":454,"w":27,"h":42,"a":"pop"},{"id":"b1","c":"b","x":1019,"y":448,"w":186,"h":44,"a":"wx"},{"id":"b2","c":"b","x":1252,"y":453,"w":24,"h":39,"a":"pop"}]},"04-pack-maker":{"w":1600,"h":597,"K":[{"x":493,"y":196,"w":189,"h":202,"eyes":[[587.5,284.5,7.5,10.5],[653.0,287.0,7.0,10.0]],"fill":"#5e5a59","m":"bRock","pivot":[587.0,392],"crest":{"x":572,"y":121,"w":60,"h":77,"ox":587.8,"oy":196}}],"G":[{"id":"o0","c":"o","x":354,"y":266,"w":92,"h":48,"a":"pop"},{"id":"o1","c":"o","x":1066,"y":265,"w":92,"h":49,"a":"pop"},{"id":"o3","c":"o","x":1250,"y":422,"w":116,"h":52,"a":"pop"},{"id":"o2","c":"o","x":1300,"y":305,"w":123,"h":63,"a":"pop"},{"id":"b0","c":"b","x":910,"y":351,"w":163,"h":79,"a":"pop"},{"id":"r0","c":"r","x":1300,"y":305,"w":123,"h":63,"a":"pop"}]},"05-inherit-layers":{"w":1117,"h":823,"K":[{"x":370,"y":73,"w":157,"h":141,"eyes":[[463.0,146.5,6.0,6.5]],"fill":"#5c5754","m":"bNod","pivot":[449.0,208],"crest":{"x":462,"y":27,"w":54,"h":59,"ox":484.6,"oy":84}}],"G":[{"id":"o2","c":"o","x":33,"y":610,"w":157,"h":64,"a":"wx"},{"id":"o0","c":"o","x":494,"y":222,"w":70,"h":472,"a":"wy"},{"id":"o1","c":"o","x":856,"y":316,"w":170,"h":43,"a":"wx"},{"id":"r0","c":"r","x":34,"y":610,"w":156,"h":64,"a":"wx"}]},"10-cover-backpack":{"w":1405,"h":625,"K":[{"x":293,"y":290,"w":221,"h":241,"eyes":[[433.0,390.0,8.0,11.0],[486.5,397.5,7.5,10.5]],"fill":"#5c5a59","m":"bTilt","pivot":[403.5,525],"crest":{"x":416,"y":220,"w":66,"h":81,"ox":438.7,"oy":299}}],"G":[{"id":"o0","c":"o","x":144,"y":341,"w":113,"h":67,"a":"pop"},{"id":"o7","c":"o","x":184,"y":584,"w":142,"h":13,"a":"wx"},{"id":"o8","c":"o","x":339,"y":584,"w":31,"h":12,"a":"wx"},{"id":"o6","c":"o","x":384,"y":584,"w":30,"h":12,"a":"pop"},{"id":"o5","c":"o","x":451,"y":582,"w":30,"h":13,"a":"wx"},{"id":"o3","c":"o","x":494,"y":582,"w":78,"h":13,"a":"wx"},{"id":"o4","c":"o","x":586,"y":582,"w":30,"h":12,"a":"pop"},{"id":"o2","c":"o","x":630,"y":580,"w":123,"h":14,"a":"wx"},{"id":"o1","c":"o","x":766,"y":577,"w":300,"h":16,"a":"wx"},{"id":"b1","c":"b","x":49,"y":53,"w":61,"h":68,"a":"pop"},{"id":"b0","c":"b","x":188,"y":27,"w":127,"h":72,"a":"pop"},{"id":"b2","c":"b","x":389,"y":60,"w":54,"h":70,"a":"pop"}]},"11-webslide":{"w":1366,"h":795,"K":[{"x":576,"y":369,"w":177,"h":173,"eyes":[[613.0,442.0,6.0,9.0],[671.0,448.0,7.0,9.0]],"fill":"#5b5958","m":"bPush","pivot":[665.0,536],"crest":{"x":663,"y":309,"w":59,"h":65,"ox":682.7,"oy":372}}],"G":[{"id":"o4","c":"o","x":230,"y":392,"w":40,"h":46,"a":"pop"},{"id":"o3","c":"o","x":334,"y":338,"w":43,"h":47,"a":"pop"},{"id":"o2","c":"o","x":422,"y":276,"w":36,"h":42,"a":"pop"},{"id":"o1","c":"o","x":884,"y":238,"w":36,"h":76,"a":"pop"},{"id":"o0","c":"o","x":936,"y":198,"w":276,"h":75,"a":"wx"},{"id":"o5","c":"o","x":1109,"y":570,"w":101,"h":56,"a":"pop"},{"id":"o6","c":"o","x":1113,"y":660,"w":108,"h":58,"a":"pop"},{"id":"b0","c":"b","x":899,"y":664,"w":139,"h":93,"a":"pop"}]},"12-blueprint":{"w":1429,"h":751,"K":[{"x":131,"y":224,"w":215,"h":207,"eyes":[[245.0,329.5,8.0,10.5],[308.5,336.5,7.5,9.5]],"fill":"#5b5b5b","m":"bNod","pivot":[240.5,427],"crest":{"x":244,"y":148,"w":68,"h":82,"ox":265.8,"oy":228}}],"G":[{"id":"o1","c":"o","x":422,"y":240,"w":220,"h":76,"a":"wx"},{"id":"o2","c":"o","x":464,"y":316,"w":54,"h":88,"a":"pop"},{"id":"o0","c":"o","x":631,"y":142,"w":344,"h":484,"a":"wx"},{"id":"b2","c":"b","x":1195,"y":530,"w":142,"h":75,"a":"pop"},{"id":"b0","c":"b","x":1226,"y":27,"w":141,"h":84,"a":"pop"},{"id":"b1","c":"b","x":1259,"y":288,"w":121,"h":65,"a":"pop"}]},"13-hwp-typeset":{"w":1512,"h":616,"K":[{"x":385,"y":110,"w":210,"h":201,"eyes":[[487.5,210.5,8.5,10.5],[556.5,213.5,7.5,10.5]],"fill":"#575554","m":"bNod","pivot":[490.0,306],"crest":{"x":480,"y":31,"w":66,"h":83,"ox":499.0,"oy":112}}],"G":[{"id":"o3","c":"o","x":76,"y":450,"w":218,"h":140,"a":"wx"},{"id":"o1","c":"o","x":712,"y":195,"w":37,"h":41,"a":"pop"},{"id":"o2","c":"o","x":1024,"y":315,"w":86,"h":61,"a":"pop"},{"id":"o0","c":"o","x":1114,"y":83,"w":190,"h":58,"a":"wx"},{"id":"b0","c":"b","x":1350,"y":422,"w":108,"h":74,"a":"pop"}]},"k2-pain-ruler":{"w":1600,"h":561,"K":[{"x":839,"y":286,"w":147,"h":152,"eyes":[[898.0,346.0,5.0,7.0]],"fill":"#625d5c","m":"bTilt","pivot":[913.0,432],"crest":{"x":868,"y":148,"w":78,"h":142,"ox":916.0,"oy":288}}],"G":[{"id":"o3","c":"o","x":212,"y":406,"w":235,"h":64,"a":"wx"},{"id":"o4","c":"o","x":637,"y":451,"w":201,"h":65,"a":"wx"},{"id":"o2","c":"o","x":768,"y":259,"w":16,"h":15,"a":"pop"},{"id":"o1","c":"o","x":875,"y":201,"w":11,"h":43,"a":"wy"},{"id":"o0","c":"o","x":934,"y":143,"w":88,"h":32,"a":"wx"},{"id":"r0","c":"r","x":212,"y":405,"w":56,"h":47,"a":"pop"},{"id":"r1","c":"r","x":281,"y":406,"w":166,"h":64,"a":"wx"},{"id":"b0","c":"b","x":399,"y":82,"w":338,"h":52,"a":"wx"},{"id":"b1","c":"b","x":852,"y":83,"w":465,"h":54,"a":"wx"},{"id":"b2","c":"b","x":960,"y":467,"w":121,"h":42,"a":"wx"}]},"k3-vault-llm":{"w":1600,"h":606,"K":[{"x":338,"y":316,"w":125,"h":138,"eyes":[[406.0,373.0,6.0,7.0],[440.5,374.0,5.5,7.0]],"fill":"#555354","m":"bBreathe","pivot":[401.0,448],"crest":{"x":393,"y":269,"w":41,"h":49,"ox":405.7,"oy":316}}],"G":[{"id":"o3","c":"o","x":493,"y":276,"w":123,"h":65,"a":"pop"},{"id":"o5","c":"o","x":614,"y":366,"w":62,"h":66,"a":"pop"},{"id":"o4","c":"o","x":692,"y":286,"w":123,"h":68,"a":"pop"},{"id":"o2","c":"o","x":1010,"y":260,"w":310,"h":52,"a":"wx"},{"id":"o0","c":"o","x":1132,"y":210,"w":129,"h":46,"a":"wx"},{"id":"o1","c":"o","x":1277,"y":211,"w":27,"h":38,"a":"pop"},{"id":"b0","c":"b","x":852,"y":82,"w":112,"h":47,"a":"wx"},{"id":"r2","c":"r","x":1010,"y":260,"w":310,"h":52,"a":"wx"},{"id":"r0","c":"r","x":1132,"y":210,"w":129,"h":47,"a":"wx"},{"id":"r1","c":"r","x":1277,"y":211,"w":27,"h":38,"a":"pop"}]},"k4-inspector":{"w":1600,"h":466,"K":[{"x":597,"y":170,"w":153,"h":158,"eyes":[[679.5,232.5,4.5,7.5]],"fill":"#5c5856","m":"bPeer","pivot":[673.5,322],"crest":{"x":647,"y":116,"w":45,"h":58,"ox":657.6,"oy":172}}],"G":[{"id":"o8","c":"o","x":28,"y":258,"w":49,"h":31,"a":"pop"},{"id":"o7","c":"o","x":280,"y":256,"w":48,"h":32,"a":"pop"},{"id":"o9","c":"o","x":534,"y":257,"w":46,"h":31,"a":"pop"},{"id":"o11","c":"o","x":745,"y":284,"w":69,"h":66,"a":"pop"},{"id":"o3","c":"o","x":868,"y":160,"w":74,"h":83,"a":"pop"},{"id":"o6","c":"o","x":990,"y":229,"w":67,"h":77,"a":"pop"},{"id":"o4","c":"o","x":1246,"y":205,"w":42,"h":44,"a":"pop"},{"id":"o2","c":"o","x":1264,"y":128,"w":37,"h":43,"a":"pop"},{"id":"o10","c":"o","x":1308,"y":263,"w":47,"h":31,"a":"pop"},{"id":"o1","c":"o","x":1312,"y":112,"w":62,"h":47,"a":"pop"},{"id":"o0","c":"o","x":1388,"y":108,"w":112,"h":62,"a":"pop"},{"id":"o5","c":"o","x":1494,"y":204,"w":42,"h":46,"a":"pop"},{"id":"r2","c":"r","x":724,"y":284,"w":90,"h":65,"a":"pop"},{"id":"b0","c":"b","x":812,"y":242,"w":116,"h":14,"a":"pop"},{"id":"r0","c":"r","x":868,"y":160,"w":74,"h":83,"a":"pop"},{"id":"r1","c":"r","x":990,"y":229,"w":67,"h":77,"a":"pop"}]},"k5-closing-relay":{"w":1593,"h":551,"K":[{"x":990,"y":225,"w":212,"h":207,"eyes":[[1165.5,309.5,8.5,10.5],[1094.0,317.5,9.0,10.5]],"fill":"#5e5a59","m":"bBreathe","pivot":[1096.0,426],"crest":{"x":1048,"y":144,"w":70,"h":89,"ox":1063.6,"oy":231}},{"x":523,"y":226,"w":196,"h":204,"eyes":[[620.5,309.5,8.5,10.5],[551.5,310.5,8.5,10.5]],"fill":"#5e5a59","m":"bBreathe","pivot":[621.0,424],"crest":{"x":591,"y":154,"w":62,"h":75,"ox":607.2,"oy":227}}],"G":[{"id":"o2","c":"o","x":744,"y":212,"w":220,"h":62,"a":"wx"},{"id":"o0","c":"o","x":1232,"y":26,"w":298,"h":133,"a":"wx"},{"id":"o1","c":"o","x":1432,"y":212,"w":32,"h":43,"a":"pop"},{"id":"b0","c":"b","x":118,"y":44,"w":264,"h":124,"a":"wx"}]}}</script>
+<script type="application/json" id="deck-data">{"cat":[["결과보고","요약","개요 → 주요 내용 → 성과 → 향후 계획","실적표, 전년 대비 증감"],["계획보고","요약","추진 배경 → 추진 내용 → 추진 일정 → 기대 효과","일정표(분기·월)"],["검토보고","요약","검토 배경 → 현황 → 검토 의견 → 건의 사항","대안 비교표"],["이슈·장애 보고","요약","발생 개요 → 경과 → 원인 → 조치 → 재발 방지","시각표, 영향 범위"],["회의 결과 보고","요약","회의 개요 → 주요 논의 → 결정 사항 → 후속 조치","담당·기한 표"],["출장 결과 보고","요약","출장 개요 → 주요 활동 → 시사점 → 후속 조치","일자별 일정표"],["고객 방문 결과","요약","방문 개요 → 주요 논의 → 고객 요청 → 후속 조치","참석자 표(가명 규칙)"],["행사 계획 보고","요약","행사 개요 → 세부 일정 → 역할 분담 → 소요 예산 → 준비 일정","시간표, 예산표"],["주간 업무 보고","요약","금주 실적 → 차주 계획 → 이슈","표 중심, 1쪽"],["교육 기획안","요약","교육 개요 → 커리큘럼 → 운영 계획 → 소요 예산","차시별 표"],["사업계획서","상세","Ⅰ.추진 배경 → Ⅱ.현황 → Ⅲ.기본 방향 → Ⅳ.추진 과제 → Ⅴ.기대 효과","표지·목차"],["제안서·공모전","상세","Ⅰ.배경 → Ⅱ.현황 분석 → Ⅲ.제안 개요 → Ⅳ.추진 내용 → Ⅴ.추진 계획 → Ⅵ.기대 효과 → 별첨","그림 중심, 심사 기준 대응 별첨"],["업무 가이드","상세","Ⅰ.목적 → Ⅱ.절차별 가이드 → Ⅲ.유의 사항 → 별첨 서식","절차 그림, 참고 박스"]],"packs":[["영업 팩","고객사 제안서 · 방문 결과 보고 · 고객 브리핑 링크",["PPT","WEB","한글"],"회사 소개·서비스 카탈로그·레퍼런스 고정 블록, 대외용 등급 표기","고객사명 오기 검사"],["기획 팩","임원 보고 · 요약보고 · 한 장 요약",["한글","PPT"],"결론 먼저 구성, 결재라인 기본값, 한 장 요약 장표","보고 문법(□ ㅇ - ·) 잠금"],["운영 팩","장애 경위서 · 주간 운영 보고 · 운영 현황판",["한글","WEB"],"경위서 목차(개요·경과·원인·조치·재발 방지), 시스템 용어 사전","시각 표기 규칙(2026. 10. 27 14:05)"],["교육 팩","교육·안내 자료 · 사내 공유용 학습 페이지",["PPT","WEB"],"쉬운 말 규칙, 용어 첫 등장 풀이, 확인 퀴즈 장표","코쇠 삽화 자동 매칭"]],"layers":[["개인 설정","자주 쓰는 표현, 서명",false],["부서 팩","고정 문구 · 용어 · 결재라인",false],["본부 팩","본부 공통 보고 구성",false],["전사 공통 팩","CI · 보고 문법 · 검수 기준 🔒",true]],"scenes":[["0:00","문제","손으로 만든 문서 2건","같은 내용을 부서 양식 때문에 다시 쓴다. 손으로 만든 문서 2건에 양식 위반 표시를 띄운다.","k2-pain-ruler"],["0:20","엔진 셋","메모 한 장 → 요약보고 .hwp","메모 한 장을 기획 팩에 넣는다. 요약보고 .hwp를 한글 뷰어로 열면 표준 양식 그대로다.","01-engine-pack"],["0:50","팩이 다르면","같은 메모 → 제안서 · 웹 링크","같은 메모를 영업 팩에 넣으면 고객사 제안서 .pptx와 브리핑 웹슬라이드가 나온다. 회사 소개·레퍼런스가 자동으로 들어간다.","02-same-memo"],["1:20","일괄 반영","팩 한 줄 수정 → 전원","부서 관리자가 팩의 서비스 소개 문구를 고친다. 다시 생성하면 바로 반영되고, 버전 기록이 남는다.","03-one-line-all"],["1:50","자동 검수","망친 문서 → 검출 → 수정","3줄 초과·날짜 형식·CI 색을 일부러 틀린 문서를 넣는다. 검수가 찾아내고 자동으로 고친다.","k4-inspector"],["2:15","새 팩 만들기","문서 3건 → 팩 초안 → 승인","가상 부서 문서 3건에서 공통 목차·반복 문구·용어를 뽑아 팩 초안을 만든다. 승인하면 즉시 쓴다.","04-pack-maker"],["2:40","AI 교체","설정 한 줄로 모델 교체","본선은 상용 AI로 시연한다. 설정 한 줄로 사내 GPU(Qwen·H200)나 Bedrock Claude로 바꿔도 결과 서식은 같다. 민감정보는 가려서 보낸다.","k3-vault-llm"],["2:50","마무리","엔진은 하나, 팩은 부서마다","\"엔진은 회사가 하나, 팩은 부서마다\" — 연 약 24,000시간(가정)으로 맺는다.","k5-closing-relay"]],"charts":{"c3bar":{"title":"03 · 직장인 보고서 인식","cols":["항목","값(%)","색","출처"],"types":["t","n","c","t"],"rows":[["정기 업무(보고서 등)에 시간을 쓴다",66,"네이비","드롭박스·유고브 (2025.7)"],["보고서 스트레스를 느낀다",65.4,"오렌지","사람인, 1,227명 (2021.8)"],["과거 양식을 재활용해 쓴다",36.8,"회색","사람인, 1,227명 (2021.8)"],["업무시간 중 보고서 작성",35,"오렌지","사람인, 1,227명 (2021.8)"],["스트레스 원인 — 복잡한 양식",20.8,"회색","사람인, 1,227명 (2021.8)"]]},"c3ring":{"title":"03 · 업무시간 중 보고서 비중","cols":["항목","값(%)"],"types":["t","n"],"rows":[["보고서 작성",35]]},"c5":{"title":"05 · 경쟁 포지셔닝","cols":["이름","재현 깊이(0~10)","맞춤·관리(0~10)","형식 수","색"],"types":["t","n","n","n","c"],"rows":[["사내 공모전 '보고서 자동 작성'",2,1.6,1,"회색"],["오픈소스 HWPX 스킬",5.6,1.4,1,"회색"],["한컴어시스턴트 · 양식 초안",4,3.6,1,"회색"],["MS Copilot 조직 템플릿",2.8,6.8,1,"네이비"],["Templafy",2.2,8.2,2,"네이비"],["코쇠 문서팩",9,9,3,"오렌지"]]},"c6":{"title":"06 · 도입 후 감소율","cols":["항목","감소율(%)","색"],"types":["t","n","c"],"rows":[["회의록 작성 시간 · 삼성SDS 브리티",75,"회색"],["자산 수정 시간 · Canva 업종 사례",68,"회색"],["메일 초안 시간 · 삼성SDS 브리티",66,"회색"],["디자인 제작 요청 · Canva 업종 사례",54,"회색"],["제안서·보고서 작성 · Templafy 사례",50,"오렌지"],["문서 작성 시간 · Templafy(Forrester)",30,"오렌지"]]},"c9":{"title":"09 · 22장 기획서 작성 시간","cols":["구분","분","색"],"types":["t","n","c"],"rows":[["수작업 (가정)",440,"회색"],["AI 첫 완성본 (실측)",43,"오렌지"],["수정 3회 포함 최종본 (실측)",140,"네이비"]]},"c11":{"title":"11 · 보고서 작성 평가 통과율","cols":["구분","통과율(%)","색"],"types":["t","n","c"],"rows":[["스킬 사용",100,"오렌지"],["스킬 미사용",79,"회색"]]},"c12":{"title":"12 · 한글 템플릿 base 구성","cols":["구분","종 수","색"],"types":["t","n","c"],"rows":[["요약보고 base",10,"오렌지"],["상세보고 base",3,"진네이비"]]},"c18":{"title":"18 · 단계별 일정 (2026년)","cols":["단계","시작(월/일)","끝(월/일)","색"],"types":["t","d","d","c"],"rows":[["아이디어·자료 정리 (서류)","10/27","11/5","오렌지"],["본선 진출 · 개발 환경 지원","11/6","11/6","네이비"],["환경 점검 · 엔진 연결 확인","11/6","11/9","네이비"],["공통 설계도 · AI 어댑터","11/9","11/10","네이비"],["문서팩 · 자동 검수 · 화면","11/10","11/11","네이비"],["리허설 · 시연 데이터","11/11","11/11","연오렌지"],["본선 — 저장소 받아 구현·시연","11/12","11/12","오렌지"]]},"c19":{"title":"19 · 월별 절감 시간","cols":["월","월 절감(시간)"],"types":["t","n"],"rows":[["1월",2000],["2월",2000],["3월",2000],["4월",2000],["5월",2000],["6월",2000],["7월",2000],["8월",2000],["9월",2000],["10월",2000],["11월",2000],["12월",2000]]},"c20":{"title":"20 · 심사 배점","cols":["영역","배점","색"],"types":["t","n","c"],"rows":[["창의성",30,"오렌지"],["업무 도구 실용성",30,"진네이비"],["구현 가능성",20,"연오렌지"],["기대 효과",20,"진회색"]]}}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.Chart || document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>')</script>
+<script>
+(() => {
+  /* 편집 저장의 바탕: 스크립트가 DOM을 바꾸기 전의 원본 */
+  const PRISTINE = '<!doctype html>\n' + document.documentElement.outerHTML;
+  // 단일 파일판: 그림·영상이 #asset-map 안에 들어 있으면 경로 대신 그것을 쓴다(폴더판에서는 경로 그대로)
+  const ASSETS = (() => { try { return JSON.parse(document.getElementById('asset-map')?.textContent || '{}'); } catch (e) { return {}; } })();
+  const A = p => ASSETS[p] || p;
+  const toBlobUrl = (d, type) => URL.createObjectURL(new Blob([Uint8Array.from(atob(d.split(',')[1]), c => c.charCodeAt(0))], {type}));
+  document.querySelectorAll('img[src^="assets/"], img[data-asset], video[src^="assets/"], video[data-asset], video[data-poster]').forEach(el => {
+    const src = el.dataset.asset || el.getAttribute('src'), poster = el.dataset.poster || el.getAttribute('poster');
+    if (src) { el.dataset.asset = src; if (ASSETS[src]) el.src = el.tagName === 'VIDEO' ? toBlobUrl(ASSETS[src], 'video/mp4') : ASSETS[src]; }
+    if (poster && ASSETS[poster]) el.poster = ASSETS[poster];
+  });
+  const DATA = JSON.parse(document.getElementById('deck-data').textContent);
+  ['cat', 'packs', 'layers', 'scenes'].forEach(k => DATA[k] = DATA[k] || []); DATA.charts = DATA.charts || {};
+  // 장·부록을 빼도 돌아가게: 그 장에만 있는 요소가 없으면 화면에 붙지 않는 빈 요소로 대신한다
+  const $el = id => document.getElementById(id) || Object.assign(document.createElement('div'), {id: '_' + id});
+
+  const C = {or:'#ee6d1d', or2:'#f26522', ort:'#fad3bb', orp:'#fdeee4', navy:'#00338d', navy2:'#1f4b9b', hair:'#dcdce0', surf:'#f5f5f7', ink:'#2b2b2e', ink2:'#6e6e73', grey:'#8c8c92'};
+  const COLORS = {'오렌지': C.or, '네이비': C.navy2, '진네이비': C.navy, '회색': C.hair, '진회색': C.grey, '연오렌지': C.ort};
+  const col = n => COLORS[n] || C.hair;
+  const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+  const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+  const FONT = "'KoPub Dotum','KoPub돋움체 Medium','Malgun Gothic',sans-serif";
+  const stage = document.getElementById('stage');
+  const slides = [...document.querySelectorAll('.slide')];
+  const N = slides.length;
+  let cur = -1, editing = false;
+
+  /* ── 편집 대상 찾기: 슬라이드 안에서 글자를 직접 가진 가장 바깥 요소 ── */
+  const SKIP = 'script,style,svg,canvas,button,[data-gen],.chevs,.lb';
+  function candidates(doc) {
+    const out = [], set = new Set();
+    doc.querySelectorAll('#stage .slide *, #stage .side-page *').forEach(el => {
+      if (el.closest(SKIP)) return;
+      for (let p = el.parentElement; p && p.id !== 'stage'; p = p.parentElement) if (set.has(p)) return;
+      if ([...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) { set.add(el); out.push(el); }
+    });
+    return out;
+  }
+  const images = doc => [...doc.querySelectorAll('#stage .slide img, #stage .side-page img')].filter(el => !el.closest('[data-gen]'));
+  const liveEds = candidates(document), liveImgs = images(document);
+  liveEds.forEach((el, i) => el.dataset.ek = i);
+  liveImgs.forEach((el, i) => el.dataset.ik = i);
+
+  /* ── 초안(브라우저 보관) ── */
+  // 초안은 슬라이드 본문과 데이터에만 묶는다. 스타일·스크립트를 고쳐도 초안이 살아남는다
+  const sigSrc = PRISTINE.slice(PRISTINE.indexOf('<section class="slide'), PRISTINE.indexOf('<!-- /deck-content -->')) + document.getElementById('deck-data').textContent;
+  let h = 5381; for (let i = 0; i < sigSrc.length; i++) h = (h * 33 ^ sigSrc.charCodeAt(i)) >>> 0;
+  const SIG = sigSrc.length + ':' + h, DKEY = 'kosoe-deck-draft:' + location.pathname;
+  const dirty = new Set(), dirtyImg = new Set();
+  let dataDirty = false, unsaved = false, draftT = null;
+  function storeDraft() {
+    try {
+      localStorage.setItem(DKEY, JSON.stringify({sig: SIG, t: Date.now(), n: liveEds.length, ni: liveImgs.length,
+        html: Object.fromEntries([...dirty].map(k => [k, liveEds[k].innerHTML])),
+        img: Object.fromEntries([...dirtyImg].map(k => [k, liveImgs[k].getAttribute('src')])),
+        data: dataDirty ? DATA : null}));
+    } catch (e) { toast('브라우저에 초안을 보관하지 못했습니다. HTML 저장을 눌러 주세요'); }
+  }
+  function changed() { unsaved = true; clearTimeout(draftT); draftT = setTimeout(storeDraft, 400); updateBar(); }
+  let draft = null, staleDraft = null;
+  try { draft = JSON.parse(localStorage.getItem(DKEY)); } catch (e) {}
+  if (draft && draft.sig === SIG) {
+    Object.entries(draft.html || {}).forEach(([k, v]) => { if (liveEds[k]) { liveEds[k].innerHTML = v; syncCounts(liveEds[k]); dirty.add(+k); } });
+    Object.entries(draft.img || {}).forEach(([k, v]) => { if (liveImgs[k]) { liveImgs[k].src = v; dirtyImg.add(+k); } });
+    if (draft.data) { Object.assign(DATA, draft.data); dataDirty = true; }
+    unsaved = dirty.size + dirtyImg.size > 0 || dataDirty;
+  } else if (draft) {
+    // 파일이 바뀐 뒤 남은 초안: 칸 수가 맞으면 불러올지 묻는다
+    const keysFit = (o, n) => Object.keys(o || {}).every(k => +k < n);
+    staleDraft = (draft.n == null || draft.n === liveEds.length) && (draft.ni == null || draft.ni === liveImgs.length)
+      && keysFit(draft.html, liveEds.length) && keysFit(draft.img, liveImgs.length) ? draft : null;
+    draft = null;
+  }
+
+  /* ── scale stage to window ── */
+  function fit() {
+    const s = Math.min(innerWidth / 1440, innerHeight / 810);
+    stage.style.transform = `scale(${s})`;
+    stage.style.left = (innerWidth - 1440 * s) / 2 + 'px';
+    stage.style.top = (innerHeight - 810 * s) / 2 + 'px';
+    stage.dataset.scale = s;
+  }
+  addEventListener('resize', fit); fit();
+
+  slides.forEach(sl => sl.querySelectorAll('.a').forEach((el, i) => el.style.setProperty('--i', i)));
+
+  /* ── rail: 섹션 번호·이름은 2장 목차에서 읽는다(목차를 고치면 레일도 바뀜) ── */
+  const rail = document.getElementById('rail');
+  const agRows = [...document.querySelectorAll('.agenda .agrow')];
+  agRows.forEach((row, k) => {
+    const members = slides.map((sl, i) => sl.dataset.sec === String(k + 1) ? i : -1).filter(i => i >= 0);
+    const b = document.createElement('button');
+    b.dataset.sec = k + 1;
+    b.innerHTML = `<span class="n"></span><span class="dots">${members.map(i => `<i data-i="${i}"></i>`).join('')}</span>`;
+    b.onclick = e => go(e.target.dataset.i != null ? +e.target.dataset.i : +row.dataset.go);
+    rail.appendChild(b);
+  });
+  function syncRail() {
+    agRows.forEach((row, k) => {
+      const b = rail.children[k];
+      b.querySelector('.n').textContent = row.querySelector('.n').textContent;
+      b.title = row.querySelector('.h').textContent + ' — ' + row.querySelector('.d').textContent;
+    });
+  }
+  syncRail();
+  const sides = [...document.querySelectorAll('.side-page')];
+  const apx = document.createElement('div');
+  apx.className = 'rail-apx';
+  apx.innerHTML = '<span class="ttl">부록</span>' + sides.map(sp => `<button data-side="${sp.dataset.side}" title="${sp.dataset.label}"><span class="k">${sp.dataset.key}</span>${sp.dataset.short}</button>`).join('');
+  rail.appendChild(apx);
+  document.getElementById('pgTot').textContent = String(N).padStart(2, '0');
+
+  /* ── navigation ── */
+  const hooks = {};
+  function go(i) {
+    i = Math.max(0, Math.min(N - 1, i));
+    closeSide();
+    if (i === cur) return;
+    const prev = slides[cur];
+    if (prev) { prev.classList.remove('active'); prev.classList.add('leaving'); setTimeout(() => prev.classList.remove('leaving'), 400); }
+    const sl = slides[i];
+    sl.classList.add('active');
+    cur = i;
+    stage.dataset.theme = sl.dataset.theme || 'light';
+    document.getElementById('pgCur').textContent = String(i + 1).padStart(2, '0');
+    document.getElementById('pgLab').textContent = sl.dataset.label || '';
+    document.getElementById('prog').style.width = ((i + 1) / N * 100) + '%';
+    rail.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.sec === sl.dataset.sec));
+    rail.querySelectorAll('.dots i').forEach(d => { const j = +d.dataset.i; d.classList.toggle('on', j === i); d.classList.toggle('done', j < i); });
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
+    sl.querySelectorAll('canvas').forEach(cv => make(cv.id));
+    sl.querySelectorAll('[data-count]').forEach(countUp);
+    if (sl.dataset.hook && hooks[sl.dataset.hook]) hooks[sl.dataset.hook](sl);
+    if (sl.dataset.hook !== 'tl') stopAuto();
+  }
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { if (!editing) go(+b.dataset.go); }));
+  addEventListener('keydown', e => {
+    const typing = e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveFile(); return; }
+    if (e.key === 'Escape') {
+      if (typing) e.target.blur();
+      else if (lbOpen()) closeLb();
+      else if (sideOpen) closeSide();
+      else if (editing) setEdit(false);
+      return;
+    }
+    if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === 'e' || e.key === 'E') { setEdit(!editing); return; }
+    if (sideOpen) {
+      if (lbOpen() && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { e.preventDefault(); lbStep(e.key === 'ArrowRight' ? 1 : -1); }
+      const vid = vidOf(sideOpen);
+      if (vid && (e.key === ' ' || e.key === 'k' || e.key === 'K') && e.target !== vid) { e.preventDefault(); vid.paused ? vid.play() : vid.pause(); }
+      return;
+    }
+    if (['ArrowRight','PageDown',' ','Enter'].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+    else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(N - 1);
+    else if (e.key === 'f' || e.key === 'F') toggleFs();
+  });
+  let wheelLock = 0, wheelAcc = 0;
+  addEventListener('wheel', e => {
+    if (sideOpen || (e.target.closest && e.target.closest('#cpanel'))) return;
+    const now = Date.now();
+    if (now < wheelLock) return;
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) > 60) { go(cur + (wheelAcc > 0 ? 1 : -1)); wheelAcc = 0; wheelLock = now + 750; }
+  }, {passive: true});
+  let tx = null;
+  addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive: true});
+  addEventListener('touchend', e => { if (tx == null || editing || sideOpen) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1)); tx = null; });
+  function toggleFs() { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+  document.getElementById('fsBtn').onclick = toggleFs;
+
+  /* ── count up ── */
+  const fmtNum = (v, dec) => v.toLocaleString('ko-KR', {minimumFractionDigits: dec, maximumFractionDigits: dec});
+  function countUp(el) {
+    const to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0);
+    if (editing) { el.textContent = fmtNum(to, dec); return; }
+    const t0 = performance.now(), dur = 1400;
+    const step = t => {
+      const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmtNum(to * e, dec);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ── mouse: parallax, tilt, cursor ── */
+  const cursor = document.getElementById('cursor');
+  addEventListener('mousemove', e => {
+    cursor.style.opacity = 1;
+    cursor.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
+    const r = stage.getBoundingClientRect();
+    const mx = ((e.clientX - r.left) / r.width - .5) * 2, my = ((e.clientY - r.top) / r.height - .5) * 2;
+    if (slides[cur]) { slides[cur].style.setProperty('--mx', mx.toFixed(3)); slides[cur].style.setProperty('--my', my.toFixed(3)); }
+  });
+  document.addEventListener('mouseleave', () => cursor.style.opacity = 0);
+  document.addEventListener('mouseover', e => cursor.classList.toggle('big', !!e.target.closest('button,.card,.rule,.eng,.illu,.plane,.lab,.hwp,.pipe .st,.feat,canvas,[role=button],.kosoe,.kpi,.ready,.shot,summary')));
+  const tilts = [...document.querySelectorAll('[data-tilt]')];
+  tilts.forEach(el => {
+    el.addEventListener('mousemove', e => {
+      if (editing) return;
+      const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      el.style.transition = 'transform .12s linear';
+      el.style.transform = `perspective(1100px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg) translateZ(6px)`;
+    });
+    el.addEventListener('mouseleave', () => { el.style.transition = ''; el.style.transform = ''; });
+  });
+
+  /* ── 삽화 레이어: 원본 그림 위에 배경 · 코쇠(몸통·꺾쇠·눈꺼풀) · 화살표/라벨 덩어리를 겹쳐 따로 움직인다 ── */
+  const LAYERS = JSON.parse(document.getElementById('illu-layers').textContent);
+  function layerize(img) {
+    const holder = img.parentElement;
+    holder.querySelector(':scope > .lay')?.remove();
+    img.classList.remove('lay-src');
+    const m = (img.dataset.asset || img.getAttribute('src') || '').match(/assets\/illust\/([\w-]+)\.webp$/);
+    const L = m && LAYERS[m[1]];
+    const bw = img.offsetWidth, bh = img.offsetHeight;
+    if (!L || !bw || !bh) return;
+    const dir = `assets/illust/layers2/${m[1]}/`, sfx = img.closest('.navy,.black') ? '-d' : '';
+    const sc = Math.min(bw / L.w, bh / L.h), w = L.w * sc, h = L.h * sc;
+    const P = (v, t) => (v / t * 100).toFixed(3) + '%';
+    const at = (o, ox, oy, tw, th) => `left:${P(o.x - ox, tw)};top:${P(o.y - oy, th)};width:${P(o.w, tw)};height:${P(o.h, th)}`;
+    let html = `<img class="L-bg" src="${A(`${dir}bg${sfx}.webp`)}" alt="" style="left:0;top:0;width:100%;height:100%">`;
+    L.G.forEach((g, i) => { html += `<img class="G G-${g.c} A-${g.a}" src="${A(`${dir}${g.id}${sfx}.webp`)}" alt="" style="${at(g, 0, 0, L.w, L.h)};--gi:${i}">`; });
+    L.K.forEach((k, i) => {
+      const c = k.crest;
+      const x0 = Math.min(k.x, c ? c.x : k.x), y0 = Math.min(k.y, c ? c.y : k.y);
+      const KW = Math.max(k.x + k.w, c ? c.x + c.w : 0) - x0, KH = Math.max(k.y + k.h, c ? c.y + c.h : 0) - y0;
+      let inner = `<img class="K-body" src="${A(`${dir}k${i}${sfx}.webp`)}" alt="" style="${at(k, x0, y0, KW, KH)}">`;
+      k.eyes.forEach(e => {
+        inner += `<i class="K-lid" style="left:${P(e[0] - e[2] * 1.6 - x0, KW)};top:${P(e[1] - e[3] * 1.6 - y0, KH)};width:${P(e[2] * 3.2, KW)};height:${P(e[3] * 3.2, KH)};background:${k.fill}"></i>`;
+      });
+      if (c) inner += `<img class="K-crest" src="${A(`${dir}c${i}${sfx}.webp`)}" alt="" style="${at(c, x0, y0, KW, KH)};transform-origin:${P(c.ox - c.x, c.w)} ${P(c.oy - c.y, c.h)}">`;
+      html += `<div class="K ${k.m}" style="${at({x: x0, y: y0, w: KW, h: KH}, 0, 0, L.w, L.h)};transform-origin:${P(k.pivot[0] - x0, KW)} ${P(k.pivot[1] - y0, KH)};--ki:${i}">${inner}</div>`;
+    });
+    const lay = document.createElement('div');
+    lay.className = 'lay';
+    Object.assign(lay.style, {left: img.offsetLeft + (bw - w) / 2 + 'px', top: img.offsetTop + (bh - h) / 2 + 'px', width: w + 'px', height: h + 'px'});
+    lay.innerHTML = html;
+    img.after(lay);
+    img.classList.add('lay-src');
+  }
+  document.querySelectorAll('#stage .illu img').forEach(layerize);
+
+  /* ── cover kosoe: 누르면 말풍선 ── */
+  const kosoe = $el('kosoe');
+  kosoe.addEventListener('click', () => { kosoe.classList.add('say'); clearTimeout(kosoe._t); kosoe._t = setTimeout(() => kosoe.classList.remove('say'), 2200); });
+
+  /* ── architecture focus ── */
+  const arch = $el('arch');
+  function focusEng(e) {
+    arch.classList.toggle('focus', !!e && e !== 'all');
+    arch.querySelectorAll('.eng,.flow.e').forEach(n => n.classList.toggle('on', e === 'all' || n.dataset.e === e));
+    document.querySelectorAll('.rule').forEach(r => r.classList.toggle('on', r.dataset.e === e));
+  }
+  arch.querySelectorAll('.eng').forEach(g => { g.addEventListener('mouseenter', () => focusEng(g.dataset.e)); g.addEventListener('mouseleave', () => focusEng(null)); });
+  document.querySelectorAll('.rule').forEach(r => { r.addEventListener('mouseenter', () => focusEng(r.dataset.e)); r.addEventListener('mouseleave', () => focusEng(null)); });
+
+  /* ── hangul catalog (data: cat) ── */
+  const cat = $el('cat'), catD = $el('catDetail');
+  let catK = 0;
+  function showCat(k) {
+    catK = k;
+    const [n, b, o, f] = DATA.cat[k];
+    cat.querySelectorAll('.chip').forEach((x, j) => x.classList.toggle('on', j === k));
+    catD.innerHTML = `<h4><span data-bind="cat.${k}.0">${esc(n)}</span> <span class="tag ${b === '상세' ? 'navy' : 'or'}" style="margin-left:8px;vertical-align:middle">${esc(b)}보고 base</span></h4><div class="ol" data-bind="cat.${k}.2">${esc(o)}</div><div class="ft">특징 — <span data-bind="cat.${k}.3">${esc(f)}</span></div>`;
+    refreshBinds();
+  }
+  DATA.cat.forEach(([n, b], k) => {
+    const x = document.createElement('div');
+    x.className = 'chip' + (b === '상세' ? ' d' : '');
+    x.setAttribute('role', 'button');
+    x.innerHTML = `<span data-bind="cat.${k}.0">${esc(n)}</span><small>${esc(b)}보고</small>`;
+    x.addEventListener('mouseenter', () => { if (!editing) showCat(k); });
+    x.addEventListener('click', () => { if (catK !== k) showCat(k); });
+    cat.appendChild(x);
+  });
+  if (DATA.cat.length) showCat(0);
+
+  /* ── pack tabs (data: packs) ── */
+  const tabs = $el('packTabs'), pv = $el('packView');
+  let packK = 0;
+  function showPack(k) {
+    packK = k;
+    const [n, d, eng, own, chk] = DATA.packs[k];
+    tabs.querySelectorAll('.tab').forEach((b, j) => b.classList.toggle('on', j === k));
+    pv.innerHTML = `
+      <div class="row"><span>주 문서</span><b data-bind="packs.${k}.1">${esc(d)}</b></div>
+      <div class="row"><span>엔진</span><div class="eng-dots">${['PPT','WEB','한글'].map(e => `<span class="tag ${eng.includes(e) ? 'solid' : 'off'}" data-eng="${e}" title="편집 모드에서 눌러 켜고 끕니다">${e === 'WEB' ? 'WEBSLIDE' : e}</span>`).join('')}</div></div>
+      <div class="row"><span>팩 고유</span><span data-bind="packs.${k}.3">${esc(own)}</span></div>
+      <div class="row"><span>추가 검수</span><span data-bind="packs.${k}.4">${esc(chk)}</span></div>
+      <div class="row" style="border:0"><span>상속</span><span>전사 공통 팩 → <b style="color:var(--or)" data-bind="packs.${k}.0">${esc(n)}</b> → 개인 설정</span></div>
+      <p class="note" style="margin-top:8px">모든 팩은 가상 예시입니다</p>`;
+    pv.querySelectorAll('[data-eng]').forEach(t => t.addEventListener('click', () => {
+      if (!editing) return;
+      const arr = DATA.packs[k][2], i = arr.indexOf(t.dataset.eng);
+      i < 0 ? arr.push(t.dataset.eng) : arr.splice(i, 1);
+      dataDirty = true; changed(); showPack(k);
+    }));
+    refreshBinds();
+    if (!editing) pv.animate([{opacity: 0, transform: 'translateY(8px)'}, {opacity: 1, transform: 'none'}], {duration: 350, easing: 'cubic-bezier(.2,.8,.2,1)'});
+  }
+  DATA.packs.forEach(([n], k) => {
+    const b = document.createElement('div');
+    b.className = 'tab'; b.setAttribute('role', 'button');
+    b.innerHTML = `<span data-bind="packs.${k}.0">${esc(n)}</span>`;
+    b.onclick = () => { if (packK !== k) showPack(k); };
+    b.onmouseenter = () => { if (!editing && packK !== k) showPack(k); };
+    tabs.appendChild(b);
+  });
+  if (DATA.packs.length) showPack(0);
+
+  /* ── inheritance stack (data: layers) ── */
+  const stack = $el('stack');
+  const baseTop = [0, 80, 160, 240];
+  DATA.layers.forEach(([n, d, lock], k) => {
+    const p = document.createElement('div');
+    p.className = 'plane' + (lock ? ' lock' : '');
+    p.style.top = baseTop[k] + 'px'; p.style.zIndex = 10 - k;
+    const l = document.createElement('div');
+    l.className = 'lab'; l.style.top = (baseTop[k] + 70) + 'px';
+    l.innerHTML = `<span><span data-bind="layers.${k}.0">${esc(n)}</span><br><small data-bind="layers.${k}.1">${esc(d)}</small></span>`;
+    const on = () => { stack.querySelectorAll('.plane,.lab').forEach(x => x.classList.remove('on')); p.classList.add('on'); l.classList.add('on'); spread(k); };
+    p.onmouseenter = on; l.onmouseenter = on;
+    stack.append(p, l);
+  });
+  const beam = document.createElement('div'); beam.className = 'beam'; stack.appendChild(beam);
+  function spread(k) {
+    const planes = stack.querySelectorAll('.plane'), labs = stack.querySelectorAll('.lab');
+    planes.forEach((p, j) => { const t = baseTop[j] + (k == null ? 0 : (j < k ? -16 : j > k ? 16 : 0)); p.style.top = t + 'px'; labs[j].style.top = (t + 70) + 'px'; });
+    beam.style.top = (baseTop[0] + 90) + 'px'; beam.style.height = (baseTop[3] - baseTop[0]) + 'px';
+  }
+  spread(null);
+  stack.addEventListener('mouseleave', () => { stack.querySelectorAll('.plane,.lab').forEach(x => x.classList.remove('on')); spread(null); });
+  stack.addEventListener('mousemove', e => {
+    const r = stack.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5;
+    stack.querySelectorAll('.plane').forEach(p => p.style.setProperty('--rz', (x * 10).toFixed(1) + 'deg'));
+  });
+
+  /* ── demo timeline (data: scenes) ── */
+  const tl = $el('tl'), tlFill = $el('tlFill');
+  const sImg = $el('sceneImg');
+  let sceneK = 0, autoT = null, autoOn = true;
+  DATA.scenes.forEach(([t, h], k) => {
+    const b = document.createElement('div');
+    b.className = 'tli'; b.setAttribute('role', 'button');
+    b.innerHTML = `<b data-bind="scenes.${k}.0">${esc(t)}</b><span data-bind="scenes.${k}.1">${esc(h)}</span>`;
+    b.onclick = () => { setAuto(false); if (sceneK !== k) showScene(k); };
+    b.onmouseenter = () => { if (editing) return; setAuto(false); showScene(k); };
+    tl.appendChild(b);
+  });
+  function showScene(k) {
+    if (!tl.isConnected) return;   // 시연 타임라인 장이 없을 때
+    sceneK = k;
+    const [t, h, title, txt, img] = DATA.scenes[k];
+    tl.querySelectorAll('.tli').forEach((b, j) => { b.classList.toggle('on', j === k); b.classList.toggle('done', j < k); });
+    tlFill.style.width = (k / (DATA.scenes.length - 1) * (100 - 100 / DATA.scenes.length)) + '%';
+    [['sceneT', 0, t], ['sceneH', 1, h], ['sceneTitle', 2, title], ['sceneText', 3, txt]].forEach(([id, f, v]) => {
+      const el = $el(id); el.dataset.bind = `scenes.${k}.${f}`; el.textContent = v;
+    });
+    const src = `assets/illust/${img}.webp`;
+    if ((sImg.dataset.asset || sImg.getAttribute('src')) !== src) {
+      sImg.dataset.asset = src;
+      sImg.style.opacity = 0;
+      const old = sImg.parentElement.querySelector(':scope > .lay');
+      if (old) old.style.opacity = 0;
+      setTimeout(() => { sImg.src = A(src); sImg.onload = () => { layerize(sImg); sImg.style.opacity = 1; }; }, 180);
+    }
+    refreshBinds();
+  }
+  const autoBtn = $el('autoBtn');
+  function setAuto(on) {
+    autoOn = on; clearInterval(autoT);
+    autoBtn.textContent = on ? '❚❚ 자동 재생 멈춤' : '▶ 자동 재생';
+    if (on && !editing && slides[cur]?.dataset.hook === 'tl') autoT = setInterval(() => showScene((sceneK + 1) % DATA.scenes.length), 3200);
+  }
+  function stopAuto() { clearInterval(autoT); }
+  autoBtn.onclick = () => setAuto(!autoOn);
+  hooks.tl = () => { if (DATA.scenes.length) { showScene(0); setAuto(true); } };
+  if (DATA.scenes.length) showScene(0);
+
+  /* ── criteria cards ── */
+  const critCards = [...document.querySelectorAll('#crit .card')];
+  function hiCrit(k) { critCards.forEach((c, j) => c.classList.toggle('on', j === k)); }
+
+  /* ── closing waves ── */
+  const wave = $el('wave');
+  wave.innerHTML = [['#7a3a10', 0, 60], ['#b85415', 1.2, 80], ['#ee6d1d', 2.4, 100]].map(([c, ph, a]) => `<path stroke="${c}" data-ph="${ph}" data-a="${a}" />`).join('');
+  let wt = 0, wmy = 0;
+  addEventListener('mousemove', e => wmy = e.clientY / innerHeight);
+  (function waveLoop() {
+    if (slides[cur] && slides[cur].contains(wave)) {
+      wt += 0.012;
+      wave.querySelectorAll('path').forEach((p, k) => {
+        const ph = +p.dataset.ph, a = +p.dataset.a * (0.6 + wmy * 0.8);
+        let d = '';
+        for (let x = 0; x <= 1440; x += 24) {
+          const y = 150 + Math.sin(x / 210 + wt * (1 + k * .3) + ph) * a * .6 + Math.sin(x / 90 + wt * 2 + ph) * a * .12;
+          d += (x ? 'L' : 'M') + x + ' ' + y.toFixed(1);
+        }
+        p.setAttribute('d', d);
+      });
+    }
+    requestAnimationFrame(waveLoop);
+  })();
+
+  /* ── charts (data: charts) ── */
+  const charts = {};
+  const valueLabels = {
+    id: 'valueLabels',
+    afterDatasetsDraw(chart, _, opts) {
+      if (!opts || !opts.on) return;
+      const {ctx} = chart;
+      chart.data.datasets.forEach((ds, di) => {
+        chart.getDatasetMeta(di).data.forEach((el, i) => {
+          const v = ds.data[i]; if (Array.isArray(v) || v == null) return;
+          const txt = (opts.fmt ? opts.fmt(v) : v) + (opts.suffix || '');
+          ctx.save();
+          ctx.font = `700 15px ${FONT}`;
+          ctx.fillStyle = Array.isArray(ds.backgroundColor) && ds.backgroundColor[i] === C.or ? C.or : C.ink;
+          const horiz = chart.options.indexAxis === 'y';
+          ctx.textAlign = horiz ? 'left' : 'center';
+          ctx.textBaseline = horiz ? 'middle' : 'bottom';
+          horiz ? ctx.fillText(txt, el.x + 8, el.y) : ctx.fillText(txt, el.x, el.y - 6);
+          ctx.restore();
+        });
+      });
+    }
+  };
+  const TT = () => ({backgroundColor: C.ink, titleFont: {family: FONT, weight: 700, size: 14}, bodyFont: {family: FONT, size: 13}, padding: 10, cornerRadius: 0, displayColors: false});
+  function base(extra = {}) {
+    return Object.assign({
+      responsive: true, maintainAspectRatio: false, devicePixelRatio: Math.max(2, (window.devicePixelRatio || 1) * (+stage.dataset.scale || 1)),
+      animation: {duration: editing ? 0 : 1200, easing: 'easeOutQuart'},
+      plugins: {legend: {display: false}, tooltip: TT()},
+    }, extra);
+  }
+  const axisFont = {family: FONT, size: 13};
+  const gridOff = {display: false}, gridOn = {color: '#ececee'};
+  const T = id => DATA.charts[id];
+  const num = r => r.map(x => +x || 0);
+  const hbar = (id, suffix, extra = {}) => {
+    const d = T(id), vals = num(d.rows.map(r => r[1]));
+    return {type: 'bar', data: {labels: d.rows.map(r => r[0]), datasets: [{data: vals, backgroundColor: d.rows.map(r => col(r[2])), hoverBackgroundColor: C.or2, barThickness: extra.thick || 24}]},
+      options: base({indexAxis: 'y', layout: {padding: {right: 60}},
+        scales: {x: {display: false, min: 0, max: Math.max(1, ...vals) * 1.15}, y: {grid: gridOff, border: {display: false}, ticks: {font: {family: FONT, size: extra.fs || 14}, color: C.ink}}},
+        plugins: {legend: {display: false}, valueLabels: {on: true, suffix}, tooltip: {...TT(), callbacks: {afterLabel: c => d.rows[c.dataIndex][3] || ''}}}})};
+  };
+  const vbar = (id, opts) => {
+    const d = T(id), vals = num(d.rows.map(r => r[1]));
+    return {type: 'bar', data: {labels: d.rows.map(r => r[0]), datasets: [{data: vals, backgroundColor: d.rows.map(r => col(r[2])), hoverBackgroundColor: C.or2, barThickness: opts.thick}]},
+      options: base({layout: {padding: {top: 26}}, scales: {y: {display: false, min: 0, max: Math.max(1, ...vals) * 1.12}, x: {grid: gridOff, border: {color: C.hair}, ticks: {font: {family: FONT, size: 14}, color: C.ink}}},
+        plugins: {legend: {display: false}, valueLabels: {on: true, ...opts.label}, tooltip: {...TT(), ...(opts.tip || {})}}})};
+  };
+  const BUILD = {
+    c3bar: () => hbar('c3bar', '%', {thick: 26, fs: 15}),
+    c3ring: () => {
+      const [lab, v0] = T('c3ring').rows[0] || ['', 0], v = +v0 || 0;
+      const el = document.getElementById('c3ringVal'); el.dataset.count = v; el.dataset.dec = String(v).includes('.') ? 1 : 0;
+      document.getElementById('c3ringLab').textContent = '업무시간 중 ' + lab.replace(/ 작성$/, '');
+      return {type: 'doughnut', data: {labels: [lab, '그 밖의 업무'], datasets: [{data: [v, Math.max(0, 100 - v)], backgroundColor: [C.or, C.surf], borderWidth: 0, hoverOffset: 6}]},
+        options: base({cutout: '78%', rotation: -90, animation: {animateRotate: true, duration: editing ? 0 : 1400}})};
+    },
+    c5: () => {
+      const rows = T('c5').rows, last = rows.findIndex(r => r[4] === '오렌지');
+      return {type: 'bubble', data: {datasets: rows.map(([l, x, y, n, c]) => ({label: l, data: [{x: +x, y: +y, r: (+n || 1) * 13}], backgroundColor: rgba(col(c), c === '오렌지' ? .85 : c === '회색' ? .9 : .55), borderColor: c === '오렌지' ? C.or : 'transparent', borderWidth: 2, hoverRadius: 4}))},
+        options: base({layout: {padding: 10},
+          scales: {x: {min: 0, max: 10.5, grid: gridOn, border: {display: false}, ticks: {display: false}, title: {display: true, text: '코스콤 양식 재현 깊이 →', font: {family: FONT, size: 14, weight: 700}, color: C.ink2}},
+                   y: {min: 0, max: 10.5, grid: gridOn, border: {display: false}, ticks: {display: false}, title: {display: true, text: '부서별 맞춤 · 일괄 관리 →', font: {family: FONT, size: 14, weight: 700}, color: C.ink2}}},
+          plugins: {legend: {display: false}, tooltip: {...TT(), callbacks: {label: c => c.dataset.label + ` · 형식 ${c.raw.r / 13}종`}}}}),
+        plugins: [{id: 'bubbleLabels', afterDatasetsDraw(ch) {
+          const {ctx} = ch;
+          ch.data.datasets.forEach((ds, i) => { const el = ch.getDatasetMeta(i).data[0]; if (!el) return;
+            ctx.save(); const ours = i === last, right = el.x > ch.chartArea.right - 200;
+            ctx.font = `${ours ? 700 : 500} ${ours ? 17 : 13}px ${FONT}`; ctx.fillStyle = ours ? C.or : C.ink2;
+            ctx.textAlign = right ? 'right' : 'left'; ctx.textBaseline = 'middle';
+            right ? ctx.fillText(ds.label, el.x - el.options.radius - 10, el.y) : ctx.fillText(ds.label, el.x + el.options.radius + 6, el.y);
+            ctx.restore(); });
+        }}]};
+    },
+    c6: () => hbar('c6', '%'),
+    c9: () => vbar('c9', {thick: 70, label: {fmt: v => v >= 60 ? `${Math.floor(v / 60)}시간 ${v % 60}분` : `${v}분`}, tip: {callbacks: {label: c => `${c.raw}분`}}}),
+    c11: () => vbar('c11', {thick: 64, label: {suffix: '%'}}),
+    c12: () => {
+      const rows = T('c12').rows;
+      document.getElementById('c12Sum').textContent = 'n';   // 개수는 계속 늘어나므로 n종으로 표기
+      document.getElementById('c12Leg').innerHTML = rows.map(r => `<span><i style="display:inline-block;width:12px;height:12px;background:${col(r[2])};margin-right:6px;vertical-align:-1px"></i>${esc(r[0])} n종</span>`).join('');
+      return {type: 'doughnut', data: {labels: rows.map(r => r[0]), datasets: [{data: num(rows.map(r => r[1])), backgroundColor: rows.map(r => col(r[2])), borderWidth: 2, borderColor: '#fff', hoverOffset: 8}]},
+        options: base({cutout: '68%', plugins: {legend: {display: false}, tooltip: {...TT(), callbacks: {label: c => `${c.label} · 비중 ${c.raw}`}}}})};
+    },
+    c18: () => {
+      const y = 2026, b0 = new Date(y, 9, 27);
+      const off = s => { const [m, d] = String(s).split('/').map(Number); return Math.round((new Date(y, (m || 1) - 1, d || 1) - b0) / 864e5); };
+      const D = v => { const t = new Date(b0.getTime() + v * 864e5); return `${t.getMonth() + 1}/${t.getDate()}`; };
+      const rows = T('c18').rows.map(r => [r[0], off(r[1]), off(r[2]) + 1, r[3]]);
+      const min = Math.min(0, ...rows.map(r => r[1])), max = Math.max(16, ...rows.map(r => r[2]));
+      const now = new Date(), today = Math.round((new Date(now.getFullYear(), now.getMonth(), now.getDate()) - b0) / 864e5);
+      return {type: 'bar', data: {labels: rows.map(r => r[0]), datasets: [{data: rows.map(r => [r[1], r[2]]), backgroundColor: rows.map(r => col(r[3])), hoverBackgroundColor: C.or2, barThickness: 22, borderSkipped: false}]},
+        options: base({indexAxis: 'y', layout: {padding: {top: 22}},
+          scales: {x: {min, max, grid: gridOn, border: {display: false}, ticks: {stepSize: 1, autoSkip: false, maxRotation: 0, font: axisFont, color: C.grey, callback: v => (v - min) % 2 === 0 ? D(v) : ''}},
+                   y: {grid: gridOff, border: {display: false}, ticks: {font: {family: FONT, size: 14}, color: C.ink}}},
+          plugins: {legend: {display: false}, tooltip: {...TT(), callbacks: {label: c => `${D(c.raw[0])} ~ ${D(c.raw[1] - 1)}`}}}}),
+        plugins: [{id: 'today', afterDatasetsDraw(ch) {
+          if (today < min || today > max) return;
+          const x = ch.scales.x.getPixelForValue(today + .5), {top, bottom} = ch.chartArea, ctx = ch.ctx;
+          ctx.save(); ctx.strokeStyle = C.or; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke();
+          ctx.fillStyle = C.or; ctx.font = `700 12px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('오늘 ' + D(today), x, top - 8); ctx.restore();
+        }}]};
+    },
+    c19: () => {
+      const rows = T('c19').rows, m = rows.map(r => r[0]), v = num(rows.map(r => r[1]));
+      let acc = 0; const cum = v.map(x => acc += x);
+      return {data: {labels: m, datasets: [
+        {type: 'line', label: '누적 절감', data: cum, borderColor: C.or, backgroundColor: C.or, pointRadius: 4, pointHoverRadius: 7, borderWidth: 3, tension: .25, yAxisID: 'y1'},
+        {type: 'bar', label: '월 절감', data: v, backgroundColor: C.hair, hoverBackgroundColor: C.navy2, barThickness: 26, yAxisID: 'y'}]},
+        options: base({interaction: {mode: 'index', intersect: false},
+          scales: {x: {grid: gridOff, ticks: {font: axisFont, color: C.grey}},
+                   y: {position: 'right', min: 0, max: Math.max(1, ...v) * 4, grid: gridOff, border: {display: false}, ticks: {font: axisFont, color: C.grey, callback: x => x.toLocaleString()}},
+                   y1: {position: 'left', min: 0, max: Math.max(1, acc) * 1.08, grid: gridOn, border: {display: false}, ticks: {font: axisFont, color: C.grey, callback: x => x.toLocaleString()}}},
+          plugins: {legend: {display: true, position: 'top', align: 'end', labels: {font: axisFont, color: C.ink, boxWidth: 12, boxHeight: 12}},
+            tooltip: {...TT(), displayColors: true, callbacks: {label: c => `${c.dataset.label} ${c.raw.toLocaleString()}시간`}}}})};
+    },
+    c20: () => {
+      const rows = T('c20').rows;
+      return {type: 'polarArea', data: {labels: rows.map(r => r[0]), datasets: [{data: num(rows.map(r => r[1])), backgroundColor: rows.map(r => rgba(col(r[2]), .85)), borderColor: '#fff', borderWidth: 2}]},
+        options: base({scales: {r: {grid: {color: '#ececee'}, ticks: {display: false}, pointLabels: {display: false}}},
+          onHover: (e, els) => hiCrit(els.length ? els[0].index : -1),
+          plugins: {legend: {display: true, position: 'bottom', labels: {font: axisFont, color: C.ink, boxWidth: 12, boxHeight: 12}},
+            tooltip: {...TT(), callbacks: {label: c => `${c.label} ${c.raw}점`}}}})};
+    },
+  };
+  // 범용 차트: deck-data의 charts.<id>.kind 만 적으면 전용 코드 없이 그린다 — 행 = [이름, 값, 색 이름]
+  const AUTO = {
+    hbar: id => hbar(id, T(id).suffix || ''),
+    vbar: id => vbar(id, {thick: 44, label: {suffix: T(id).suffix || ''}}),
+    doughnut: id => { const d = T(id); return {type: 'doughnut', data: {labels: d.rows.map(r => r[0]), datasets: [{data: num(d.rows.map(r => r[1])), backgroundColor: d.rows.map(r => col(r[2])), borderWidth: 2, borderColor: '#fff', hoverOffset: 8}]},
+      options: base({cutout: '62%', plugins: {legend: {display: true, position: 'bottom', labels: {font: axisFont, color: C.ink, boxWidth: 12}}, tooltip: TT()}})}; },
+    line: id => { const d = T(id); return {type: 'line', data: {labels: d.rows.map(r => r[0]), datasets: [{data: num(d.rows.map(r => r[1])), borderColor: C.or, backgroundColor: rgba(C.or, .12), fill: true, tension: .3, pointRadius: 4, pointHoverRadius: 7, borderWidth: 3}]},
+      options: base({scales: {x: {grid: gridOff, ticks: {font: axisFont, color: C.grey}}, y: {grid: gridOn, border: {display: false}, ticks: {font: axisFont, color: C.grey}}}})}; },
+  };
+  function make(id) {
+    const build = BUILD[id] || (T(id) && AUTO[T(id).kind] ? () => AUTO[T(id).kind](id) : null);
+    if (!build || !window.Chart) return;
+    if (charts[id]) { charts[id].reset(); charts[id].update(); return; }
+    const cfg = build();
+    cfg.plugins = (cfg.plugins || []).concat([valueLabels]);
+    charts[id] = new Chart(document.getElementById(id), cfg);
+  }
+  function rebuild(id) {
+    if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+    make(id);
+    const v = document.getElementById('c3ringVal');
+    if (id === 'c3ring') v.textContent = fmtNum(+v.dataset.count, +v.dataset.dec || 0);
+  }
+  /* ── 마우스를 대면 숫자·그래프가 다시 채워진다 ── */
+  const lastPlay = new WeakMap();
+  const cool = el => { const t = performance.now(); if (t - (lastPlay.get(el) || 0) < 1600) return false; lastPlay.set(el, t); return true; };
+  document.querySelectorAll('#stage [data-count]').forEach(el => {
+    const zone = el.closest('.kpi, .chart-box, h1, h2, h3, h4') || el;
+    zone.addEventListener('mouseenter', () => { if (!editing && cool(el)) countUp(el); });
+  });
+  document.querySelectorAll('#stage .chart-box').forEach(box => {
+    const cv = box.querySelector('canvas');
+    if (!cv) return;
+    box.addEventListener('mouseenter', () => {
+      const ch = charts[cv.id];
+      if (!editing && ch && cool(box)) { ch.reset(); ch.update(); }
+    });
+  });
+  document.querySelectorAll('#stage .ready').forEach(row => row.addEventListener('mouseenter', () => {
+    const m = row.querySelector('.meter i');
+    if (editing || !m || !cool(row)) return;
+    m.style.animation = 'none'; void m.offsetWidth; m.style.animation = 'barFill 1s var(--ease) both';
+  }));
+  critCards.forEach((c, k) => { c.addEventListener('mouseenter', () => { hiCrit(k); const ch = charts.c20; if (ch && k < ch.data.labels.length) { ch.setActiveElements([{datasetIndex: 0, index: k}]); ch.tooltip.setActiveElements([{datasetIndex: 0, index: k}], {x: 0, y: 0}); ch.update(); } }); c.addEventListener('mouseleave', () => hiCrit(-1)); });
+
+  /* ── 사이드 페이지(부록) ── */
+  const scrim = document.getElementById('sideScrim'), pgLab = document.getElementById('pgLab');
+  let sideOpen = null;
+  sides.forEach(sp => [...sp.querySelector('.sp-body').children].forEach((el, i) => el.style.setProperty('--i', Math.min(i, 10))));
+  function vidOf(sp) { return sp?.id === 'side-video' ? MV : sp?.querySelector('video'); }
+  function openSide(id) {
+    const sp = document.getElementById('side-' + id);
+    if (!sp) return;
+    if (sideOpen && sideOpen !== sp) { closeLb(); vidOf(sideOpen)?.pause(); sideOpen.classList.remove('on'); sideOpen.setAttribute('aria-hidden', 'true'); }
+    sideOpen = sp;
+    sp.classList.add('on'); sp.setAttribute('aria-hidden', 'false'); scrim.classList.add('on');
+    sp.querySelector('.sp-body').scrollTop = 0;
+    if (editing) sp.querySelectorAll('details').forEach(d => d.open = true);
+    pgLab.textContent = sp.dataset.label;
+    apx.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.side === id));
+    const vid = vidOf(sp);
+    if (vid && !editing) setTimeout(() => vid.play().catch(() => {}), 450);
+  }
+  function closeSide() {
+    if (!sideOpen) return;
+    closeLb();
+    vidOf(sideOpen)?.pause();
+    sideOpen.classList.remove('on'); sideOpen.setAttribute('aria-hidden', 'true');
+    sideOpen = null;
+    scrim.classList.remove('on');
+    pgLab.textContent = slides[cur]?.dataset.label || '';
+    apx.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+  }
+  document.querySelectorAll('[data-side]:not(.side-page)').forEach(b => b.addEventListener('click', () => openSide(b.dataset.side)));
+  scrim.addEventListener('click', closeSide);
+  document.querySelectorAll('.sp-close').forEach(b => b.addEventListener('click', closeSide));
+  document.querySelectorAll('.sp-go').forEach(b => b.addEventListener('click', () => go(+b.dataset.goto)));
+  /* ── 요약 모션 재생기: video/summary.html을 iframe에서 재생(단일 파일판은 #motion-src의 원본 HTML) ── */
+  window.__motionAsset = p => { const u = A(p); return u === p ? new URL(p, location.href).href : u; };   // 폴더판: 기획서 기준 절대 경로
+  window.__motionManifest = JSON.parse(document.getElementById('illu-layers').textContent);
+  const MV = (() => {
+    if (!document.getElementById('sumMotion')) return {paused: true, currentTime: 0, duration: 0, play: async () => {}, pause() {}, addEventListener() {}, load() {}};   // 요약 모션 부록이 없을 때
+    const box = document.getElementById('sumMotion'), fr = box.querySelector('iframe'), ctl = box.nextElementSibling;
+    const tg = ctl.querySelector('.vtg'), bar = ctl.querySelector('.vbar'), fill = bar.querySelector('i'), tm = ctl.querySelector('.vtm');
+    const subs = [], fmt = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+    let m = null, loading = null, raf = 0, want = null;
+    function load() {
+      if (loading) return loading;
+      loading = new Promise(res => {
+        fr.addEventListener('load', async () => {
+          for (let i = 0; i < 400 && !fr.contentWindow.__ready; i++) await new Promise(r => setTimeout(r, 50));
+          m = fr.contentWindow.motion; if (want !== null) m.seek(want); paint(); res(m);
+        }, {once: true});
+        const src = document.getElementById('motion-src');
+        if (src) fr.srcdoc = src.textContent.replace(/<\\\/script/g, '</script'); else fr.src = 'video/summary.html?embed=1';
+      });
+      return loading;
+    }
+    function paint() {
+      const t = m ? m.time() : (want || 0), d = 111;
+      fill.style.width = (t / d * 100) + '%';
+      tm.textContent = `${fmt(t)} / ${fmt(d)}`;
+      const on = !!(m && m.playing);
+      tg.textContent = on ? '❚❚' : '▶'; box.classList.toggle('on', on);
+      subs.forEach(f => f());
+      if (on && t >= d - .02) { m.pause(); }
+      if (on) raf = requestAnimationFrame(paint);
+    }
+    const api = {
+      get paused() { return !(m && m.playing); },
+      get currentTime() { return m ? m.time() : (want || 0); },
+      set currentTime(t) { want = t; if (m) { const p = m.playing; m.seek(t); if (p) m.play(); } paint(); },
+      get duration() { return 111; },
+      async play() { await load(); m.play(); cancelAnimationFrame(raf); paint(); },
+      pause() { if (m && m.playing) m.pause(); paint(); },
+      addEventListener(ev, f) { if (ev === 'timeupdate') subs.push(f); },
+      load,
+    };
+    const toggle = () => api.paused ? api.play() : api.pause();
+    box.addEventListener('click', toggle); tg.addEventListener('click', toggle);
+    bar.addEventListener('click', e => { const r = bar.getBoundingClientRect(); api.currentTime = (e.clientX - r.left) / r.width * 111; });
+    bar.addEventListener('mousemove', e => { const r = bar.getBoundingClientRect(); bar.querySelector('b').style.left = (e.clientX - r.left) + 'px'; bar.title = fmt((e.clientX - r.left) / r.width * 111); });
+    ctl.querySelector('.vfs').addEventListener('click', () => document.fullscreenElement ? document.exitFullscreen() : box.requestFullscreen?.());
+    return api;
+  })();
+  // 요약 영상: 장면 바로가기와 현재 장면 표시
+  const sumVideo = MV, chaps = [...document.querySelectorAll('#vchap button')];
+  chaps.forEach(b => b.addEventListener('click', () => { sumVideo.currentTime = +b.dataset.t; sumVideo.play().catch(() => {}); }));
+  sumVideo.addEventListener('timeupdate', () => {
+    const t = sumVideo.currentTime;
+    chaps.forEach((b, i) => b.classList.toggle('on', t >= +b.dataset.t && (i === chaps.length - 1 || t < +chaps[i + 1].dataset.t)));
+  });
+  // 편집 모드에서는 링크 이동·질문 접기를 막는다
+  stage.addEventListener('click', e => {
+    if (editing && (e.target.closest('a[href]') || e.target.closest('summary'))) e.preventDefault();
+  }, true);
+  // 출처 필터
+  document.querySelectorAll('.flt button').forEach(b => b.addEventListener('click', () => {
+    b.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('#side-sources .it').forEach(it => it.classList.toggle('hide', !!b.dataset.f && it.dataset.k !== b.dataset.f));
+  }));
+  // 예상 질문 모두 펼치기
+  const qaAll = document.querySelector('.qa-all') || document.createElement('button');
+  qaAll.addEventListener('click', () => {
+    const ds = [...document.querySelectorAll('#side-qa details')], open = !ds.every(d => d.open);
+    ds.forEach(d => d.open = open);
+    qaAll.textContent = open ? '모두 접기' : '모두 펼치기';
+  });
+  // 가정 바꿔 보기 표: 같은 줄·같은 열 강조
+  document.querySelectorAll('table.sens').forEach(t => {
+    t.addEventListener('mouseover', e => {
+      const td = e.target.closest('td'); if (!td) return;
+      t.querySelectorAll('td,th').forEach(x => x.classList.toggle('hl', x.dataset.r === td.dataset.r || x.dataset.c === td.dataset.c));
+    });
+    t.addEventListener('mouseleave', () => t.querySelectorAll('.hl').forEach(x => x.classList.remove('hl')));
+  });
+  // 실물·화면 시안 크게 보기 — 부록 쪽마다 제 라이트박스를 쓴다
+  let lb = null, lbItems = [], lbK = 0;
+  function lbOpen() { return !!lb && lb.classList.contains('on'); }
+  function showLb(k) { lbK = (k + lbItems.length) % lbItems.length; lb.querySelector('img').src = lbItems[lbK].src; lb.querySelector('.lb-cap').textContent = lbItems[lbK].dataset.cap; lb.classList.add('on'); }
+  function lbStep(d) { showLb(lbK + d); }
+  function closeLb() { lb?.classList.remove('on'); }
+  document.querySelectorAll('.side-page .lb').forEach(box => {
+    const items = [...box.closest('.side-page').querySelectorAll('img[data-lb]')];
+    items.forEach((img, k) => (img.closest('.shot') || img.closest('.illu')).addEventListener('click', () => { if (!editing) { lb = box; lbItems = items; showLb(k); } }));
+    box.querySelector('.lb-x').onclick = closeLb;
+    box.querySelector('.lb-p').onclick = () => lbStep(-1);
+    box.querySelector('.lb-n').onclick = () => lbStep(1);
+    box.addEventListener('click', e => { if (e.target === box) closeLb(); });
+  });
+
+  /* ═════════ 편집 모드 ═════════ */
+  const editBtn = document.getElementById('editBtn'), bar = document.getElementById('editbar'), ebState = document.getElementById('ebState');
+  function refreshBinds() {
+    document.querySelectorAll('#stage [data-bind]').forEach(el => editing ? el.setAttribute('contenteditable', 'plaintext-only') : el.removeAttribute('contenteditable'));
+  }
+  function setEdit(on) {
+    editing = on;
+    document.body.classList.toggle('editing', on);
+    editBtn.classList.toggle('on', on);
+    bar.hidden = !on;
+    liveEds.forEach(el => on ? el.setAttribute('contenteditable', 'true') : el.removeAttribute('contenteditable'));
+    refreshBinds();
+    if (on) {
+      stopAuto(); autoBtn.textContent = '▶ 자동 재생'; autoOn = false;
+      document.querySelectorAll('#side-qa details').forEach(d => d.open = true);
+      tilts.forEach(el => { el.style.transition = ''; el.style.transform = ''; });
+      slides[cur]?.querySelectorAll('[data-count]').forEach(countUp);
+      if (!sessionStorage.getItem('kosoe-edit-tip')) { try { sessionStorage.setItem('kosoe-edit-tip', 1); } catch (e) {} toast('점선 상자를 눌러 글자를 고치세요. 차트는 「차트 데이터 편집」, 그림은 더블클릭'); }
+    } else {
+      closePanel();
+      if (document.activeElement && document.activeElement.isContentEditable) document.activeElement.blur();
+    }
+    updateBar();
+  }
+  editBtn.onclick = () => setEdit(!editing);
+  function updateBar() {
+    ebState.textContent = unsaved ? '저장 안 됨 · 초안 보관 중' : (dirty.size || dataDirty || dirtyImg.size ? '파일에 저장됨' : '변경 없음');
+    ebState.classList.toggle('dirty', unsaved);
+  }
+
+  // 글자 편집
+  function setPath(path, v) {
+    const ks = path.split('.'); let o = DATA;
+    for (let i = 0; i < ks.length - 1; i++) o = o[ks[i]];
+    o[ks[ks.length - 1]] = v;
+  }
+  stage.addEventListener('input', e => {
+    const b = e.target.closest('[data-bind]');
+    if (b) {
+      const v = b.textContent.replace(/\s*\n\s*/g, ' ');
+      setPath(b.dataset.bind, v);
+      document.querySelectorAll(`#stage [data-bind="${b.dataset.bind}"]`).forEach(x => { if (x !== b) x.textContent = v; });
+      dataDirty = true;
+    } else {
+      const el = e.target.closest('[data-ek]');
+      if (!el) return;
+      dirty.add(+el.dataset.ek);
+      syncCounts(el);
+      if (el.closest('.agenda')) syncRail();
+    }
+    changed();
+  });
+  // 숫자를 고치면 카운트업 값도 맞춘다
+  function syncCounts(el) {
+    [el, ...el.querySelectorAll('[data-count]')].filter(x => x.dataset.count != null).forEach(x => {
+      const m = x.textContent.replace(/,/g, '').match(/-?\d+(?:\.(\d+))?/);
+      if (!m) return;
+      x.dataset.count = m[0];
+      if (m[1]) x.dataset.dec = m[1].length; else delete x.dataset.dec;
+    });
+  }
+  stage.addEventListener('paste', e => {
+    if (!editing || !e.target.closest('[data-ek]')) return;
+    e.preventDefault();
+    document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text/plain'));
+  });
+  function selHost() {
+    const s = getSelection(); if (!s.rangeCount) return null;
+    const n = s.getRangeAt(0).commonAncestorContainer;
+    return (n.nodeType === 1 ? n : n.parentElement).closest('[data-ek]');
+  }
+  function accent() {
+    const s = getSelection(), host = selHost();
+    if (!host || s.isCollapsed) return toast('강조할 글자를 먼저 선택하세요');
+    const r = s.getRangeAt(0), n = r.commonAncestorContainer;
+    const em = (n.nodeType === 1 ? n : n.parentElement).closest('em');
+    if (em && host.contains(em) && em !== host) em.replaceWith(...em.childNodes);
+    else { const w = document.createElement('em'); w.appendChild(r.extractContents()); r.insertNode(w); s.removeAllRanges(); }
+    host.dispatchEvent(new Event('input', {bubbles: true}));
+  }
+  bar.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });
+  bar.addEventListener('click', e => {
+    const c = e.target.closest('[data-cmd]')?.dataset.cmd;
+    if (c === 'bold') { if (selHost()) { document.execCommand('bold'); selHost()?.dispatchEvent(new Event('input', {bubbles: true})); } else toast('굵게 할 글자를 먼저 선택하세요'); }
+    else if (c === 'accent') accent();
+    else if (c === 'plain') { const h = selHost(); if (h) { document.execCommand('removeFormat'); h.dispatchEvent(new Event('input', {bubbles: true})); } }
+    else if (c === 'undo') document.execCommand('undo');
+    else if (c === 'save') saveFile();
+    else if (c === 'discard') discard();
+    else if (c === 'exit') setEdit(false);
+  });
+
+  // 그림 바꾸기
+  const imgPick = document.getElementById('imgPick');
+  let imgTarget = null;
+  stage.addEventListener('dblclick', e => {
+    if (!editing) return;
+    const img = e.target.closest('.illu')?.querySelector('img[data-ik]');
+    if (!img) return;
+    imgTarget = img; imgPick.value = ''; imgPick.click();
+  });
+  imgPick.addEventListener('change', () => {
+    const f = imgPick.files[0]; if (!f || !imgTarget) return;
+    const rd = new FileReader();
+    rd.onload = () => { delete imgTarget.dataset.asset; imgTarget.src = rd.result; layerize(imgTarget); dirtyImg.add(+imgTarget.dataset.ik); changed(); toast(`그림을 ${f.name}(으)로 바꿨습니다. 파일 안에 함께 저장됩니다`); };
+    rd.readAsDataURL(f);
+  });
+
+  // 차트 데이터 패널
+  const panel = document.getElementById('cpanel'), cpBody = document.getElementById('cpBody');
+  let panelId = null, rbT = null;
+  document.querySelectorAll('#stage canvas').forEach(cv => {
+    if (!BUILD[cv.id]) return;
+    const b = document.createElement('button');
+    b.className = 'chart-edit'; b.textContent = '차트 데이터 편집';
+    b.onclick = () => openPanel(cv.id);
+    cv.parentElement.appendChild(b);
+  });
+  function openPanel(id) {
+    panelId = id;
+    const d = T(id);
+    document.getElementById('cpTitle').textContent = d.title || id;
+    cpBody.innerHTML = `<table><thead><tr>${d.cols.map(c => `<th>${esc(c)}</th>`).join('')}<th></th></tr></thead><tbody>${d.rows.map((r, ri) => `<tr>${d.types.map((t, ci) =>
+      t === 'c' ? `<td><select data-r="${ri}" data-c="${ci}">${Object.keys(COLORS).map(n => `<option${n === r[ci] ? ' selected' : ''}>${n}</option>`).join('')}</select></td>`
+      : `<td><input data-r="${ri}" data-c="${ci}" ${t === 'n' ? 'type="number" step="any"' : ''} ${t === 'd' ? 'placeholder="월/일"' : ''} value="${esc(r[ci])}"></td>`).join('')}<td><button data-del="${ri}" title="행 삭제">✕</button></td></tr>`).join('')}</tbody></table>`;
+    panel.hidden = false;
+  }
+  function closePanel() { panel.hidden = true; panelId = null; }
+  document.getElementById('cpClose').onclick = closePanel;
+  cpBody.addEventListener('input', e => {
+    const t = e.target; if (t.dataset.r == null) return;
+    const d = T(panelId), ci = +t.dataset.c;
+    d.rows[+t.dataset.r][ci] = d.types[ci] === 'n' ? (t.value === '' ? 0 : +t.value) : t.value;
+    dataDirty = true; changed();
+    const id = panelId; clearTimeout(rbT); rbT = setTimeout(() => rebuild(id), 250);
+  });
+  cpBody.addEventListener('click', e => {
+    const b = e.target.closest('[data-del]'); if (!b) return;
+    T(panelId).rows.splice(+b.dataset.del, 1);
+    dataDirty = true; changed(); openPanel(panelId); rebuild(panelId);
+  });
+  document.getElementById('cpAdd').onclick = () => {
+    const d = T(panelId);
+    d.rows.push(d.types.map(t => ({t: '새 항목', n: 0, c: '회색', d: '11/12'})[t]));
+    dataDirty = true; changed(); openPanel(panelId); rebuild(panelId);
+    cpBody.scrollTop = cpBody.scrollHeight;
+  };
+
+  // 저장: 원본 HTML에 고친 부분만 덮어 새 파일을 만든다
+  function buildHTML() {
+    const doc = new DOMParser().parseFromString(PRISTINE, 'text/html');
+    const eds = candidates(doc), ims = images(doc);
+    dirty.forEach(k => {
+      if (!eds[k]) return;
+      const c = liveEds[k].cloneNode(true);
+      c.querySelectorAll('[contenteditable]').forEach(x => x.removeAttribute('contenteditable'));
+      eds[k].innerHTML = c.innerHTML;
+      if (liveEds[k].dataset.count != null) { eds[k].setAttribute('data-count', liveEds[k].dataset.count); liveEds[k].dataset.dec ? eds[k].setAttribute('data-dec', liveEds[k].dataset.dec) : eds[k].removeAttribute('data-dec'); }
+    });
+    dirtyImg.forEach(k => { if (ims[k]) ims[k].setAttribute('src', liveImgs[k].getAttribute('src')); });
+    const json = '{\n' + Object.entries(DATA).map(([k, v]) => k === 'charts'
+      ? ` "charts": {\n${Object.entries(v).map(([ck, cv]) => `  ${JSON.stringify(ck)}: ${JSON.stringify(cv)}`).join(',\n')}\n }`
+      : ` ${JSON.stringify(k)}: ${JSON.stringify(v)}`).join(',\n') + '\n}';
+    doc.getElementById('deck-data').textContent = '\n' + json.replace(/</g, '\\u003c') + '\n';
+    return '<!doctype html>\n' + doc.documentElement.outerHTML;
+  }
+  let fileHandle = null;
+  async function saveFile() {
+    if (!(dirty.size || dirtyImg.size || dataDirty)) return toast('저장할 변경이 없습니다');
+    const html = buildHTML();
+    try {
+      if (window.showSaveFilePicker) {
+        if (!fileHandle) fileHandle = await showSaveFilePicker({suggestedName: 'index.html', types: [{description: 'HTML 문서', accept: {'text/html': ['.html']}}]});
+        const w = await fileHandle.createWritable(); await w.write(html); await w.close();
+        saved(`${fileHandle.name}에 저장했습니다. 같은 폴더의 assets와 함께 열면 됩니다`);
+      } else {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([html], {type: 'text/html'})); a.download = 'index.html'; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+        saved('index.html을 내려받았습니다. 이 폴더의 index.html과 바꿔 넣으세요');
+      }
+    } catch (e) { if (e.name !== 'AbortError') toast('저장하지 못했습니다: ' + e.message); }
+  }
+  function saved(msg) { unsaved = false; clearTimeout(draftT); try { localStorage.removeItem(DKEY); } catch (e) {} updateBar(); toast(msg); }
+  function discard() {
+    if (!unsaved) return toast('버릴 편집이 없습니다');
+    if (!confirm('저장하지 않은 편집을 모두 버리고 마지막으로 저장한 상태로 돌아갈까요?')) return;
+    unsaved = false; try { localStorage.removeItem(DKEY); } catch (e) {}
+    location.reload();
+  }
+  addEventListener('beforeunload', e => { if (unsaved) { storeDraft(); e.preventDefault(); e.returnValue = ''; } });
+
+  // 알림
+  const toastEl = document.getElementById('toast'), toastMsg = document.getElementById('toastMsg');
+  let toastT = null;
+  function toast(msg, action) {
+    toastMsg.textContent = msg;
+    toastEl.querySelector('button')?.remove();
+    if (action) { const b = document.createElement('button'); b.textContent = action[0]; b.onclick = () => { toastEl.classList.remove('show'); action[1](); }; toastEl.appendChild(b); }
+    toastEl.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), action ? 9000 : 4200);
+  }
+
+  window.deck = {go, get index() { return cur; }, edit: setEdit, buildHTML};
+
+  /* ── boot ── */
+  const start = Math.max(0, (parseInt(location.hash.slice(1)) || 1) - 1);
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+    if (window.Chart) { Chart.defaults.font.family = FONT; Chart.defaults.color = C.ink2; }
+    go(start);
+    updateBar();
+    if (draft && unsaved) toast('파일에 저장하지 않은 편집 초안을 불러왔습니다', ['초안 버리기', () => { unsaved = false; try { localStorage.removeItem(DKEY); } catch (e) {} location.reload(); }]);
+    else if (staleDraft) toast('이전 버전 화면에서 저장하지 않은 편집 초안이 있습니다', ['불러오기', () => {
+      try { localStorage.setItem(DKEY, JSON.stringify({...staleDraft, sig: SIG})); } catch (e) {}
+      location.reload();
+    }]);
+  });
+})();
+</script>
+</body>
+</html>

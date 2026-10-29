@@ -1,0 +1,19 @@
+Generate one standalone 16:9 horizontal Korean article illustration.
+
+Visual DNA:
+Pure white background. Minimalist dark-charcoal hand-drawn line art. Slightly wobbly pen lines. Lots of empty white space. Sparse orange/blue/red handwritten Korean annotations. Clean, absurd product-sketch feeling. Objects are line-only (white inside), no gray shading on objects. No gradients, no shadows, no paper texture, no complex background, no commercial vector style, no PPT infographic look, no cute mascot poster, no children's illustration, no realistic UI, no company logos.
+
+Recurring character required — 코쇠 (Kosoe):
+Keep the character design EXACTLY as in the attached character sheet: a small solid charcoal-gray (#5A5555) rounded-square block body like a worn keycap, one bright orange (#E96717) chevron ">" crest on top of the head always pointing right, two white dot eyes, tiny flat-line mouth, very thin black stick arms and legs. Deadpan, serious, diligent, slightly bizarre — not cute. Use the attached image ONLY for character design consistency; do not copy its layout, poses or labels.
+코쇠 must perform the core conceptual action, not decorate the scene.
+
+Color use:
+Dark charcoal for line art. Orange (#E96717) for the main flow, path and arrows. Blue (#4368F2) only for secondary notes or system state. Red only for one key warning or problem, if needed.
+
+Constraints:
+One image explains only one core structure. Main subject around 40%-60% of the canvas, at least 35% blank white space. At most 5 short handwritten Korean labels (2-8 characters each), spelled exactly as given. No title in the top-left corner. Do not write the structure type on the image. Clear but not instructional, interesting but not childish, strange but clean.
+
+Theme: The Korean report engine typesets Koscom report grammar exactly — bullet level marks and fixed paragraph spacing — directly into a .hwp file without the Hangul word processor.
+Structure type: precision craft metaphor
+Composition: 코쇠 stands at an old letterpress typesetting table (line-only). With tweezers in one thin arm it places a small metal type block into a page frame; the page frame already has neat rows starting with the marks "□", "ㅇ", "-". Between rows, 코쇠 inserts thin spacer strips of different thickness. A small tray on the side holds loose type blocks. To the right, a finished report page slides out on an orange arrow with a tiny file tag on its corner.
+Korean labels: "□ ㅇ - ·" (charcoal, on the type tray), "간격 4·6·8pt" (orange, by the spacer strips), ".hwp" (blue, on the file tag), "한글 없이" (orange, small, near the finished page)

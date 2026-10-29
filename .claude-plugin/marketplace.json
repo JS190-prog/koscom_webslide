@@ -1,0 +1,7 @@
+{
+  "name": "koscom-webslide",
+  "owner": {"name": "humanist96"},
+  "plugins": [
+    {"name": "koscom-webslide", "source": "./", "description": "코스콤 스타일 웹슬라이드 스킬", "version": "1.0.0"}
+  ]
+}

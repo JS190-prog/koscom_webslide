@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>코쇠 문서팩 요약 영상</title>
+<style>
+@font-face{font-family:'KoPub Dotum';src:url(../assets/fonts/KoPubDotum-Medium.ttf) format('truetype');font-weight:500}
+@font-face{font-family:'KoPub Dotum';src:url(../assets/fonts/KoPubDotum-Bold.ttf) format('truetype');font-weight:700}
+@property --n{syntax:'<integer>';initial-value:0;inherits:false}
+:root{--or:#ee6d1d;--or2:#f26522;--ort:#fad3bb;--orp:#fdeee4;--navy:#00338d;--navy2:#1f4b9b;--navy3:#0f499c;--bt:#edf4fb;--ink:#2b2b2e;--ink2:#6e6e73;--grey:#8c8c92;--hair:#dcdce0;--surf:#f5f5f7;--e:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#111;overflow:hidden}
+body{display:grid;place-items:center;min-height:100vh}
+#v{position:relative;width:1920px;height:1080px;overflow:hidden;background:#fff;color:var(--ink);font-family:'KoPub Dotum','Malgun Gothic',sans-serif;font-weight:500;word-break:keep-all;transform-origin:0 0}
+b,h1,h2,h3{font-weight:700}
+em{font-style:normal;color:var(--or)}
+.sc{position:absolute;inset:0;opacity:0}
+.abs{position:absolute}
+.hl{font-size:66px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.kick{display:flex;align-items:center;gap:14px;font-size:22px;letter-spacing:.24em;color:var(--grey)}
+.kick i{width:10px;height:30px;background:var(--or)}
+.chev{position:absolute}
+.card{background:#fff;border:1.5px solid var(--hair)}
+.tag{display:inline-block;font-size:22px;font-weight:700;padding:8px 16px;background:var(--or);color:#fff;margin-right:10px}
+.tag.o{background:#fff;color:var(--or);border:2px solid var(--or)}
+.lay{position:absolute}
+.lay img{position:absolute;display:block}
+.count{counter-reset:n var(--n)}
+.count::before{content:counter(n)}
+/* HUD */
+#brand{position:absolute;left:48px;top:40px;z-index:50;display:flex;align-items:center;gap:12px;font-size:24px;font-weight:700;background:rgba(255,255,255,.92);padding:10px 18px 10px 14px}
+#brand svg{width:20px;height:26px}
+#cap{position:absolute;left:0;right:0;bottom:44px;z-index:50;display:flex;justify-content:center}
+#cap div{position:absolute;bottom:0;background:var(--ink);color:#fff;font-size:27px;padding:14px 26px;white-space:nowrap}
+#cap div b{color:var(--or);margin-right:14px}
+#prog{position:absolute;left:0;bottom:0;height:8px;width:100%;background:var(--or);transform-origin:left;z-index:51}
+.sweep{position:absolute;top:-200px;left:0;width:1500px;height:1480px;z-index:60;pointer-events:none}
+/* 화면 시안 프레임 */
+.frame{position:absolute;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 26px 70px rgba(0,12,40,.38)}
+.fbar{height:30px;background:#ececee;display:flex;align-items:center;gap:7px;padding:0 12px;font-size:15px;color:#6e6e73}
+.fbar i{width:11px;height:11px;border-radius:50%;background:#c9c9cf}.fbar span{margin-left:10px;letter-spacing:.02em}
+.fimg{position:absolute;left:0;right:0;top:30px;bottom:0;overflow:hidden}
+.fimg img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:top left;transform-origin:35% 30%}
+.flab{position:absolute;font-size:27px;font-weight:700;line-height:1.35}
+.chip2{display:inline-block;font-size:24px;font-weight:700;padding:9px 16px;margin:0 10px 10px 0;border:2px solid var(--or);color:var(--or);background:rgba(255,255,255,.96)}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.08)}}
+@keyframes flyIn{from{opacity:0;transform:translate(60px,40px) rotate(3deg) scale(.92)}to{opacity:1;transform:none}}
+/* keyframes */
+@keyframes sIn{from{opacity:0}to{opacity:1}}
+@keyframes sOut{from{opacity:1}to{opacity:0}}
+@keyframes up{from{opacity:0;transform:translateY(36px)}}
+@keyframes fromL{from{opacity:0;transform:translateX(-80px)}}
+@keyframes fromR{from{opacity:0;transform:translateX(80px)}}
+@keyframes pop{from{opacity:0;transform:scale(.8)}}
+@keyframes fade{from{opacity:0}}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes growY{from{transform:scaleY(0)}}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes dim{to{opacity:.3;filter:grayscale(1)}}
+@keyframes drop{0%{opacity:0;transform:translateY(-70px)}55%{opacity:1}78%{transform:translateY(5px)}100%{opacity:1;transform:none}}
+@keyframes teeter{0%,100%{transform:rotate(0)}15%{transform:rotate(3deg)}35%{transform:rotate(-3deg)}55%{transform:rotate(2deg)}75%{transform:rotate(-1.5deg)}}
+@keyframes swing{from{transform:rotate(9deg)}to{transform:rotate(-7deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes sweep{from{transform:translateX(-1600px)}to{transform:translateX(2100px)}}
+@keyframes intoBox{to{transform:translate(var(--dx),var(--dy)) scale(.15);opacity:0}}
+@keyframes lidShut{to{transform:rotateX(0)}}
+@keyframes ring{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+@keyframes waveX{from{transform:translateX(0)}to{transform:translateX(-600px)}}
+@keyframes cnt35{to{--n:35}}
+@keyframes cnt24{to{--n:24}}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(14px)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes kBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes kPress{0%,100%{transform:none}40%,55%{transform:translateY(6px) scaleY(.97)}}
+@keyframes kHop{0%,60%,100%{transform:none}30%{transform:translateY(-12px) rotate(-3deg)}}
+@keyframes kWrite{0%,100%{transform:rotate(0)}25%{transform:rotate(2.2deg)}75%{transform:rotate(-1.6deg)}}
+@keyframes kRock{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+@keyframes kNod{0%,70%,100%{transform:rotate(0)}35%{transform:rotate(4deg) translateY(2px)}}
+@keyframes kWalk{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg) translateY(-3px)}}
+@keyframes kPushX{0%,100%{transform:translateX(0)}50%{transform:translateX(-8px)}}
+@keyframes kPeer{0%,100%{transform:translateX(0)}50%{transform:translateX(7px) rotate(1.5deg)}}
+@keyframes kLift{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-1.5deg)}}
+@keyframes kIn{from{opacity:0;transform:scale(.88)}}
+@keyframes crestIn{from{opacity:0;transform:scale(0) rotate(-30deg)}}
+@keyframes crestWiggle{0%,46%,100%{transform:rotate(0)}8%{transform:rotate(-14deg)}17%{transform:rotate(10deg)}26%{transform:rotate(-6deg)}35%{transform:rotate(3deg)}}
+@keyframes lidBlink{0%,91%,100%{transform:scaleY(0)}94%,96%{transform:scaleY(1)}}
+@keyframes gPop{0%{opacity:0;transform:scale(.35)}65%{opacity:1;transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes wipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes wipeY{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes redPulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes bTilt{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes bNod{0%,60%,100%{transform:rotate(0)}30%{transform:rotate(3.5deg) translateY(1px)}}
+@keyframes bPress{0%,100%{transform:none}40%,55%{transform:translateY(3px) scaleY(.97)}}
+@keyframes bRock{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes bPush{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(-4px) rotate(-1.5deg)}}
+@keyframes bPeer{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(4px) rotate(2deg)}}
+@keyframes bBreathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.015,.975)}}
+.lay .lid{position:absolute;border-radius:50%;transform:scaleY(0);transform-origin:50% 30%}
+</style>
+</head>
+<body>
+<div id="v">
+
+  <!-- S1 표지 0–6.8 -->
+  <div class="sc" data-t="sIn .01 0, sOut .4 6.6 forwards">
+    <svg class="chev" style="left:1050px;top:540px;width:512px;height:690px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromL 1.2 .1"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#ececee"/></svg>
+    <svg class="chev" style="left:1576px;top:376px;width:668px;height:900px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromL 1.2 .25"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#fdeee4"/></svg>
+    <svg class="chev" style="left:1304px;top:-30px;width:668px;height:900px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromL 1.2 .4, nudge 3.2 1.8 infinite"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#f26522"/></svg>
+    <div class="abs" style="left:1088px;top:336px;width:144px;height:283px" data-t="drop .9 1.1">
+      <div class="abs" style="inset:0;transform-origin:50% 74%" data-t="teeter .7 2.1">
+        <div class="abs" style="inset:0;transform-origin:50% 74%" data-t="bob 3 2.9 infinite ease-in-out">
+          <img class="abs" src="../assets/kosoe/kosoe-legs.png" style="left:0;top:207px;width:144px;height:75px;transform-origin:52.5% 3%" data-t="swing 1.15 1.1 infinite ease-in-out alternate">
+          <img class="abs" src="../assets/kosoe/kosoe-body.png" style="left:0;top:0;width:144px;height:212px">
+        </div>
+      </div>
+    </div>
+    <div class="abs" style="left:150px;top:0;bottom:0;width:900px;display:flex;flex-direction:column;justify-content:center;gap:0">
+      <div class="kick" data-t="up .7 .5"><i></i>ㅋㅋ톤 2026 · 참가 기획서 요약</div>
+      <div style="font-size:150px;font-weight:700;letter-spacing:-.02em;line-height:1.05;margin-top:22px" data-t="up .8 .8">코쇠 <em>문서팩</em></div>
+      <div style="font-size:42px;font-weight:700;line-height:1.4;margin-top:28px" data-t="up .8 1.2">코스콤 맞춤형 PPT · 웹슬라이드 · 한글<br>문서 제작 패키지 솔루션</div>
+      <div style="margin-top:34px" data-t="up .7 1.7"><span class="tag">PPT</span><span class="tag">WEBSLIDE</span><span class="tag">한글</span><span class="tag o">부서 문서팩</span></div>
+    </div>
+  </div>
+
+  <!-- S2 문제 ① 6.8–16.8 -->
+  <div class="sc" data-t="sIn .5 6.8, sOut .4 16.4 forwards">
+    <div class="abs" style="left:140px;top:120px" data-t="up .7 7.1"><div class="kick"><i></i>THE PROBLEM</div><div class="hl" style="margin-top:14px">업무시간의 <em>3분의 1</em>이 보고서에 들어간다</div></div>
+    <div class="abs" style="left:140px;top:330px;width:760px" data-t="up .6 7.6">
+      <div style="font-size:210px;font-weight:700;color:var(--or);line-height:1"><span class="count" data-t="cnt35 1.6 7.7 both ease-out"></span><span style="font-size:80px">%</span></div>
+      <div style="font-size:28px;color:var(--ink2);margin-top:6px">업무시간 중 보고서 작성 비중 · 사람인, 직장인 1,227명</div>
+    </div>
+    <div class="abs" style="left:140px;top:660px;width:760px;font-size:26px">
+      <div style="display:grid;grid-template-columns:300px 1fr 100px;gap:18px;align-items:center" data-t="up .5 9.3"><span>보고서 스트레스</span><span style="height:22px;background:var(--surf);position:relative"><i class="abs" style="left:0;top:0;bottom:0;width:65.4%;background:var(--or);transform-origin:left" data-t="grow 1 9.5"></i></span><b style="color:var(--or)">65.4%</b></div>
+      <div style="display:grid;grid-template-columns:300px 1fr 100px;gap:18px;align-items:center;margin-top:18px" data-t="up .5 9.7"><span>과거 양식 재활용</span><span style="height:22px;background:var(--surf);position:relative"><i class="abs" style="left:0;top:0;bottom:0;width:36.8%;background:var(--navy2);transform-origin:left" data-t="grow 1 9.9"></i></span><b>36.8%</b></div>
+    </div>
+    <div class="abs card" style="left:990px;top:300px;width:800px;height:380px" data-t="fromR .8 8.1"><div class="lay" data-ill="k2-pain-ruler" data-at="8.4" style="left:20px;top:20px;width:760px;height:340px"></div></div>
+    <div class="abs" style="left:990px;top:720px;width:800px;font-size:34px;font-weight:700" data-t="up .6 11.4">같은 내용을, <em>양식 때문에</em> 또 쓴다</div>
+    <div class="abs" style="left:990px;top:790px;display:flex;gap:12px;font-size:24px">
+      <span style="padding:10px 16px;border:2px solid var(--ink)" data-t="pop .4 12">① 형식이 셋 — 한글·PPT·링크</span>
+      <span style="padding:10px 16px;border:2px solid var(--ink)" data-t="pop .4 12.5">② 부서마다 다른 규칙</span>
+      <span style="padding:10px 16px;border:2px solid var(--ink)" data-t="pop .4 13">③ 바뀌면 각자 다시</span>
+    </div>
+  </div>
+
+  <!-- S3 문제 ② 16.8–23.8 -->
+  <div class="sc" data-t="sIn .5 16.8, sOut .4 23.4 forwards">
+    <div class="abs" style="left:140px;top:120px" data-t="up .7 17.1"><div class="kick"><i></i>LANDSCAPE</div><div class="hl" style="margin-top:14px">'AI가 문서를 써 준다'는 <em>더 이상 차별점이 아니다</em></div></div>
+    <div class="abs" style="left:140px;top:350px;display:grid;grid-template-columns:repeat(4,390px);gap:24px" data-t="dim .8 20.2 forwards">
+      <div class="card" style="padding:28px;height:200px" data-t="up .5 17.9"><b style="font-size:30px">MS Copilot</b><p style="font-size:23px;color:var(--ink2);margin-top:12px">조직 브랜드 템플릿 연결<br>(2026.8~9)</p></div>
+      <div class="card" style="padding:28px;height:200px" data-t="up .5 18.2"><b style="font-size:30px">한컴 × LG AI</b><p style="font-size:23px;color:var(--ink2);margin-top:12px">양식 적용 초안 작성<br>(2026.5)</p></div>
+      <div class="card" style="padding:28px;height:200px" data-t="up .5 18.5"><b style="font-size:30px">오픈소스 HWPX</b><p style="font-size:23px;color:var(--ink2);margin-top:12px">서식 블록 약 87% 재현<br>(자체 발표)</p></div>
+      <div class="card" style="padding:28px;height:200px" data-t="up .5 18.8"><b style="font-size:30px">사내 공모전</b><p style="font-size:23px;color:var(--ink2);margin-top:12px">'보고서 자동 작성'이<br>상위권 단골</p></div>
+    </div>
+    <div class="abs" style="left:140px;top:620px;width:1640px;background:var(--ink);color:#fff;padding:44px 52px" data-t="up .7 20.6">
+      <div style="font-size:28px;color:var(--ort)">그래서 차별점은 두 가지</div>
+      <div style="font-size:52px;font-weight:700;margin-top:14px;line-height:1.35"><em>①</em> 코스콤 양식의 정밀 재현 &nbsp; <em>②</em> 부서 규칙의 일괄 관리</div>
+    </div>
+  </div>
+
+  <!-- S4 해법 23.8–32.8 (navy) -->
+  <div class="sc" style="background:var(--navy)" data-t="sIn .5 23.8, sOut .4 32.4 forwards">
+    <svg class="chev" style="left:1460px;top:-60px;width:820px;height:1200px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromR 1.2 24"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#1f4b9b"/></svg>
+    <svg class="chev" style="left:-40px;top:760px;width:150px;height:240px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromL 1 24.4"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#f26522"/></svg>
+    <div class="abs" style="left:160px;top:290px;color:#fff">
+      <div class="kick" style="color:var(--bt)" data-t="up .6 24.3"><i></i>SOLUTION</div>
+      <div style="font-size:104px;font-weight:700;line-height:1.2;margin-top:24px"><div data-t="up .7 24.6">엔진은 회사가 <em>하나</em>,</div><div data-t="up .7 25.3">팩은 <em>부서마다</em>.</div></div>
+      <div style="font-size:30px;color:var(--bt);margin-top:34px;line-height:1.6" data-t="up .7 26.8">공통 엔진 3종(PPT · 웹슬라이드 · 한글) 위에<br>부서별 문서팩을 끼운다</div>
+    </div>
+    <div class="abs" style="left:1040px;top:250px;width:760px;height:430px" data-t="fromR .8 25.6"><div class="lay" data-ill="01-engine-pack" data-dark data-at="26" style="left:24px;top:24px;width:712px;height:382px"></div></div>
+  </div>
+
+  <!-- S5 엔진 3종 32.8–46.8 -->
+  <div class="sc" data-t="sIn .5 32.8, sOut .4 46.4 forwards">
+    <div class="abs" style="left:140px;top:110px" data-t="up .7 33.1"><div class="kick"><i></i>3 ENGINES</div><div class="hl" style="margin-top:14px">요청 하나, <em>라우터가 형식을 정한다</em></div></div>
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080" fill="none">
+      <path d="M400 600 L500 600" stroke="#ee6d1d" stroke-width="5" pathLength="1" stroke-dasharray="1" data-t="draw .5 34"/>
+      <path d="M780 600 C840 600 840 385 900 385" stroke="#ee6d1d" stroke-width="5" pathLength="1" stroke-dasharray="1" data-t="draw .6 34.9"/>
+      <path d="M780 600 L900 600" stroke="#ee6d1d" stroke-width="5" pathLength="1" stroke-dasharray="1" data-t="draw .6 35.1"/>
+      <path d="M780 600 C840 600 840 815 900 815" stroke="#ee6d1d" stroke-width="5" pathLength="1" stroke-dasharray="1" data-t="draw .6 35.3"/>
+    </svg>
+    <div class="abs card" style="left:140px;top:520px;width:260px;height:160px;display:grid;place-items:center;text-align:center" data-t="pop .5 33.6"><div><b style="font-size:36px">요청</b><div style="font-size:22px;color:var(--ink2);margin-top:8px">메모 · 엑셀 · 회의록</div></div></div>
+    <div class="abs" style="left:540px;top:410px;padding:10px 18px;background:var(--orp);border:2px solid var(--or);color:var(--or);font-size:24px;font-weight:700" data-t="pop .5 34.6">부서 문서팩</div>
+    <div class="abs" style="left:500px;top:510px;width:280px;height:180px;border:3px solid var(--ink);background:#fff;display:grid;place-items:center;text-align:center" data-t="pop .5 34.3"><div><b style="font-size:36px">문서 라우터</b><div style="font-size:22px;color:var(--ink2);margin-top:8px">형식 결정 · 템플릿 선택</div></div></div>
+    <div class="abs card" style="left:900px;top:290px;width:880px;height:190px;display:flex;gap:26px;padding:16px" data-t="fromR .6 35.6">
+      <img src="../assets/gallery/ppt-01.webp" style="width:280px;height:158px;object-fit:cover;border:1px solid var(--hair)">
+      <div style="flex:1"><b style="font-size:32px">PPT 엔진 <span style="color:var(--grey);font-size:24px">→ .pptx</span></b><div style="font-size:22px;color:var(--ink2);margin-top:8px">코스콤 양식 그대로, PowerPoint에서 고친다</div><div style="font-size:46px;font-weight:700;color:var(--or);margin-top:10px" data-t="up .5 37.6">43분 <span style="font-size:22px;color:var(--ink2)">22장 첫 완성본 · 실측</span></div></div>
+    </div>
+    <div class="abs card" style="left:900px;top:505px;width:880px;height:190px;display:flex;gap:26px;padding:16px" data-t="fromR .6 35.9">
+      <img src="../assets/video/still-deck.png" style="width:280px;height:158px;object-fit:cover;border:1px solid var(--hair)">
+      <div style="flex:1"><b style="font-size:32px">WEBSLIDE 엔진 <span style="color:var(--grey);font-size:24px">→ .html</span></b><div style="font-size:22px;color:var(--ink2);margin-top:8px">링크 하나로 열리는, 움직이는 발표자료</div><div style="font-size:46px;font-weight:700;color:var(--or);margin-top:10px" data-t="up .5 38.2">LIVE <span style="font-size:22px;color:var(--ink2)">이 기획서 자체가 결과물</span></div></div>
+    </div>
+    <div class="abs card" style="left:900px;top:720px;width:880px;height:190px;display:flex;gap:26px;padding:16px" data-t="fromR .6 36.2">
+      <img src="../assets/video/thumb-hwp.webp" style="width:280px;height:158px;object-fit:cover;object-position:top;border:1px solid var(--hair)">
+      <div style="flex:1"><b style="font-size:32px">한글 엔진 <span style="color:var(--grey);font-size:24px">→ .hwp</span></b><div style="font-size:22px;color:var(--ink2);margin-top:8px">한글 프로그램 없이 표준 보고 양식 그대로</div><div style="font-size:46px;font-weight:700;color:var(--or);margin-top:10px" data-t="up .5 38.8">100% <span style="font-size:22px;color:var(--ink2)">평가 통과율 · 미사용 79%</span></div></div>
+    </div>
+  </div>
+
+  <!-- S6 공통 설계도 46.8–55.8 -->
+  <div class="sc" data-t="sIn .5 46.8, sOut .4 55.4 forwards">
+    <div class="abs" style="left:140px;top:110px" data-t="up .7 47.1"><div class="kick"><i></i>ONE BLUEPRINT</div><div class="hl" style="margin-top:14px">설계도 한 장으로 <em>세 형식</em>을</div></div>
+    <div class="abs card" style="left:140px;top:300px;width:820px;height:440px" data-t="fromL .7 47.5"><div class="lay" data-ill="12-blueprint" data-at="47.8" style="left:20px;top:20px;width:780px;height:400px"></div></div>
+    <div class="abs" style="left:140px;top:770px;width:820px;background:#1d1d20;color:#e8e8ea;font-family:Consolas,monospace;font-size:21px;line-height:1.6;padding:20px 24px" data-t="up .6 49">
+      <div data-t="fade .3 49.4">{ <span style="color:#fad3bb">"key_message"</span>: <span style="color:#9cc2ff">"엔진은 하나, 팩은 부서마다"</span>,</div>
+      <div data-t="fade .3 49.8">&nbsp;&nbsp;<span style="color:#fad3bb">"sections"</span>: [ <span style="color:#9cc2ff">… 제목 · 항목 · 표 · 그림 …</span> ],</div>
+      <div data-t="fade .3 50.2">&nbsp;&nbsp;<span style="color:#fad3bb">"targets"</span>: { <span style="color:#ee6d1d">hwp</span>, <span style="color:#ee6d1d">pptx</span>, <span style="color:#ee6d1d">web</span> } }</div>
+    </div>
+    <div class="abs" style="left:1040px;top:320px;width:740px;font-size:25px">
+      <div style="display:grid;grid-template-columns:170px 1fr 1fr 1fr;border-bottom:3px solid var(--ink);padding:12px 6px;color:var(--grey);font-size:22px" data-t="fade .4 50.6"><span>설계도</span><span>한글</span><span>PPT</span><span>웹</span></div>
+      <div style="display:grid;grid-template-columns:170px 1fr 1fr 1fr;border-bottom:1px solid var(--hair);padding:18px 6px" data-t="fromR .5 51"><b>제목</b><span>□ 대제목</span><span>장표 제목</span><span>슬라이드 제목</span></div>
+      <div style="display:grid;grid-template-columns:170px 1fr 1fr 1fr;border-bottom:1px solid var(--hair);padding:18px 6px" data-t="fromR .5 51.4"><b>항목</b><span>ㅇ · - 단계</span><span>글머리표</span><span>카드 · 목록</span></div>
+      <div style="display:grid;grid-template-columns:170px 1fr 1fr 1fr;border-bottom:1px solid var(--hair);padding:18px 6px" data-t="fromR .5 51.8"><b>표</b><span>병합 셀 표</span><span>네이티브 표</span><span>표 · 차트</span></div>
+      <div style="display:grid;grid-template-columns:170px 1fr 1fr 1fr;border-bottom:1px solid var(--hair);padding:18px 6px" data-t="fromR .5 52.2"><b>그림</b><span>그림 + 캡션</span><span>이미지</span><span>움직이는 삽화</span></div>
+      <div style="margin-top:28px;font-size:30px;font-weight:700" data-t="up .5 53">삽화는 <em>한 번 그려 세 형식에서</em> 다시 쓴다</div>
+    </div>
+  </div>
+
+  <!-- S7a 문서팩 55.8–61.8 -->
+  <div class="sc" data-t="sIn .5 55.8, sOut .4 61.4 forwards">
+    <div class="abs" style="left:140px;top:110px" data-t="up .7 56.1"><div class="kick"><i></i>DEPARTMENT PACK</div><div class="hl" style="margin-top:14px">부서 규칙을 <em>팩 하나</em>로 묶는다</div></div>
+    <div class="abs" style="left:760px;top:600px;width:400px;height:280px;perspective:900px">
+      <div class="abs" style="left:0;right:0;bottom:0;height:240px;background:#fff;border:4px solid var(--ink);display:grid;place-items:center" data-t="pop .5 56.6"><div style="text-align:center"><b style="font-size:40px">영업 팩</b><div style="font-size:24px;color:var(--grey);margin-top:6px">v1.4 · 승인됨</div></div></div>
+      <div class="abs" style="left:-6px;right:-6px;top:0;height:40px;background:var(--or);transform-origin:50% 100%;transform:rotateX(-80deg)" data-t="pop .4 56.8, lidShut .5 59.3 forwards"></div>
+    </div>
+    <div class="abs" style="left:900px;top:520px;width:120px;height:120px;border-radius:50%;border:5px solid var(--or);opacity:0" data-t="ring .8 59.8 forwards"></div>
+    <div class="abs" style="left:160px;top:360px;width:1600px;height:220px;font-size:28px;font-weight:700">
+      <span class="abs" style="left:0;top:0;padding:14px 22px;border:2.5px solid var(--ink);background:#fff;--dx:760px;--dy:330px" data-t="pop .4 57, intoBox .6 58.1 forwards">양식</span>
+      <span class="abs" style="left:200px;top:110px;padding:14px 22px;border:2.5px solid var(--ink);background:#fff;--dx:540px;--dy:220px" data-t="pop .4 57.15, intoBox .6 58.25 forwards">보고 유형</span>
+      <span class="abs" style="left:460px;top:20px;padding:14px 22px;border:2.5px solid var(--ink);background:#fff;--dx:300px;--dy:310px" data-t="pop .4 57.3, intoBox .6 58.4 forwards">고정 콘텐츠</span>
+      <span class="abs" style="left:740px;top:120px;padding:14px 22px;border:2.5px solid var(--ink);background:#fff;--dx:40px;--dy:210px" data-t="pop .4 57.45, intoBox .6 58.55 forwards">용어 사전</span>
+      <span class="abs" style="left:1000px;top:10px;padding:14px 22px;border:2.5px solid var(--ink);background:#fff;--dx:-240px;--dy:320px" data-t="pop .4 57.6, intoBox .6 58.7 forwards">결재라인</span>
+      <span class="abs" style="left:1240px;top:110px;padding:14px 22px;border:2.5px solid var(--ink);background:#fff;--dx:-480px;--dy:220px" data-t="pop .4 57.75, intoBox .6 58.85 forwards">삽화 태그</span>
+      <span class="abs" style="left:1420px;top:0;padding:14px 22px;border:2.5px solid var(--or);color:var(--or);background:#fff;--dx:-660px;--dy:330px" data-t="pop .4 57.9, intoBox .6 59 forwards">검수 규칙</span>
+    </div>
+    <div class="abs" style="left:0;right:0;top:910px;text-align:center;font-size:32px;font-weight:700" data-t="up .5 60">한 번 등록하면, <em>부서원 전원이 같은 규칙</em>으로</div>
+  </div>
+
+  <!-- S7b 상속 61.8–68.8 -->
+  <div class="sc" data-t="sIn .5 61.8, sOut .4 68.4 forwards">
+    <div class="abs" style="left:140px;top:110px" data-t="up .7 62.1"><div class="kick"><i></i>INHERIT &amp; PROPAGATE</div><div class="hl" style="margin-top:14px">한 곳만 고치면, <em>전원에게</em></div></div>
+    <div class="abs" style="left:140px;top:300px;width:760px;height:600px;perspective:1600px">
+      <div class="abs" style="left:60px;top:40px;width:420px;height:250px" data-t="drop .6 62.5"><div class="abs" style="inset:0;border:3px solid var(--ink);background:rgba(255,255,255,.92);transform:rotateX(62deg) rotateZ(-38deg)"></div></div>
+      <div class="abs" style="left:60px;top:150px;width:420px;height:250px" data-t="drop .6 62.75"><div class="abs" style="inset:0;border:3px solid var(--ink);background:rgba(255,255,255,.92);transform:rotateX(62deg) rotateZ(-38deg)"></div></div>
+      <div class="abs" style="left:60px;top:260px;width:420px;height:250px" data-t="drop .6 63"><div class="abs" style="inset:0;border:3px solid var(--ink);background:rgba(255,255,255,.92);transform:rotateX(62deg) rotateZ(-38deg)"></div></div>
+      <div class="abs" style="left:60px;top:370px;width:420px;height:250px" data-t="drop .6 63.25"><div class="abs" style="inset:0;border:3px solid var(--or);background:var(--orp);transform:rotateX(62deg) rotateZ(-38deg)"></div></div>
+      <div class="abs" style="left:268px;top:160px;width:0;height:330px;border-left:4px dashed var(--or);transform-origin:top" data-t="growY .8 64.6"></div>
+      <div class="abs" style="left:540px;top:140px;font-size:28px;font-weight:700" data-t="fromR .4 62.7">개인 설정</div>
+      <div class="abs" style="left:540px;top:250px;font-size:28px;font-weight:700" data-t="fromR .4 62.95">부서 팩</div>
+      <div class="abs" style="left:540px;top:360px;font-size:28px;font-weight:700" data-t="fromR .4 63.2">본부 팩</div>
+      <div class="abs" style="left:540px;top:470px;font-size:28px;font-weight:700;color:var(--or)" data-t="fromR .4 63.45">전사 공통 팩 🔒</div>
+    </div>
+    <div class="abs card" style="left:960px;top:330px;width:820px;height:300px" data-t="fromR .7 64"><div class="lay" data-ill="03-one-line-all" data-at="64.3" style="left:16px;top:16px;width:788px;height:268px"></div></div>
+    <div class="abs" style="left:960px;top:670px;width:820px;font-size:30px;line-height:1.6" data-t="up .6 65.4"><b>팩 한 줄 수정 → 다음 문서부터 부서원 전원</b><div style="font-size:24px;color:var(--ink2);margin-top:8px">버전 · 승인 기록 · 되돌리기 / 전사 CI·등급 표기는 잠금</div></div>
+  </div>
+
+  <!-- S8 AI 제안 · 사람 승인 68.8–76.8 -->
+  <div class="sc" data-t="sIn .5 68.8, sOut .4 76.4 forwards">
+    <div class="abs" style="left:140px;top:110px" data-t="up .7 69.1"><div class="kick"><i></i>HUMAN IN THE LOOP</div><div class="hl" style="margin-top:14px">AI는 <em>제안</em>하고, 사람이 <em>승인</em>한다</div></div>
+    <div class="abs card" style="left:140px;top:300px;width:800px;height:310px" data-t="fromL .7 69.5"><div class="lay" data-ill="04-pack-maker" data-at="69.8" style="left:16px;top:16px;width:768px;height:278px"></div></div>
+    <div class="abs card" style="left:980px;top:300px;width:800px;height:310px" data-t="fromR .7 69.9"><div class="lay" data-ill="k4-inspector" data-at="70.2" style="left:16px;top:16px;width:768px;height:278px"></div></div>
+    <div class="abs" style="left:140px;top:650px;width:800px;font-size:26px;line-height:1.5">
+      <b style="font-size:34px" data-t="up .5 71">팩 만들기 도우미</b>
+      <div style="margin-top:14px" data-t="up .4 71.4"><em>1</em>&nbsp; 기존 문서 3~5건을 올린다</div>
+      <div style="margin-top:8px" data-t="up .4 71.8"><em>2</em>&nbsp; AI가 목차·반복 문구·용어를 뽑아 팩 초안</div>
+      <div style="margin-top:8px" data-t="up .4 72.2"><em>3</em>&nbsp; 관리자가 승인하면 버전을 달고 게시</div>
+    </div>
+    <div class="abs" style="left:980px;top:650px;width:800px;font-size:26px;line-height:1.5">
+      <b style="font-size:34px" data-t="up .5 71.2">자동 검수 — 사람이 쓴 문서도</b>
+      <div style="margin-top:14px" data-t="up .4 72.6"><b style="color:var(--navy)">한글</b>&nbsp; 3줄 이내 · 명사형 종결 · 날짜 형식</div>
+      <div style="margin-top:8px" data-t="up .4 73">  <b style="color:var(--navy)">PPT · 웹</b>&nbsp; 색 · 서체 · 넘침 · 겹침 · 출처</div>
+      <div style="margin-top:8px" data-t="up .4 73.4"><b style="color:var(--navy)">팩 규칙</b>&nbsp; 고객사명 오기 · 대외비 문구</div>
+    </div>
+  </div>
+
+
+  <!-- S8b 화면 시안 ① 76.8–85.8 (navy) -->
+  <div class="sc" style="background:var(--navy);color:#fff" data-t="sIn .5 76.8, sOut .4 85.39999999999999 forwards">
+    <svg class="chev" style="left:1640px;top:-80px;width:520px;height:700px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromR 1 76.89999999999999"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#1f4b9b"/></svg>
+    <div class="abs" style="left:140px;top:100px" data-t="up .7 77.1"><div class="kick" style="color:var(--bt)"><i></i>화면 설계 시안 · 본선 구현 범위</div><div class="hl" style="margin-top:14px;color:#fff">말하면, 세 형식이 <em>한 번에</em></div></div>
+    <div class="abs" style="left:1060px;top:120px;width:760px;text-align:right" data-t="up .6 77.7"><span class="chip2">AI 초안 → 채팅 수정</span><span class="chip2">자동 검수 · 원클릭 수정</span></div>
+    <div class="frame" style="left:140px;top:300px;width:1040px;height:615px" data-t="fromL .6 77.5"><div class="fbar"><i></i><i></i><i></i><span>코쇠 문서팩 · 화면 시안</span></div><div class="fimg"><img src="../assets/platform/02-workspace.webp" data-t="kb 9 77.9 linear"></div></div>
+    <div class="frame" style="left:1010px;top:318px;width:500px;height:311px" data-t="flyIn .6 80.0"><div class="fbar"><i></i><i></i><i></i><span>코쇠 문서팩 · 화면 시안</span></div><div class="fimg"><img src="../assets/platform/03-ppt.webp" data-t="kb 9 80.4 linear"></div></div>
+    <div class="frame" style="left:1180px;top:470px;width:500px;height:311px" data-t="flyIn .6 80.5"><div class="fbar"><i></i><i></i><i></i><span>코쇠 문서팩 · 화면 시안</span></div><div class="fimg"><img src="../assets/platform/04-web.webp" data-t="kb 9 80.9 linear"></div></div>
+    <div class="frame" style="left:1350px;top:622px;width:440px;height:278px" data-t="flyIn .6 81.0"><div class="fbar"><i></i><i></i><i></i><span>코쇠 문서팩 · 화면 시안</span></div><div class="fimg"><img src="../assets/platform/05-hwp.webp" data-t="kb 9 81.4 linear"></div></div>
+    <div class="flab" style="left:1012px;top:262px;color:#fff" data-t="fade .4 80.2"><em>PPT</em> · <em>웹</em> 표→차트 · <em>한글</em> .hwp — 같은 설계도에서</div>
+  </div>
+
+  <!-- S8c 화면 시안 ② 85.8–94.8 -->
+  <div class="sc" data-t="sIn .5 85.8, sOut .4 94.39999999999999 forwards">
+    <div class="abs" style="left:140px;top:100px" data-t="up .7 86.1"><div class="kick"><i></i>화면 설계 시안 · 등록 · 승인 · AI</div><div class="hl" style="margin-top:14px">규칙은 <em>서버와 Git</em>이 지킨다</div></div>
+    <div class="frame" style="left:140px;top:330px;width:520px;height:322px" data-t="pop .6 86.6"><div class="fbar"><i></i><i></i><i></i><span>코쇠 문서팩 · 화면 시안</span></div><div class="fimg"><img src="../assets/platform/06-register.webp" data-t="kb 9 87.0 linear"></div></div>
+    <div class="frame" style="left:700px;top:330px;width:520px;height:322px" data-t="pop .6 87.39999999999999"><div class="fbar"><i></i><i></i><i></i><span>코쇠 문서팩 · 화면 시안</span></div><div class="fimg"><img src="../assets/platform/07-approve.webp" data-t="kb 9 87.8 linear"></div></div>
+    <div class="frame" style="left:1260px;top:330px;width:520px;height:322px" data-t="pop .6 88.2"><div class="fbar"><i></i><i></i><i></i><span>코쇠 문서팩 · 화면 시안</span></div><div class="fimg"><img src="../assets/platform/08-inet.webp" data-t="kb 9 88.60000000000001 linear"></div></div>
+    <svg class="chev" style="left:668px;top:470px;width:22px;height:30px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromL .4 87.3"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#ee6d1d"/></svg>
+    <svg class="chev" style="left:1228px;top:470px;width:22px;height:30px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromL .4 88.1"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#ee6d1d"/></svg>
+    <div class="flab" style="left:140px;top:670px;width:520px" data-t="up .5 86.89999999999999"><em>①</em> 예시 문서 2건 → AI가<br>구성·고정 문구·규칙 추출</div>
+    <div class="flab" style="left:700px;top:670px;width:520px" data-t="up .5 87.7"><em>②</em> 팀장 승인 = GitHub PR 댓글<br>→ 병합 · 버전 태그</div>
+    <div class="flab" style="left:1260px;top:670px;width:520px" data-t="up .5 88.5"><em>③</em> 외부 AI(Bedrock 등)는 승인 기간만,<br>고객정보는 가려서 보낸다</div>
+    <div class="abs" style="left:140px;top:810px;width:1640px;font-size:26px;color:var(--ink2)" data-t="fade .5 89.39999999999999">문서 권한(팀·부서 읽기/쓰기) · 대외비 잠금 · 감사 로그까지 — 본선에서 구현할 범위입니다 (화면은 가상 데이터 시안)</div>
+  </div>
+
+  <!-- S9 효과 94.8–103 -->
+  <div class="sc" data-t="sIn .5 94.8, sOut .4 102.6 forwards">
+    <div class="abs" style="left:140px;top:110px" data-t="up .7 95.1"><div class="kick"><i></i>IMPACT</div><div class="hl" style="margin-top:14px">연 약 <em>24,000시간</em>을 돌려준다</div></div>
+    <div class="abs" style="left:140px;top:320px;width:1640px;display:flex;align-items:stretch;gap:14px;font-size:24px;text-align:center">
+      <div style="flex:1;background:var(--surf);border:1.5px solid var(--hair);padding:24px 10px" data-t="pop .4 95.6"><b style="font-size:54px;display:block">500명</b>문서 작성자 · 가정</div><b style="align-self:center;font-size:40px;color:var(--grey)" data-t="fade .3 95.8">×</b>
+      <div style="flex:1;background:var(--surf);border:1.5px solid var(--hair);padding:24px 10px" data-t="pop .4 96"><b style="font-size:54px;display:block">8시간</b>1인 월 문서 작성 · 가정</div><b style="align-self:center;font-size:40px;color:var(--grey)" data-t="fade .3 96.2">×</b>
+      <div style="flex:1;background:var(--surf);border:1.5px solid var(--hair);padding:24px 10px" data-t="pop .4 96.4"><b style="font-size:54px;display:block">50%</b>절감률 · 보수 가정</div><b style="align-self:center;font-size:40px;color:var(--grey)" data-t="fade .3 96.6">×</b>
+      <div style="flex:1;background:var(--surf);border:1.5px solid var(--hair);padding:24px 10px" data-t="pop .4 96.8"><b style="font-size:54px;display:block">12개월</b>1년</div>
+    </div>
+    <div class="abs" style="left:0;right:0;top:540px;text-align:center" data-t="up .6 97.4">
+      <div style="font-size:230px;font-weight:700;color:var(--or);line-height:1;letter-spacing:-.02em"><span class="count" data-t="cnt24 1.6 97.6 both ease-out"></span>,000<span style="font-size:70px;color:var(--ink);margin-left:16px">시간 / 년</span></div>
+      <div style="font-size:26px;color:var(--ink2);margin-top:18px">실측(22장 최종본 2시간 20분 = 수작업 가정의 1/3)에서 낮춰 잡은 값 · 파일럿 30명으로 확정</div>
+    </div>
+  </div>
+
+  <!-- S10 맺음 103–111 (black) -->
+  <div class="sc" style="background:#000;color:#fff" data-t="sIn .5 103, sOut .01 117 forwards">
+    <svg class="abs" style="left:0;top:690px" width="2600" height="300" viewBox="0 0 2600 300" data-t="waveX 6 103 infinite linear">
+      <path d="M0 150 Q150 70 300 150 T600 150 T900 150 T1200 150 T1500 150 T1800 150 T2100 150 T2400 150 T2700 150" stroke="#7a3a10" stroke-width="3" fill="none"/>
+      <path d="M0 170 Q150 100 300 170 T600 170 T900 170 T1200 170 T1500 170 T1800 170 T2100 170 T2400 170 T2700 170" stroke="#b85415" stroke-width="3" fill="none" transform="translate(-120 0)"/>
+      <path d="M0 190 Q150 120 300 190 T600 190 T900 190 T1200 190 T1500 190 T1800 190 T2100 190 T2400 190 T2700 190" stroke="#ee6d1d" stroke-width="3" fill="none" transform="translate(-240 0)"/>
+    </svg>
+    <svg class="chev" style="left:1340px;top:520px;width:360px;height:484px" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="fromR 1 103.3"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#f26522"/></svg>
+    <div class="abs" style="left:1360px;top:323px;width:144px;height:283px" data-t="drop .9 104">
+      <div class="abs" style="inset:0;transform-origin:50% 74%" data-t="bob 3 105 infinite ease-in-out">
+        <img class="abs" src="../assets/kosoe/kosoe-legs.png" style="left:0;top:207px;width:144px;height:75px;transform-origin:52.5% 3%" data-t="swing 1.15 104 infinite ease-in-out alternate">
+        <img class="abs" src="../assets/kosoe/kosoe-body.png" style="left:0;top:0;width:144px;height:212px">
+      </div>
+    </div>
+    <div class="abs" style="left:160px;top:250px">
+      <div class="kick" style="color:var(--bt)" data-t="up .6 103.4"><i></i>CLOSING</div>
+      <div style="font-size:92px;font-weight:700;line-height:1.25;margin-top:26px"><div data-t="up .6 103.7">내용은 사람이 쓰고,</div><div data-t="up .6 104.2"><em>코스콤다움</em>은</div><div data-t="up .6 104.7">코쇠 문서팩이 맞춘다.</div></div>
+      <div style="margin-top:40px" data-t="up .6 105.6"><span class="tag">공통 엔진 3종</span><span class="tag">부서 문서팩</span><span class="tag">자동 검수</span><span class="tag">사내 AI 우선</span></div>
+    </div>
+  </div>
+
+  <!-- 장면 전환 셰브론 -->
+  <svg class="sweep" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="sweep 1.1 6.25 both ease-in-out"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#f26522"/></svg>
+  <svg class="sweep" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="sweep 1.1 23.25 both ease-in-out"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#00338d"/></svg>
+  <svg class="sweep" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="sweep 1.1 32.25 both ease-in-out"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#f26522"/></svg>
+  <svg class="sweep" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="sweep 1.1 55.25 both ease-in-out"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#f26522"/></svg>
+  <svg class="sweep" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="sweep 1.1 102.45 both ease-in-out"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#000"/></svg>
+
+  <svg class="sweep" viewBox="0 0 1000 1345" preserveAspectRatio="none" data-t="sweep 1.1 76.25 both ease-in-out"><polygon points="0,0 424,0 1000,672.5 424,1345 0,1345 523,672.5" fill="#00338d"/></svg>
+
+  <!-- HUD -->
+  <div id="brand" data-t="fade .5 6.9, sOut .3 102.7 forwards"><svg viewBox="0 0 120 200"><polygon points="0,0 60,0 120,100 60,200 0,200 60,100" fill="#ee6d1d"/></svg>코쇠 문서팩</div>
+  <div id="cap">
+    <div data-t="up .5 7.6, sOut .3 16.3 forwards"><b>문제 ①</b>보고서는 업무시간의 1/3 — 그중 큰 몫이 양식 맞추기</div>
+    <div data-t="up .5 17.4, sOut .3 23.3 forwards"><b>문제 ②</b>'AI 문서 작성'은 흔하다 — 차별점은 코스콤다움과 부서 관리</div>
+    <div data-t="up .5 26.2, sOut .3 32.3 forwards"><b>해법</b>공통 엔진 3종 + 부서별 문서팩</div>
+    <div data-t="up .5 33.6, sOut .3 46.3 forwards"><b>엔진</b>라우터가 형식을 고르고, 세 엔진이 코스콤 양식으로 만든다</div>
+    <div data-t="up .5 47.6, sOut .3 55.3 forwards"><b>설계도</b>한 번 쓰면 PPT · 웹 · 한글 세 형식으로</div>
+    <div data-t="up .5 56.6, sOut .3 61.3 forwards"><b>문서팩</b>부서 규칙을 한 번 등록하면 전원에게</div>
+    <div data-t="up .5 62.6, sOut .3 68.3 forwards"><b>상속</b>전사 → 본부 → 부서 → 개인, 한 곳만 고치면 일괄 반영</div>
+    <div data-t="up .5 69.6, sOut .3 76.3 forwards"><b>검수</b>AI는 제안하고 사람이 승인한다</div>
+    <div data-t="up .5 77.6, sOut .3 85.3 forwards"><b>시안</b>AI 초안 → 채팅 수정 → 한글·PPT·웹을 한 번에</div>
+    <div data-t="up .5 86.6, sOut .3 94.3 forwards"><b>운영</b>등록은 PR, 승인은 PR 댓글 — 외부 AI는 승인제</div>
+    <div data-t="up .5 95.6, sOut .3 102.5 forwards"><b>효과</b>연 약 24,000시간 — 가정은 파일럿에서 실측으로 확정</div>
+  </div>
+  <div id="prog" data-t="grow 111 0 both linear"></div>
+</div>
+
+<script>
+(async () => {
+  const v = document.getElementById('v');
+  // 1920×1080 무대를 창 크기에 맞춰 줄인다(가운데 정렬 레이아웃과 무관하게 왼쪽 위 기준으로 고정)
+  const fit = () => {
+    const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+    Object.assign(v.style, {position: 'absolute', margin: '0', left: (innerWidth - 1920 * s) / 2 + 'px', top: (innerHeight - 1080 * s) / 2 + 'px', transform: `scale(${s})`});
+  };
+  document.body.style.display = 'block'; addEventListener('resize', fit); fit();
+
+  // 기획서(웹슬라이드) 안에 끼워 재생할 때: 그림·서체·레이어 지도를 부모 문서에서 받아 쓴다(단일 파일판에서도 같은 데이터를 다시 넣지 않는다)
+  const EMB = (() => { try { return window.parent !== window && parent.__motionAsset ? parent : null; } catch (e) { return null; } })();
+  const R = p => EMB ? EMB.__motionAsset(p.replace(/^\.\.\//, '')) : p;
+  if (EMB) {
+    const faces = [...EMB.document.styleSheets].flatMap(sh => { try { return [...sh.cssRules]; } catch (e) { return []; } })
+      .filter(r => r.constructor.name === 'CSSFontFaceRule').map(r => r.cssText).join('\n');
+    const st = document.createElement('style'); st.textContent = faces; document.head.appendChild(st);
+    document.querySelectorAll('img[data-masset], img[src^="../assets/"]').forEach(i => { i.src = R(i.dataset.masset || i.getAttribute('src')); });
+  }
+
+  // 삽화 레이어: 배경 · 코쇠(몸통·꺾쇠·눈꺼풀) · 화살표/라벨 덩어리를 따로 움직인다
+  const man = EMB && EMB.__motionManifest ? EMB.__motionManifest : await (await fetch('../assets/illust/layers2/manifest.json')).json();
+  const KD = {bTilt: 2.8, bNod: 2.6, bPress: 1.8, bRock: 1.6, bPush: 1.8, bPeer: 3, bBreathe: 3.2};
+  document.querySelectorAll('.lay[data-ill]').forEach(box => {
+    const name = box.dataset.ill, L = man[name], t0 = +box.dataset.at, bw = box.offsetWidth, bh = box.offsetHeight;
+    const dir = `../assets/illust/layers2/${name}/`, sfx = box.hasAttribute('data-dark') ? '-d' : '';
+    const sc = Math.min(bw / L.w, bh / L.h), w = L.w * sc, h = L.h * sc;
+    const P = (v, t) => (v / t * 100).toFixed(3) + '%';
+    const at = (o, ox, oy, tw, th) => `left:${P(o.x - ox, tw)};top:${P(o.y - oy, th)};width:${P(o.w, tw)};height:${P(o.h, th)}`;
+    const T = v => v.toFixed(2);
+    let html = `<img src="${R(`${dir}bg${sfx}.webp`)}" data-t="fade .45 ${T(t0)}" style="left:0;top:0;width:100%;height:100%">`;
+    L.G.forEach((g, i) => {
+      const d = t0 + .7 + i * .11;
+      const a = g.a === 'pop' ? `gPop .55 ${T(d)} ease-out` + (g.c === 'r' ? `, redPulse 2.6 ${T(d + 1.7)} infinite ease-in-out` : '') : `${g.a === 'wy' ? 'wipeY' : 'wipeX'} .75 ${T(d)}`;
+      html += `<img src="${R(`${dir}${g.id}${sfx}.webp`)}" data-t="${a}" style="${at(g, 0, 0, L.w, L.h)}">`;
+    });
+    L.K.forEach((k, i) => {
+      const c = k.crest;
+      const x0 = Math.min(k.x, c ? c.x : k.x), y0 = Math.min(k.y, c ? c.y : k.y);
+      const KW = Math.max(k.x + k.w, c ? c.x + c.w : 0) - x0, KH = Math.max(k.y + k.h, c ? c.y + c.h : 0) - y0;
+      let inner = `<img src="${R(`${dir}k${i}${sfx}.webp`)}" style="${at(k, x0, y0, KW, KH)}">`;
+      k.eyes.forEach(e => {
+        inner += `<i class="lid" data-t="lidBlink 4.4 ${T(t0 + 1.9 + i * .8)} infinite linear" style="left:${P(e[0] - e[2] * 1.6 - x0, KW)};top:${P(e[1] - e[3] * 1.6 - y0, KH)};width:${P(e[2] * 3.2, KW)};height:${P(e[3] * 3.2, KH)};background:${k.fill}"></i>`;
+      });
+      if (c) inner += `<img src="${R(`${dir}c${i}${sfx}.webp`)}" data-t="crestIn .7 ${T(t0 + .55)} ease-out, crestWiggle 3.4 ${T(t0 + 1.6)} infinite ease-in-out" style="${at(c, x0, y0, KW, KH)};transform-origin:${P(c.ox - c.x, c.w)} ${P(c.oy - c.y, c.h)}">`;
+      html += `<div class="abs" data-t="kIn .6 ${T(t0 + .2)}, ${k.m} ${KD[k.m] || 3} ${T(t0 + 1.1)} infinite ease-in-out" style="${at({x: x0, y: y0, w: KW, h: KH}, 0, 0, L.w, L.h)};transform-origin:${P(k.pivot[0] - x0, KW)} ${P(k.pivot[1] - y0, KH)}">${inner}</div>`;
+    });
+    const inner = document.createElement('div');
+    inner.className = 'abs';
+    Object.assign(inner.style, {left: (bw - w) / 2 + 'px', top: (bh - h) / 2 + 'px', width: w + 'px', height: h + 'px'});
+    inner.innerHTML = html;
+    box.appendChild(inner);
+  });
+
+  // data-t="이름 길이 시작 [반복] [이징] [방향] [채우기]" → CSS animation
+  document.querySelectorAll('[data-t]').forEach(el => {
+    el.style.animation = el.dataset.t.split(',').map(part => {
+      const [name, dur, delay, ...rest] = part.trim().split(/\s+/);
+      const opts = rest.join(' ');
+      const fill = /\b(forwards|backwards|both|none)\b/.test(opts) ? '' : ' both';
+      const ease = /(ease|linear|cubic-bezier)/.test(opts) ? '' : ' cubic-bezier(.2,.8,.2,1)';
+      return `${name} ${dur}s${ease} ${delay}s ${opts}${fill}`.replace(/\s+/g, ' ').trim();
+    }).join(', ');
+  });
+
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(i => i.decode().catch(() => {})));
+
+  // 프레임 단위로 멈춰 그리기(녹화용) — ?capture=1 이면 0초에서 멈춘 채 대기
+  window.renderAt = async t => {
+    document.getAnimations().forEach(a => { a.pause(); a.currentTime = t * 1000; });
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  };
+  if (new URLSearchParams(location.search).has('capture')) await window.renderAt(0);
+
+  // 재생기 — 기획서 안에서 동영상처럼 재생·멈춤·이동한다(동영상 파일 없이, 이 HTML 그대로)
+  const DUR = 111;
+  let base = 0, t0 = null;
+  const all = () => document.getAnimations();
+  window.motion = {
+    dur: DUR,
+    time: () => t0 === null ? base : Math.min(DUR, base + (performance.now() - t0) / 1000),
+    get playing() { return t0 !== null; },
+    seek(t) { base = Math.max(0, Math.min(DUR, t)); t0 = null; all().forEach(a => { a.pause(); a.currentTime = base * 1000; }); },
+    play() {
+      if (base >= DUR - .05) this.seek(0);
+      all().forEach(a => { a.currentTime = base * 1000; if (a.currentTime < a.effect.getComputedTiming().endTime) a.play(); });   // 끝난 것은 그대로(다시 감기지 않게)
+      t0 = performance.now();
+    },
+    pause() { const t = this.time(); this.seek(t); },
+  };
+  if (EMB) window.motion.seek(3);   // 끼워 넣었을 때는 3초 장면에서 멈춘 채 대기(포스터 역할)
+  window.__ready = true;
+})();
+</script>
+</body>
+</html>

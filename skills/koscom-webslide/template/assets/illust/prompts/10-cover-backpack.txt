@@ -1,0 +1,19 @@
+Generate one standalone 16:9 horizontal Korean article illustration.
+
+Visual DNA:
+Pure white background. Minimalist dark-charcoal hand-drawn line art. Slightly wobbly pen lines. Lots of empty white space. Sparse orange/blue/red handwritten Korean annotations. Clean, absurd product-sketch feeling. Objects are line-only (white inside), no gray shading on objects. No gradients, no shadows, no paper texture, no complex background, no commercial vector style, no PPT infographic look, no cute mascot poster, no children's illustration, no realistic UI, no company logos.
+
+Recurring character required — 코쇠 (Kosoe):
+Keep the character design EXACTLY as in the attached character sheet: a small solid charcoal-gray (#5A5555) rounded-square block body like a worn keycap, one bright orange (#E96717) chevron ">" crest on top of the head always pointing right, two white dot eyes, tiny flat-line mouth, very thin black stick arms and legs. Deadpan, serious, diligent, slightly bizarre — not cute. Use the attached image ONLY for character design consistency; do not copy its layout, poses or labels.
+코쇠 must perform the core conceptual action, not decorate the scene.
+
+Color use:
+Dark charcoal for line art. Orange (#E96717) for the main flow, path and arrows. Blue (#4368F2) only for secondary notes or system state. Red only for one key warning or problem, if needed.
+
+Constraints:
+One image explains only one core structure. Main subject around 40%-60% of the canvas, at least 35% blank white space. At most 5 short handwritten Korean labels (2-8 characters each), spelled exactly as given. No title in the top-left corner. Do not write the structure type on the image. Clear but not instructional, interesting but not childish, strange but clean.
+
+Theme: One department document pack carries three kinds of documents — slides, a web slide, and a Korean report.
+Structure type: concept metaphor (one carries many)
+Composition: 코쇠 walks steadily to the right along a long thin orange dotted path, wearing an oversized boxy hiker backpack (line-only, white inside) almost as big as its body. From the top of the backpack three rolled-up sheets stick out like rolled maps: one shows a tiny slide frame with a pie chart, one shows a tiny browser window frame with three dots on its top bar and a small cursor arrow, one shows a tiny report page with square bullet marks. 코쇠 holds the shoulder straps with both thin arms, deadpan and determined. Far right, the path ends at a small simple desk. Plenty of empty white space above and below.
+Korean labels: "문서팩" (orange, on the backpack), "PPT" (blue, by the slide roll), "웹슬라이드" (blue, by the browser roll), "한글" (blue, by the report roll)

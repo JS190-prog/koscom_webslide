@@ -45,7 +45,7 @@ description: 코스콤 스타일(KoPub돋움체 · 오렌지·네이비 · 셰�
 ## 파일
 | 경로 | 내용 |
 |---|---|
-| `template/index.html` | 예시 덱 겸 엔진(21장 + 부록 A~F). CSS·JS·deck-data 한 파일 |
+| `template/index.html` | 예시 덱 겸 엔진(22장 + 부록 A~F). CSS·JS·deck-data 한 파일 |
 | `template/video/summary.html` | 요약 모션 원본(111초, 장면별 CSS 애니메이션) |
 | `template/assets/` | 서체(ttf), 코쇠 삽화와 레이어(`illust/layers2` + manifest), 코쇠 아바타, 예시 그림 |
 | `scripts/new_deck.py` | 템플릿 복사, 장·부록 고르기 |

@@ -9,7 +9,7 @@
 - 부록(사이드 페이지): 수치 근거 · 출처 · 예상 질문 · 실물 · 요약 영상 · 추가 자료
 - 편집 모드(E): 글·차트·그림을 브라우저에서 고치고 HTML로 저장
 - 요약 모션: 덱 안에서 재생(동영상 파일 없이) + 필요하면 mp4 녹화
-- 단일 HTML 파일(그림·서체·차트·모션 내장, 외부 연결 0) — 예시 덱 21장 + 부록 6개 + 111초 모션이 **6.4MB**
+- 단일 HTML 파일(그림·서체·차트·모션 내장, 외부 연결 0) — 예시 덱 22장 + 부록 6개 + 111초 모션이 **6.4MB**
 
 ## 설치
 Claude Code에서:
@@ -31,7 +31,7 @@ node   skills/koscom-webslide/scripts/check_deck.js ./my-deck/제목_단일파�
 자세한 규칙과 부품은 [SKILL.md](skills/koscom-webslide/SKILL.md)와 `references/`.
 
 ## 예시
-`skills/koscom-webslide/template/index.html` — 「코쇠 문서팩」 참가 기획서(21장). 브라우저로 바로 열립니다.
+`skills/koscom-webslide/template/index.html` — 「코쇠 문서팩」 참가 기획서(22장). 브라우저로 바로 열립니다.
 
 ## 필요한 것
 Python 3.10+ (Pillow · numpy · fontTools[woff2]), Node 18+ + `playwright-core`(점검·녹화, 설치된 Edge/Chrome 사용), ffmpeg(mp4를 만들 때만).

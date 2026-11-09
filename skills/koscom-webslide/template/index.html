@@ -2337,9 +2337,23 @@ body.editing .chart-edit{display:block}
     return '<!doctype html>\n' + doc.documentElement.outerHTML;
   }
   let fileHandle = null;
+  // 스튜디오(scripts/studio.py)가 띄운 덱이면 프로젝트의 deck/index.html 에 바로 저장한다. 아니면 false
+  async function saveToStudio(html) {
+    if (!location.protocol.startsWith('http') || !location.pathname.startsWith('/deck/')) return false;  // 스튜디오가 연 작업본만(최종본 /exports/ 는 제외)
+    let token;
+    try { const t = await fetch('/api/token', {cache: 'no-store'}); if (!t.ok) return false; token = await t.text(); } catch (e) { return false; }
+    try {
+      const r = await fetch('/api/save', {method: 'POST', headers: {'Content-Type': 'text/html; charset=utf-8', 'X-Studio-Token': token}, body: html});
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || r.status);
+      saved('작업 폴더(deck/index.html)에 저장했습니다. 이전 판은 studio/history에 남겼습니다');
+    } catch (e) { toast('작업 폴더에 저장하지 못했습니다: ' + e.message); }
+    return true;
+  }
   async function saveFile() {
     if (!(dirty.size || dirtyImg.size || dataDirty)) return toast('저장할 변경이 없습니다');
     const html = buildHTML();
+    if (await saveToStudio(html)) return;
     try {
       if (window.showSaveFilePicker) {
         if (!fileHandle) fileHandle = await showSaveFilePicker({suggestedName: 'index.html', types: [{description: 'HTML 문서', accept: {'text/html': ['.html']}}]});

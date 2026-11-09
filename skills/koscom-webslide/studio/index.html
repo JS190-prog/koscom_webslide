@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>웹슬라이드 스튜디오</title>
+<style>
+  :root{--or:#ee6d1d;--nv:#00338d;--ink:#2b2b2e;--grey:#8c8c92;--hair:#e4e4e8;--bg:#f6f6f8}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 'KoPub Dotum','Malgun Gothic',sans-serif;color:var(--ink);background:var(--bg);word-break:keep-all}
+  .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;padding:14px 28px;background:#fff;border-bottom:1px solid var(--hair)}
+  .top b{font-size:17px}.top b::before{content:'›';color:var(--or);font-size:24px;margin-right:8px;vertical-align:-2px}
+  .top span{color:var(--grey);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  main{max-width:1180px;margin:0 auto;padding:24px 28px 120px}
+  .step,.made{background:#fff;border:1px solid var(--hair);border-radius:10px;padding:22px 24px;margin-bottom:18px}
+  h2{margin:0 0 14px;font-size:18px;display:flex;align-items:center;gap:10px}
+  h2 i{font-style:normal;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--or);color:#fff;font-size:14px}
+  h2 small{font-weight:400;color:var(--grey);font-size:13px}
+  .form{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 18px}
+  .form label{display:grid;gap:4px;font-size:13px;color:var(--grey)}
+  input[type=text]{font:inherit;color:var(--ink);padding:9px 11px;border:1px solid var(--hair);border-radius:6px}
+  input[type=text]:focus{outline:2px solid var(--or);border-color:transparent}
+  .presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--hair);background:#fff;padding:8px 14px;color:var(--ink)}
+  button:hover{border-color:var(--ink)}
+  button.primary{background:var(--or);border-color:var(--or);color:#fff;font-weight:700;padding:11px 22px}
+  button.navy{background:var(--nv);border-color:var(--nv);color:#fff}
+  button:disabled{opacity:.5;cursor:wait}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .card{position:relative;display:block;border:2px solid var(--hair);border-radius:8px;overflow:hidden;background:#fff;cursor:pointer;user-select:none}
+  .card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#eee}
+  .card .cap{display:flex;gap:8px;padding:7px 10px;font-size:13px;align-items:baseline}
+  .card .cap b{color:var(--grey);font-size:12px}
+  .card input{position:absolute;opacity:0}
+  .card:has(input:checked){border-color:var(--or)}
+  .card:has(input:checked)::after{content:'✓';position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--or);color:#fff;display:grid;place-items:center;font-weight:700}
+  .card:has(input:focus-visible){outline:3px solid var(--nv)}
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;gap:14px;align-items:center;justify-content:center;padding:14px;background:#fff;border-top:1px solid var(--hair)}
+  #msg{font-size:14px;color:var(--grey)}#msg.err{color:#c62828}
+  .made{border-color:var(--or);border-width:2px}
+  .made .row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+  .made p{margin:4px 0;color:var(--grey);font-size:14px}
+  .res{margin-top:12px;padding:12px 14px;border-radius:8px;background:var(--bg);font-size:14px}
+  .res.ok{background:#fdeee4}.res.bad{background:#fdecea}
+  .res ul{margin:6px 0 0 18px;padding:0}
+  .exports a{color:var(--nv);margin-right:14px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="top"><b>코스콤 웹슬라이드 스튜디오</b><span id="proj"></span></header>
+<main>
+  <section class="made" id="made" hidden>
+    <h2>만든 서식 · <span id="mTitle"></span></h2>
+    <p id="mInfo"></p>
+    <div class="row">
+      <button class="navy" id="open">덱 열고 고치기 ↗</button>
+      <button class="primary" id="final">최종본 만들기</button>
+    </div>
+    <p>덱이 열리면 <b>E</b> 키(또는 오른쪽 위 ✎)로 글·차트·그림을 고치고 「HTML 저장」을 누르면 이 프로젝트에 저장됩니다. 이전 판은 <code>studio/history</code>에 남습니다.</p>
+    <p>최종본은 문체·숫자 검사 → 단일 파일 → 점검을 모두 통과해야 <code>exports/제목_verN.html</code>로 남습니다(1~2분).</p>
+    <div id="fres" hidden></div>
+    <p class="exports" id="exports"></p>
+  </section>
+
+  <section class="step">
+    <h2><i>1</i> 덱 정보</h2>
+    <div class="form">
+      <label>덱 제목 (필수) <input type="text" id="title" maxlength="80" placeholder="예: 본사 노후 소방배관 교체 공사 추진(안)"></label>
+      <label>상단 바 이름 <input type="text" id="brand" maxlength="40" placeholder="코스콤"></label>
+      <label>상단 바 영문 꼬리 <input type="text" id="brand_en" maxlength="40" placeholder="예: FACILITY BRIEF"></label>
+      <label>오른쪽 위 꼬리표 <input type="text" id="pill" maxlength="40" placeholder="예: 추진(안) 보고"></label>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2><i>2</i> 장 고르기 <small id="cnt"></small></h2>
+    <div class="presets" id="presets"></div>
+    <div class="grid" id="slides"></div>
+  </section>
+
+  <section class="step">
+    <h2><i>3</i> 부록 고르기 <small>본문은 짧게, 근거·출처·질문은 부록으로</small></h2>
+    <div class="grid" id="sides"></div>
+  </section>
+</main>
+<div class="bar"><button class="primary" id="create">이 서식으로 만들기</button><span id="msg">장을 고른 뒤 누르면 프로젝트의 deck/ 에 덱이 만들어집니다</span></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+let TOKEN = '', TPL = null, STATE = null;
+const pad = n => String(n).padStart(2, '0');
+
+async function post(path, body) {
+  const r = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json', 'X-Studio-Token': TOKEN}, body: JSON.stringify(body || {})});
+  const j = await r.json().catch(() => ({ok: false, error: '응답을 읽지 못했습니다'}));
+  if (!r.ok && !('ok' in j)) j.ok = false;
+  return j;
+}
+function msg(t, err) { const m = $('#msg'); m.textContent = t; m.className = err ? 'err' : ''; }
+function card(kind, value, img, num, label, on) {
+  return `<label class="card"><input type="checkbox" data-kind="${kind}" value="${esc(value)}"${on ? ' checked' : ''}>
+    <img src="/ui/thumbs/${img}.webp" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+    <span class="cap"><b>${esc(num)}</b><span>${esc(label)}</span></span></label>`;
+}
+function picked(kind) { return [...document.querySelectorAll(`input[data-kind="${kind}"]:checked`)].map(x => x.value); }
+function count() { $('#cnt').textContent = `${picked('slide').length}장 선택 · 부록 ${picked('side').length}개`; }
+function apply(keep, sides) {
+  document.querySelectorAll('input[data-kind="slide"]').forEach(x => x.checked = keep.includes(+x.value));
+  document.querySelectorAll('input[data-kind="side"]').forEach(x => x.checked = sides.includes(x.value));
+  count();
+}
+function renderMade() {
+  const s = STATE;
+  $('#proj').textContent = s.project;
+  $('#made').hidden = !s.deck;
+  if (!s.deck) return;
+  const c = s.choice || {};
+  $('#mTitle').textContent = s.title;
+  $('#mInfo').textContent = `장 ${s.slides}개` + (c.sides ? ` · 부록 ${c.sides.length}개` : '') + (c.created_at ? ` · 만든 때 ${c.created_at.replace('T', ' ').slice(0, 16)}` : '');
+  $('#exports').innerHTML = s.exports.length ? '최종본: ' + s.exports.map(n => `<a href="/exports/${encodeURIComponent(n)}" target="_blank">${esc(n)}</a>`).join('') : '';
+  $('#create').textContent = '서식 다시 고르기(기존 덱은 history로)';
+}
+function showFinal(r) {
+  const box = $('#fres'); box.hidden = false;
+  const STAGE = {gate: '문체·숫자 검사', build: '단일 파일 만들기', check: '점검', input: '입력', finalize: '최종본'};
+  if (r.ok) {
+    const name = r.file.split(/[\\/]/).pop();
+    box.className = 'res ok';
+    box.innerHTML = `<b>ver${r.version} 최종본을 만들었습니다.</b> <a href="/exports/${encodeURIComponent(name)}" target="_blank">${esc(name)} 열기 ↗</a><br>
+      검사: ${esc(r.gate.label)} · 합격 / 점검: ${esc(r.check)}`;
+  } else {
+    box.className = 'res bad';
+    const items = (r.rework || []).map(x => `<li>${esc(x)}</li>`).join('');
+    box.innerHTML = `<b>${esc(STAGE[r.stage] || r.stage)} 단계에서 멈췄습니다.</b> ${esc(r.msg || r.error || '')}${items ? `<ul>${items}</ul>` : ''}
+      <br>고친 뒤 다시 누르거나, 에이전트에게 위 항목을 고쳐 달라고 하세요.`;
+  }
+}
+
+async function init() {
+  TOKEN = await (await fetch('/api/token', {cache: 'no-store'})).text();
+  TPL = await (await fetch('/api/template', {cache: 'no-store'})).json();
+  STATE = await (await fetch('/api/state', {cache: 'no-store'})).json();
+  $('#presets').innerHTML = TPL.presets.map((p, i) => `<button data-p="${i}">${esc(p.name)}</button>`).join('') + '<button data-p="none">모두 해제</button>';
+  $('#slides').innerHTML = TPL.slides.map(s => card('slide', s.n, 's' + pad(s.n), pad(s.n), s.label)).join('');
+  $('#sides').innerHTML = TPL.sides.map(s => card('side', s.key, 'side-' + s.key, s.key, s.label)).join('');
+  const c = STATE.choice;
+  if (c) {
+    $('#title').value = c.title || ''; $('#brand').value = c.brand || ''; $('#brand_en').value = c.brand_en || ''; $('#pill').value = c.pill || '';
+    apply(c.keep || [], c.sides || []);
+  } else apply(TPL.presets[0].keep, TPL.presets[0].sides);
+  renderMade();
+}
+document.addEventListener('change', e => { if (e.target.dataset.kind) count(); });
+$('#presets').addEventListener('click', e => {
+  const k = e.target.dataset.p; if (k == null) return;
+  if (k === 'none') apply([], []); else apply(TPL.presets[+k].keep, TPL.presets[+k].sides);
+});
+$('#create').addEventListener('click', async () => {
+  const body = {title: $('#title').value, brand: $('#brand').value, brand_en: $('#brand_en').value, pill: $('#pill').value,
+                keep: picked('slide').map(Number), sides: picked('side')};
+  if (!body.title.trim()) { msg('덱 제목을 적어 주세요', true); $('#title').focus(); return; }
+  if (!body.keep.length) { msg('장을 하나 이상 고르세요', true); return; }
+  if (STATE.deck && !confirm('이미 만든 덱이 있습니다. 새 서식으로 다시 만들까요? 기존 덱은 studio/history 로 옮겨 둡니다.')) return;
+  $('#create').disabled = true; msg('만드는 중…');
+  const r = await post('/api/create', body);
+  $('#create').disabled = false;
+  if (!r.ok) return msg(r.error || '만들지 못했습니다', true);
+  STATE = r.state; renderMade();
+  msg(`deck/ 에 ${r.choice.slides}장짜리 덱을 만들었습니다. 이제 에이전트가 원고를 채웁니다(채팅으로 돌아가세요)`);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+});
+$('#open').addEventListener('click', () => window.open('/deck/index.html', '_blank'));
+$('#final').addEventListener('click', async () => {
+  $('#final').disabled = true; $('#final').textContent = '검사·단일 파일·점검 중…';
+  const r = await post('/api/finalize');
+  $('#final').disabled = false; $('#final').textContent = '최종본 만들기';
+  showFinal(r);
+  STATE = await (await fetch('/api/state', {cache: 'no-store'})).json(); renderMade();
+});
+init().catch(e => msg('스튜디오를 불러오지 못했습니다: ' + e.message, true));
+</script>
+</body>
+</html>

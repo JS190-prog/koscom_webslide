@@ -58,10 +58,10 @@ python scripts/voice_tool.py build 예전발표1.pptx 예전발표2.html 메모.
 
 ## 3. 검사 (`gate`) — 장을 다 쓴 뒤, 단일 파일을 만들기 전에
 
-1. 근거 파일 `facts.txt`를 만든다: 사용자 요청문과 받은 자료의 숫자·이름(기간, 금액, 인원, 비율, 제품명). 덱의 숫자(본문·차트 데이터·부록)는 모두 여기에 있어야 한다.
-2. 덱을 검사한다.
+1. 근거 파일 `facts/facts.txt`를 만든다: 사용자 요청문과 받은 자료의 숫자·이름(기간, 금액, 인원, 비율, 제품명). 덱의 숫자(본문·차트 데이터·부록)는 모두 여기에 있어야 한다.
+2. 덱을 검사한다(최종본을 만드는 `finalize.py`도 `facts/`·`voice/`로 같은 검사를 먼저 돌린다).
    ```bash
-   python scripts/voice_tool.py gate --voice ./voice --facts facts.txt ./my-deck/index.html
+   python scripts/voice_tool.py gate --voice ./my-deck/voice --facts ./my-deck/facts/facts.txt ./my-deck/deck/index.html
    ```
    - 종료 코드 0이면 합격, 3이면 불합격이다. JSON의 `rework`에 고칠 항목이 한 줄씩 나온다.
    - `[금지]`는 그 표현을 뺀다. `[문체]`는 지표가 높으면 줄이고 낮으면 늘린다. 장 단위 지표(제목 길이·제목 끝맺음·장당 어절)는 어느 장 때문인지 `— 7장 「…」`로 짚어 준다. `[숫자]`는 근거대로 고치거나 `[확인 필요]`로 쓴다.

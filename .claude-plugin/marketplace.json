@@ -2,6 +2,6 @@
   "name": "koscom-webslide",
   "owner": {"name": "humanist96"},
   "plugins": [
-    {"name": "koscom-webslide", "source": "./", "description": "코스콤 스타일 웹슬라이드 스킬(문체 분석 포함)", "version": "1.1.0"}
+    {"name": "koscom-webslide", "source": "./", "description": "코스콤 스타일 웹슬라이드 스킬(문체 분석·서식 스튜디오·최종본 포함)", "version": "1.2.0"}
   ]
 }

@@ -70,7 +70,7 @@ MINI = """<div class="topbar">상단 바 2026</div>
 <div class="pain"><span class="n">1</span><h4>형식마다 재작성</h4></div>
 </section>
 <aside class="side-page"><p>부록 근거 500명</p></aside>
-<script type="application/json" id="deck-data">{"charts":{"c":{"rows":[["항목",440]]}}}</script>"""
+<script type="application/json" id="deck-data">{"charts":{"c":{"kind":"vbar","types":["t","n"],"rows":[["항목",440],["둘째",3.30]]}}}</script>"""
 
 P = 'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"'
 
@@ -115,6 +115,10 @@ def main():
     whole = json.dumps(d, ensure_ascii=False)
     for gone in ("상단 바", "THE PROBLEM", "출처 보기", "자동 생성 글", "외부 조사"):
         assert gone not in whole, gone
+    assert "vbar" not in d["extra"] and "t" not in d["extra"], "차트 설정값(kind·types)은 숫자 대조에 넣지 않는다"
+    f = vt.fidelity_of("합계 3.30억원 · 100.00% · 26.04", vt.all_text(d) + "\n100% 26.04")   # JSON 3.30 은 3.3 으로 읽힌다
+    assert "3.3" not in f["invented"] and "100" not in f["invented"] and not f["missing"], f
+    assert vt.fidelity_of("예산 26.04억원", "예산 26.40억원")["invented"] == ["26.4"], "끝자리 0이 아닌 차이는 잡는다"
     assert "\n1\n" not in "\n" + vt.all_text(d) + "\n", "번호 칸은 숫자 대조에서 빠진다"
 
     with tempfile.TemporaryDirectory() as tmp:

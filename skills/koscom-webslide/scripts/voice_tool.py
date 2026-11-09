@@ -186,8 +186,9 @@ class _Deck(HTMLParser):
 
         def walk(x):
             if isinstance(x, dict):
-                for v in x.values():
-                    walk(v)
+                for k, v in x.items():
+                    if k not in ("kind", "types"):    # 차트 종류(vbar…)·칸 종류(t·n·c)는 설정값이지 내용이 아니다
+                        walk(v)
             elif isinstance(x, list):
                 for v in x:
                     walk(v)
@@ -807,6 +808,8 @@ def assets(text):
     text = _YMD.sub(lambda m: " ".join(g for g in m.groups() if g), text)
     nums = {re.sub(r"[^\d.]", "", m.group()).strip(".") for m in NUM_RE.finditer(text)}
     nums = {x.lstrip("0") if re.fullmatch(r"0\d+", x) else x for x in nums}
+    # 소수 끝자리 0은 같은 값이다: 근거 '3.30' = 차트 데이터(JSON 숫자) 3.3
+    nums = {re.sub(r"\.?0+$", "", x) if re.fullmatch(r"\d+\.\d*0", x) else x for x in nums}
     return {x for x in nums if x}, {m.group().lower() for m in LATIN_RE.finditer(text)}
 
 

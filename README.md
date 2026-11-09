@@ -10,7 +10,8 @@
 - 편집 모드(E): 글·차트·그림을 브라우저에서 고치고 HTML로 저장
 - 요약 모션: 덱 안에서 재생(동영상 파일 없이) + 필요하면 mp4 녹화
 - 단일 HTML 파일(그림·서체·차트·모션 내장, 외부 연결 0) — 예시 덱 23장 + 부록 6개 + 111초 모션이 **6.4MB**
-- **스튜디오**([deck-design-pack](https://github.com/JS190-prog/deck-design-pack) 방식): 작업 전에 브라우저에서 장 미리보기를 보고 서식(장·부록·제목·상단 바)을 고르고, 만든 덱을 브라우저에서 고치면 프로젝트에 바로 저장되며(이전 판 백업), 검사·점검을 통과한 판만 `exports/<제목>_verN.html` 최종본으로 남긴다
+- **원고 원본 4가지**: 코쇠오피스 기획서(정적 장 넘김) · 키네틱 모션 브리핑([awesome-ai-motion](https://github.com/gongnyang/awesome-ai-motion) 기법) · 스크롤 타임라인([awesome-html-scrolline-deck](https://github.com/gongnyang/awesome-html-scrolline-deck) 방식의 연속 타임라인) · 3D 구조 브리핑(three.js). 편집 모드·검사·단일 파일은 모두 같다 — [references/templates.md](skills/koscom-webslide/references/templates.md)
+- **스튜디오**([deck-design-pack](https://github.com/JS190-prog/deck-design-pack) 방식): AI가 근거 자료로 덱 정보와 원고 후보 2~3개(원고 원본·분량별)를 미리 채우면 작업 전에 브라우저에서 확인·수정만 하고 고르며, 만든 덱을 브라우저에서 고치면 프로젝트에 바로 저장되며(이전 판 백업), 검사·점검을 통과한 판만 `exports/<제목>_verN.html` 최종본으로 남긴다
 - **문체 맞추기**([gn-voice](https://github.com/gongnyang/gn-voice) 방식): 예전 발표자료·보고서(.pptx·웹슬라이드·.hwpx·.md) 2~3건에서 제목 꼴·끝맺음·장당 분량·표기·자주 쓴 표현을 재서 `style-guide.md`로 정리하고, 그 문체로 쓴 덱을 스크립트가 검사한다(문체 밴드 · AI 상투구 · 근거에 없는 숫자 · 제목만 읽기)
 
 ## 설치

@@ -18,25 +18,45 @@ my-deck/
     <제목>_ver1.html · <제목>_ver1.json   최종본과 검사 기록. 판마다 번호가 올라가고 이전 판은 지우지 않는다
 ```
 
-## 서식 고르기
+## 서식 고르기 — AI가 채우고 사람은 확인
 
-1. 에이전트가 원고 설계에 맞춰 장 구성을 한 줄로 추천하고 스튜디오를 **배경으로** 띄운다.
+1. 에이전트가 근거 자료로 원고 설계를 하고 `studio/recommendations.json`을 쓴다(아래 형식). 덱 정보와 **원고 후보 2~3개**를 넣는다. 후보는 분량(요약·보고·상세)이나 원고 원본(`references/templates.md` — 코쇠오피스·키네틱 모션·스크롤 타임라인·3D)이 다르게 짠다.
+2. 스튜디오를 **배경으로** 띄우고 기다린다.
    ```bash
-   python scripts/studio.py ./my-deck                  # {"studio": "http://127.0.0.1:<port>/", ...} 출력 후 브라우저 열림
-   python scripts/studio.py ./my-deck --wait           # 고를 때까지 기다림(기본 540초)
+   python scripts/studio.py ./my-deck                  # {"studio": url, "recommend": "원고 후보 3개, 추천 …"} 출력 후 브라우저 열림
+   python scripts/studio.py ./my-deck --wait           # 고를 때까지 기다림(기본 540초). 종료 코드 2면 다시
    ```
-2. 사용자가 브라우저에서 고른다.
-   - **덱 정보**: 제목(필수) · 상단 바 이름(기본 "코스콤") · 상단 바 영문 꼬리 · 오른쪽 위 꼬리표
-   - **장**: 템플릿 23장의 미리보기 카드. 프리셋 — 보고·브리핑 8장(1·2·3·4·7·20·21·23 + 부록 근거·출처) / 짧은 소개 5장(1·2·7·8·23 + 출처) / 제안·공모전 전체
-   - **부록**: A 수치 근거 · B 출처 · C 예상 질문 · D 실물 · E 요약 영상 · F 추가 자료
-   - 「이 서식으로 만들기」 → `deck/` 생성, `choice.json` 기록
-3. `--wait`가 `choice.json`을 출력하면(종료 코드 0) 에이전트가 이어서 장을 쓴다. 종료 코드 2는 아직 안 고른 것이니 다시 `--wait`.
+   `recommend`가 오류 문장이면 추천 파일을 고친 뒤 다시 띄운다(화면에도 오류가 뜨고 원고 원본에서 직접 고르기로 바뀐다).
+3. 사용자가 브라우저에서 확인한다.
+   - **덱 정보**: AI가 채운 칸(연한 주황). 고친 칸은 파란 줄로 표시된다
+   - **원고 고르기**: 후보 카드(★ 추천, 장 수·부록 수·원고 원본 이름). 고른 원고의 장마다 모양 미리보기 + 제목·메시지 칸(고칠 수 있음) + 넣기 칸(끄면 그 장을 뺌)
+   - **부록**: 원고가 고른 부록이 켜져 있다
+   - 「이 서식으로 만들기」 → 원고 순서대로 `deck/` 생성, `choice.json` 기록
+4. `--wait`가 `choice.json`을 출력하면 에이전트가 `outline`대로 장을 쓰고 `changes`를 따른다.
 
-`choice.json`: `title` · `keep`(장 번호) · `labels`(장 이름) · `sides`(남긴 부록) · `brand` · `brand_en` · `pill` · `slides`(장 수) · `created_at` · `previous_deck`(다시 고르기 전 덱을 옮긴 곳, 처음이면 `null`).
+추천 파일이 없으면 예전처럼 원고 원본 탭(코쇠오피스·키네틱 모션·…)에서 장 미리보기 카드를 직접 고른다(원본마다 묶음 버튼이 있다).
+
+### recommendations.json
+
+```json
+{
+ "deck": {"title": "덱 제목", "brand": "상단 바 이름", "brand_en": "영문 꼬리", "pill": "꼬리표"},
+ "basis": "근거 한 줄(화면 맨 위에 보인다)",
+ "recommend": "report8",
+ "drafts": [
+  {"id": "report8", "name": "결재 보고 8장", "why": "누구에게·왜", "template": "kosoe", "sides": ["basis", "sources"],
+   "slides": [{"layout": 1, "title": "장 제목", "msg": "이 장에서 말할 것 한 줄"}, …]}
+ ]
+}
+```
+- `template`: 원고 원본 id(생략하면 `kosoe`). `layout`: 그 원본의 장 번호(`new_deck.py --list --template <id>`), 한 원고 안에서 겹치지 않게. 장은 적은 순서대로 만들어진다.
+- 각 장은 `layout` 장의 구조(부품·배치·움직임)를 바탕으로 내용만 바꾼다 — 사용자가 그 모양을 보고 골랐다.
+
+`choice.json`: `template` · `title` · `keep`(장 번호, 원고 순서) · `labels`(장 이름) · `sides`(남긴 부록) · `brand` · `brand_en` · `pill` · `slides`(장 수) · `created_at` · `previous_deck`(다시 고르기 전 덱을 옮긴 곳, 처음이면 `null`). 원고로 만들었으면 `draft`(고른 후보 id) · `outline`(확정한 장 `[{layout, title, msg}]`) · `changes`(사람이 추천에서 고친 곳: 덱 정보·원고·장 제목·메시지·뺀 장).
 
 `--wait`는 **이 명령을 실행한 뒤에** 기록된 선택만 인정한다(예전 선택으로 바로 끝나지 않게). 서식을 다시 고르면 기존 `deck/`은 지우지 않고 `studio/history/deck-<시각>/`으로 옮긴다.
 
-브라우저를 못 여는 환경이면 `new_deck.py --list`로 장 목록을 채팅에 보여 주고 `new_deck.py ./my-deck/deck --title … --keep … --drop-side …`로 만든다. 같은 함수(`make_deck`)를 쓰므로 결과는 같다(`--brand`·`--brand-en`·`--pill`도 있다).
+브라우저를 못 여는 환경이면 원고 후보를 채팅으로 보여 주고 `new_deck.py ./my-deck/deck --template <id> --title … --keep … --drop-side …`로 만든다. 같은 함수(`make_deck`)를 쓰므로 결과는 같다(`--brand`·`--brand-en`·`--pill`도 있다).
 
 ## 고치기
 

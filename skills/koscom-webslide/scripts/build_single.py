@@ -46,6 +46,14 @@ if cdn:
     chart = open(os.path.join(a.vendor, 'chart.umd.min.js'), encoding='utf-8').read().replace('</script', '<\\/script')
     s = s[:cdn.start()] + '<script>/*! Chart.js v4.4.1 | MIT License | chartjs.org */\n' + chart + '\n</script>\n' + s[cdn.end():]
 
+# 2-1) 원고 원본이 들고 온 로컬 스크립트(three.js 등): <script src="assets/….js"></script> → 본문으로
+def _inline_js(m):
+    code = open(os.path.join(ROOT, m.group(1)), encoding='utf-8').read().replace('</script', '<\\/script')
+    return f'<script>/* {m.group(1)} */\n{code}\n</script>'
+
+
+s = re.sub(r'<script src="(assets/[^"]+\.js)"></script>', _inline_js, s)
+
 # 3) 쓰는 그림 모으기
 mo_path = os.path.join(ROOT, 'video', 'summary.html')
 mo = open(mo_path, encoding='utf-8').read() if os.path.exists(mo_path) and 'id="sumMotion"' in s else ''

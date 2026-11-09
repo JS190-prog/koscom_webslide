@@ -6,7 +6,7 @@ deck-design-pack(ppt-master)의 확인 페이지 흐름(추천 → 브라우저�
 
   python studio.py <프로젝트>           서버를 띄우고 브라우저를 연다(에이전트는 배경으로 실행한다)
   python studio.py <프로젝트> --wait    브라우저에서 「이 서식으로 만들기」를 누를 때까지 기다렸다가 choice.json 을 출력한다
-  python studio.py --thumbs             템플릿 장 미리보기 그림(studio/thumbs)을 다시 만든다. 템플릿을 고쳤을 때만
+  python studio.py --thumbs [--template ID]   원고 원본의 장 미리보기 그림(studio/thumbs/<id>)을 다시 만든다. 원본을 고쳤을 때만
 
 프로젝트 폴더
   deck/                    작업본(폴더판). 덱을 스튜디오에서 열어 편집 모드(E)로 「HTML 저장」하면 여기에 쓴다
@@ -40,11 +40,6 @@ sys.path.insert(0, str(HERE))
 import new_deck  # noqa: E402
 
 MAX_BODY = 40 * 1024 * 1024
-PRESETS = [  # 장 번호는 템플릿 기준(1부터). 템플릿을 바꾸면 함께 고친다
-    {"name": "보고·브리핑 8장", "keep": [1, 2, 3, 4, 7, 20, 21, 23], "sides": ["basis", "sources"]},
-    {"name": "짧은 소개 5장", "keep": [1, 2, 7, 8, 23], "sides": ["sources"]},
-    {"name": "제안·공모전 전체", "keep": list(range(1, 24)), "sides": ["basis", "sources", "qa", "gallery", "video", "live"]},
-]
 
 
 def stamp():
@@ -56,17 +51,109 @@ def deck_title(index):
     return html.unescape(m.group(1)).strip() if m else ""
 
 
-def template_info():
-    _, _, labels, sides = new_deck.template_parts()
-    return {"slides": [{"n": i, "label": l} for i, l in enumerate(labels, 1)],
-            "sides": [{"key": k, "label": l} for k, l in sides], "presets": PRESETS}
+def template_info(tid="kosoe"):
+    """원고 원본 하나의 장·부록·묶음(presets, template.json 에 없으면 '전체'). 없는 id 면 ValueError."""
+    t = next((x for x in new_deck.templates() if x["id"] == tid), None)
+    if not t:
+        raise ValueError(f"원고 원본이 없습니다: {tid}")
+    _, _, labels, sides = new_deck.template_parts(tid)
+    presets = t.get("presets") or [{"name": "전체", "keep": list(range(1, len(labels) + 1)), "sides": [k for k, _ in sides]}]
+    return {"id": tid, "name": t.get("name", tid), "desc": t.get("desc", ""), "look": t.get("look", ""),
+            "slides": [{"n": i, "label": l} for i, l in enumerate(labels, 1)],
+            "sides": [{"key": k, "label": l} for k, l in sides], "presets": presets}
+
+
+def all_templates():
+    return [template_info(t["id"]) for t in new_deck.templates()]
+
+
+def check_outline(outline, n_slides):
+    """원고 장 목록 [{layout, title, msg}] 을 다듬어 돌려준다. layout = 템플릿 장 번호(모양), 원고 안에서 겹치지 않는다."""
+    if not isinstance(outline, list) or not outline:
+        raise ValueError("원고에 장이 없습니다")
+    out = []
+    for o in outline:
+        try:
+            lay = int(o.get("layout"))
+        except (AttributeError, TypeError, ValueError):
+            raise ValueError("장 모양(layout) 번호가 숫자가 아닙니다")
+        if not 1 <= lay <= n_slides:
+            raise ValueError(f"장 모양(layout)은 1~{n_slides} 입니다: {lay}")
+        title = _text(o.get("title"), 120)
+        if not title:
+            raise ValueError(f"제목이 빈 장이 있습니다(모양 {lay})")
+        out.append({"layout": lay, "title": title, "msg": _text(o.get("msg"), 300)})
+    lays = [o["layout"] for o in out]
+    if len(set(lays)) != len(lays):
+        raise ValueError("한 원고에서 같은 장 모양(layout)을 두 번 쓸 수 없습니다")
+    return out
+
+
+def load_recommend(proj):
+    """에이전트가 쓴 studio/recommendations.json — 덱 정보(deck)와 원고 후보(drafts). 없으면 None, 틀리면 ValueError."""
+    f = proj / "studio" / "recommendations.json"
+    if not f.exists():
+        return None
+    try:
+        rec = json.loads(f.read_text(encoding="utf-8"))
+    except ValueError as e:
+        raise ValueError(f"recommendations.json 을 읽지 못했습니다: {e}")
+    drafts = rec.get("drafts") or []
+    ids = [d.get("id") for d in drafts]
+    if not drafts or not all(ids) or len(set(ids)) != len(ids):
+        raise ValueError("drafts(원고 후보)가 없거나 id 가 비었거나 겹칩니다")
+    for d in drafts:
+        d["template"] = d.get("template") or "kosoe"
+        try:
+            info = template_info(d["template"])
+            d["slides"] = check_outline(d.get("slides"), len(info["slides"]))
+        except ValueError as e:
+            raise ValueError(f"원고 {d['id']}: {e}")
+        all_sides = {s["key"] for s in info["sides"]}
+        if not set(d.get("sides") or []) <= all_sides:
+            raise ValueError(f"원고 {d['id']}: 알 수 없는 부록 {sorted(set(d['sides']) - all_sides)}")
+    rec["deck"] = {k: _text((rec.get("deck") or {}).get(k), 80) for k in ("title", "brand", "brand_en", "pill")}
+    if rec.get("recommend") not in ids:
+        rec["recommend"] = ids[0]
+    return rec
+
+
+def changes_from(rec, req, draft_id, outline):
+    """사람이 추천에서 고친 곳(에이전트가 원고를 쓸 때 따른다)."""
+    out = []
+    names = {"title": "덱 제목", "brand": "상단 바 이름", "brand_en": "상단 바 영문 꼬리", "pill": "꼬리표"}
+    for k, name in names.items():
+        a, b = rec["deck"].get(k, ""), _text(req.get(k), 80)
+        if a != b:
+            out.append(f"{name}: 「{a}」 → 「{b}」")
+    if draft_id != rec["recommend"]:
+        out.append(f"원고: 추천 {rec['recommend']} 대신 {draft_id}")
+    d = next((x for x in rec["drafts"] if x["id"] == draft_id), None)
+    if d:
+        before = {o["layout"]: o for o in d["slides"]}
+        for i, o in enumerate(outline, 1):
+            b = before.get(o["layout"])
+            if not b:
+                out.append(f"{i}장 추가(모양 {o['layout']}): 「{o['title']}」")
+                continue
+            if b["title"] != o["title"]:
+                out.append(f"{i}장 제목: 「{b['title']}」 → 「{o['title']}」")
+            if b["msg"] != o["msg"]:
+                out.append(f"{i}장 메시지: 「{b['msg']}」 → 「{o['msg']}」")
+        kept = {o["layout"] for o in outline}
+        out += [f"뺀 장: 「{o['title']}」" for o in d["slides"] if o["layout"] not in kept]
+    return out
 
 
 def state(proj):
     index = proj / "deck" / "index.html"
     choice = proj / "studio" / "choice.json"
     exports = proj / "exports"
-    return {"project": str(proj), "deck": index.exists(),
+    try:
+        rec = load_recommend(proj)
+    except ValueError as e:
+        rec = {"error": str(e)}
+    return {"project": str(proj), "deck": index.exists(), "recommend": rec,
             "title": deck_title(index) if index.exists() else "",
             "slides": len(new_deck.SEC.findall(index.read_text(encoding="utf-8"))) if index.exists() else 0,
             "choice": json.loads(choice.read_text(encoding="utf-8")) if choice.exists() else None,
@@ -78,17 +165,26 @@ def _text(v, n):
 
 
 def create(proj, req):
-    """고른 서식으로 deck/ 을 만든다. 이미 있으면 studio/history/deck-<시각> 으로 옮겨 두고 새로 만든다."""
-    info = template_info()
+    """고른 서식으로 deck/ 을 만든다. 이미 있으면 studio/history/deck-<시각> 으로 옮겨 두고 새로 만든다.
+    req.outline(원고에서 고른 장 [{layout, title, msg}])이 있으면 그 순서로 만들고, 없으면 req.keep(템플릿 장 번호).
+    req.template = 원고 원본 id(기본 kosoe)."""
+    tid = _text(req.get("template"), 40) or "kosoe"
+    info = template_info(tid)
     title = _text(req.get("title"), 80)
     if not title:
         raise ValueError("덱 제목을 적어 주세요")
-    try:
-        keep = sorted({int(x) for x in req.get("keep") or []})
-    except (TypeError, ValueError):
-        raise ValueError("장 번호가 숫자가 아닙니다")
-    if not keep or keep[0] < 1 or keep[-1] > len(info["slides"]):
-        raise ValueError(f"장을 하나 이상 고르세요(1~{len(info['slides'])})")
+    outline, draft_id = None, None
+    if req.get("outline") is not None:
+        outline = check_outline(req["outline"], len(info["slides"]))
+        draft_id = _text(req.get("draft"), 40)
+        keep = [o["layout"] for o in outline]
+    else:
+        try:
+            keep = sorted({int(x) for x in req.get("keep") or []})
+        except (TypeError, ValueError):
+            raise ValueError("장 번호가 숫자가 아닙니다")
+        if not keep or keep[0] < 1 or keep[-1] > len(info["slides"]):
+            raise ValueError(f"장을 하나 이상 고르세요(1~{len(info['slides'])})")
     all_sides = {s["key"] for s in info["sides"]}
     keep_sides = set(req.get("sides") or [])
     if not keep_sides <= all_sides:
@@ -101,14 +197,22 @@ def create(proj, req):
         moved = hist / f"deck-{stamp()}"
         shutil.move(str(deck), str(moved))
     drop = all_sides - keep_sides
-    n, dropped = new_deck.make_deck(str(deck), title=title, keep=set(keep), drop=drop, no_motion="video" in drop,
+    n, dropped = new_deck.make_deck(str(deck), title=title, keep=keep if outline else set(keep), drop=drop,
+                                    no_motion="video" in drop,
                                     brand=_text(req.get("brand"), 40) or "코스콤", brand_en=_text(req.get("brand_en"), 40),
-                                    pill=_text(req.get("pill"), 40) or None)
-    choice = {"title": title, "keep": keep, "labels": [info["slides"][k - 1]["label"] for k in keep],
+                                    pill=_text(req.get("pill"), 40) or None, tpl=tid)
+    choice = {"template": tid, "title": title, "keep": keep, "labels": [info["slides"][k - 1]["label"] for k in keep],
               "sides": sorted(keep_sides), "brand": _text(req.get("brand"), 40) or "코스콤",
               "brand_en": _text(req.get("brand_en"), 40), "pill": _text(req.get("pill"), 40),
               "created_at": datetime.now().astimezone().replace(microsecond=0).isoformat(), "slides": n,
               "previous_deck": str(moved) if moved else None}
+    if outline:
+        try:
+            rec = load_recommend(proj)
+        except ValueError:
+            rec = None
+        choice.update({"draft": draft_id, "outline": outline,
+                       "changes": changes_from(rec, req, draft_id, outline) if rec else []})
     (proj / "studio").mkdir(exist_ok=True)
     (proj / "studio" / "choice.json").write_text(json.dumps(choice, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     return {"ok": True, "choice": choice, "state": state(proj)}
@@ -190,7 +294,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/state":
             return self._json(200, state(self.proj))
         if path == "/api/template":
-            return self._json(200, template_info())
+            return self._json(200, {"templates": all_templates()})
         if path.startswith("/deck/"):
             return self._file(self.proj / "deck", path[len("/deck/"):])
         if path.startswith("/exports/"):
@@ -224,7 +328,10 @@ def serve(proj, port=0, browser=True):
     url = f"http://127.0.0.1:{Handler.port}/"
     (proj / "studio").mkdir(exist_ok=True)
     (proj / "studio" / "server.json").write_text(json.dumps({"url": url, "pid": os.getpid()}) + "\n", encoding="utf-8")
-    print(json.dumps({"studio": url, "project": str(proj)}, ensure_ascii=False), flush=True)
+    rec = state(proj)["recommend"]
+    note = (rec.get("error") if rec and "error" in rec else
+            f"원고 후보 {len(rec['drafts'])}개, 추천 {rec['recommend']}" if rec else "추천 없음(studio/recommendations.json)")
+    print(json.dumps({"studio": url, "project": str(proj), "recommend": note}, ensure_ascii=False), flush=True)
     if browser:
         webbrowser.open(url)
     return httpd
@@ -244,20 +351,23 @@ def wait_choice(proj, timeout):
     return 2
 
 
-def make_thumbs():
-    """템플릿 → 단일 파일 → check_deck --shots → 480px webp (studio/thumbs). node·playwright-core·Pillow 필요."""
+def make_thumbs(only=None):
+    """원고 원본 → 단일 파일 → check_deck --shots → 480px webp (studio/thumbs/<id>). node·playwright-core·Pillow 필요."""
     from PIL import Image
-    with tempfile.TemporaryDirectory() as td:
-        single, shots = Path(td) / "tpl.html", Path(td) / "shots"
-        subprocess.run([sys.executable, str(HERE / "build_single.py"), str(HERE.parent / "template"), str(single)], check=True)
-        subprocess.run(["node", str(HERE / "check_deck.js"), str(single), "--shots", str(shots)], check=True)
-        out = UI / "thumbs"
-        out.mkdir(parents=True, exist_ok=True)
-        for png in sorted(shots.glob("*.png")):
-            im = Image.open(png).convert("RGB")
-            im.thumbnail((480, 270))
-            im.save(out / (png.stem + ".webp"), "WEBP", quality=78)
-        print(f"미리보기 {len(list(shots.glob('*.png')))}장 -> {out}")
+    for t in new_deck.templates():
+        if only and t["id"] != only:
+            continue
+        with tempfile.TemporaryDirectory() as td:
+            single, shots = Path(td) / "tpl.html", Path(td) / "shots"
+            subprocess.run([sys.executable, str(HERE / "build_single.py"), t["dir"], str(single)], check=True)
+            subprocess.run(["node", str(HERE / "check_deck.js"), str(single), "--shots", str(shots)], check=True)
+            out = UI / "thumbs" / t["id"]
+            out.mkdir(parents=True, exist_ok=True)
+            for png in sorted(shots.glob("*.png")):
+                im = Image.open(png).convert("RGB")
+                im.thumbnail((480, 270))
+                im.save(out / (png.stem + ".webp"), "WEBP", quality=78)
+            print(f"[{t['id']}] 미리보기 {len(list(shots.glob('*.png')))}장 -> {out}")
 
 
 def main():
@@ -269,10 +379,11 @@ def main():
     ap.add_argument("--no-browser", action="store_true")
     ap.add_argument("--wait", action="store_true", help="서식을 고를 때까지 기다린다(서버는 따로 떠 있어야 한다)")
     ap.add_argument("--timeout", type=int, default=540, help="--wait 최대 초(기본 540, 에이전트 도구 한도 아래)")
-    ap.add_argument("--thumbs", action="store_true")
+    ap.add_argument("--thumbs", action="store_true", help="원고 원본 미리보기 그림을 다시 만든다(--template 으로 하나만)")
+    ap.add_argument("--template", help="--thumbs 와 함께: 이 원고 원본만")
     a = ap.parse_args()
     if a.thumbs:
-        return make_thumbs()
+        return make_thumbs(a.template)
     if not a.project:
         ap.error("프로젝트 폴더를 주세요")
     proj = Path(a.project).resolve()

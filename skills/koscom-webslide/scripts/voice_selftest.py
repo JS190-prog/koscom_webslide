@@ -4,6 +4,7 @@
   2. 웹슬라이드 읽기: 근거 배지·장 번호·꼬리표·버튼·data-gen·상단 바는 빠지고, 표·부록·deck-data 는 숫자 대조에만
   3. .pptx 읽기: 제목 개체, 줄바꿈, 쪽 번호 제외, 숨긴 장 제외, 표, 제목 개체가 없을 때 가장 큰 글자
   4. .md 읽기: # 제목·--- 로 장 나누기, 표는 숫자 대조에만
+  4b. .hwpx 읽기: 본문 문단은 측정, 표 칸 글은 숫자 대조에만, 본문이 표 안에만 있으면 표 안을 본문으로
   5. 대표 자료 3건 build -> 문체 소표본·한 건 빼고 검증 통과·style-guide.md
   6. 같은 문체의 새 덱은 합격, AI투 합쇼체 덱은 불합격(제목 비율·끝맺음), 금지 상투구·이모지는 즉시 불합격
   7. 예시 덱(template)으로 만든 기준에 예시 덱 자신은 합격 (대표 자료와 검사 대상이 같은 규칙으로 읽힘)
@@ -131,6 +132,26 @@ def main():
         d = vt.read_deck(tmp / "m.md")
         assert [(x["title"], x["lines"]) for x in d["slides"]] == [("표지", ["본문 줄입니다"]), ("", ["두 번째 장 본문"]), ("세 번째", [])], d
         assert d["extra"] == ["| 표 | 100 |"], d
+
+        # 4b
+        def hwpx(path, body):
+            with zipfile.ZipFile(path, "w") as z:
+                z.writestr("Contents/section0.xml", '<hs:sec xmlns:hs="http://www.hancom.co.kr/hwpml/2011/section" '
+                           f'xmlns:hp="http://www.hancom.co.kr/hwpml/2011/paragraph">{body}</hs:sec>')
+
+        def par(*runs):
+            return "<hp:p>" + "".join(f"<hp:run>{r}</hp:run>" for r in runs) + "</hp:p>"
+        cell = "<hp:tbl><hp:tr><hp:tc><hp:subList>" + par("<hp:t>합계 : 26.04억원</hp:t>") + "</hp:subList></hp:tc></hp:tr></hp:tbl>"
+        hwpx(tmp / "r.hwpx", par("<hp:t>□ 개 요 : 본사 승강기 제어반 교체 필요</hp:t>")
+             + par("<hp:t>○ 운행 중 정지 신고 지속 </hp:t>", "<hp:t>발생</hp:t>")
+             + par("<hp:t>○ 부분 수리로는 근본적 해결이 불가함</hp:t>", cell))
+        d = vt.read_deck(tmp / "r.hwpx")
+        assert d["slides"][0]["lines"] == ["□ 개 요 : 본사 승강기 제어반 교체 필요", "○ 운행 중 정지 신고 지속 발생",
+                                            "○ 부분 수리로는 근본적 해결이 불가함"] and d["extra"] == ["합계 : 26.04억원"], d
+        assert "26.04" in vt.all_text(d) and vt.style_parts(d)[1][2] == "부분 수리로는 근본적 해결이 불가함"
+        hwpx(tmp / "q.hwpx", par("<hp:t>견적서</hp:t>", cell))
+        d = vt.read_deck(tmp / "q.hwpx")
+        assert d["slides"][0]["lines"] == ["견적서", "합계 : 26.04억원"] and d["extra"] == [], "본문이 표 안에만 있으면 표 안을 읽는다"
 
         # 5
         refs = []

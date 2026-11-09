@@ -1,6 +1,6 @@
 {
   "name": "koscom-webslide",
-  "description": "코스콤 스타일(KoPub돋움체·오렌지·네이비·셰브론) 움직이는 HTML 웹슬라이드 — 차트·레이어 삽화·부록·편집 모드·요약 모션·10MB 이하 단일 파일·대표 자료 문체 분석과 검사(gn-voice 방식)·AI가 채운 원고 후보를 브라우저에서 확인·편집 저장·최종본 verN(deck-design-pack 방식)·원고 원본 4종(코쇠오피스·키네틱 모션·스크롤 타임라인·three.js 3D)",
-  "version": "1.3.0",
+  "description": "코스콤 스타일(KoPub돋움체·오렌지·네이비·셰브론) 움직이는 HTML 웹슬라이드 — 차트·레이어 삽화·부록·편집 모드·요약 모션·10MB 이하 단일 파일·대표 자료 문체 분석과 검사(gn-voice 방식)·AI가 채운 원고 후보를 브라우저에서 확인·편집 저장·최종본 verN(deck-design-pack 방식)·원고 원본 4종(코쇠오피스·키네틱 모션·스크롤 타임라인·three.js 3D)·대본과 PPT식 발표자 보기(리모컨)",
+  "version": "1.4.0",
   "author": {"name": "humanist96"}
 }

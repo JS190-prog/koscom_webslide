@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """studio.py · finalize.py 자체검사. 실행: python scripts/studio_selftest.py   (build_single 이 쓰는 Pillow·fontTools 필요, 30초 안팎)
-  1. 템플릿 정보: 장·부록·프리셋 번호가 템플릿 범위 안
+  1. 템플릿 정보: 장·부록·프리셋 번호가 템플릿 범위 안, 원본마다 엔진·대본 CSS·발표자 보기 블록이 같음
   2. 보안: 토큰 없는 POST·다른 Host 는 403, ../ 경로는 404
   3. 서식 고르기: 잘못된 입력은 400, 고른 장·부록·제목(이스케이프)·상단 바로 deck/ 생성, choice.json 기록
   4. 저장: 덱 HTML 이 아니면 400, 저장하면 deck/index.html 이 바뀌고 이전 판이 studio/history 에 남음
@@ -61,6 +61,11 @@ def main():
                     assert all(1 <= k <= len(t["slides"]) for k in p["keep"]), (t["id"], p)
                     assert set(p["sides"]) <= {s["key"] for s in t["sides"]}, (t["id"], p)
                 assert (studio.UI / "thumbs" / t["id"] / "s01.webp").exists(), f"{t['id']} 미리보기가 없습니다(--thumbs)"
+            # 모든 원본이 같은 엔진·대본 CSS·발표자 보기 블록을 쓴다(한 곳만 고치면 원본끼리 어긋난다)
+            shared = re.compile(r"/\* ── 대본\(발표자 노트\).*?\n</style>|  let PRISTINE = .*?\n</script>|<script>\r?\n/\* ═+ 발표자 보기\(S\).*?</script>", re.S)
+            parts = {t["id"]: shared.findall((Path(studio.new_deck.tpl_dir(t["id"])) / "index.html").read_text(encoding="utf-8"))
+                     for t in ts["templates"]}
+            assert len(parts["kosoe"]) == 3 and all(v == parts["kosoe"] for v in parts.values()), {k: len(v) for k, v in parts.items()}
             t = ts["templates"][0]
             st, token = req(port, "GET", "/api/token")
             assert st == 200 and len(token) > 20

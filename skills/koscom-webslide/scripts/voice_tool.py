@@ -136,7 +136,7 @@ class _Deck(HTMLParser):
             role = "skip"
         elif tag == "section" and (self.mode == "section" or (self.mode == "slide" and "slide" in cls)):
             role = "slide"
-        elif "side-page" in cls or tag in ("table", "pre"):    # 부록·표·코드는 숫자 대조에만
+        elif cls & {"side-page", "notes"} or tag in ("table", "pre"):    # 부록·대본(aside.notes)·표·코드는 숫자 대조에만
             role = "side"
         elif tag in ("h1", "h2") and not self.n["side"]:
             role = "title"

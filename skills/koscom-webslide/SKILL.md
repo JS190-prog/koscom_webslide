@@ -1,6 +1,6 @@
 ---
 name: koscom-webslide
-description: 코스콤 스타일(KoPub돋움체 · 오렌지·네이비 · 셰브론)의 움직이는 HTML 웹슬라이드를 만든다. 마우스에 반응하는 16:9 덱, Chart.js 차트, 레이어로 움직이는 코쇠 삽화, 부록(사이드 페이지), 편집 모드, 요약 모션 영상, 외부 연결 없이 열리는 단일 HTML 파일(10MB 이하)까지. "웹슬라이드 만들어줘", "HTML 발표자료", "기획서를 웹페이지 슬라이드로", "링크로 공유할 브리핑", "반응형 슬라이드", "단일 HTML로 묶어줘", "요약 영상까지", 공모전·사내 기획서·제안서·교육 자료를 브라우저용 슬라이드로 만들 때 사용한다. 예전 발표자료·보고서(.pptx·웹슬라이드 .html·.hwpx·.md)를 주며 "이 자료 문체로", "우리 팀 장표 문체 분석해서", "예전 발표자료처럼 써줘", "발표자료 문체 분석"이라고 하면 제목·끝맺음·장당 분량·표기를 분석해 그 문체로 쓰고 스크립트로 검사한다(gn-voice 방식). .pptx가 필요하면 PPT 스킬, 결재용 .hwp가 필요하면 한글 스킬을 쓴다.
+description: 코스콤 스타일(KoPub돋움체 · 오렌지·네이비 · 셰브론)의 움직이는 HTML 웹슬라이드를 만든다. 마우스에 반응하는 16:9 덱, Chart.js 차트, 레이어로 움직이는 코쇠 삽화, 부록(사이드 페이지), 편집 모드, 요약 모션 영상, 외부 연결 없이 열리는 단일 HTML 파일(10MB 이하)까지. "웹슬라이드 만들어줘", "HTML 발표자료", "기획서를 웹페이지 슬라이드로", "링크로 공유할 브리핑", "반응형 슬라이드", "단일 HTML로 묶어줘", "요약 영상까지", 공모전·사내 기획서·제안서·교육 자료를 브라우저용 슬라이드로 만들 때 사용한다. 예전 발표자료·보고서(.pptx·웹슬라이드 .html·.hwpx·.md)를 주며 "이 자료 문체로", "우리 팀 장표 문체 분석해서", "예전 발표자료처럼 써줘", "발표자료 문체 분석"이라고 하면 제목·끝맺음·장당 분량·표기를 분석해 그 문체로 쓰고 스크립트로 검사한다(gn-voice 방식). 작업 전에 브라우저 스튜디오에서 서식(장·부록·덱 정보)을 고르고, 만든 덱을 사용자가 브라우저에서 고쳐 저장하며, 검사를 통과한 판만 "최종본 ver1·ver2"로 남긴다 — "서식 골라서", "브라우저에서 고를게", "최종본 만들어줘"도 이 스킬이다. .pptx가 필요하면 PPT 스킬, 결재용 .hwp가 필요하면 한글 스킬을 쓴다.
 ---
 
 # 코스콤 웹슬라이드 (koscom-webslide)
@@ -13,34 +13,41 @@ description: 코스콤 스타일(KoPub돋움체 · 오렌지·네이비 · 셰�
 
 ## 작업 순서
 
-1. **요구 확인** — 분량(장 수), 읽는 사람, 제출 형식(폴더/단일 파일, 용량 제한), 오프라인 여부, 요약 영상 필요 여부. 숫자·출처 자료를 받아 `facts.txt`(숫자·이름 근거)로 모은다.
+덱 하나 = 프로젝트 폴더 하나(`./my-deck`). 작업본은 `deck/`, 숫자 근거는 `facts/`, 문체 폴더는 `voice/`, 최종본은 `exports/`에 둔다(`references/studio.md`).
+
+1. **요구 확인** — 분량(장 수), 읽는 사람, 제출 형식(폴더/단일 파일, 용량 제한), 오프라인 여부, 요약 영상 필요 여부. 숫자·출처 자료를 받아 `./my-deck/facts/facts.txt`(숫자·이름 근거)로 모은다.
 2. **문체 분석(대표 자료가 있을 때)** — 사용자가 직접 쓴 예전 발표자료를 주거나 "이 자료 문체로"라고 하면 먼저 분석한다. 없으면 건너뛴다.
    ```bash
-   python scripts/voice_tool.py build 예전발표1.pptx 예전발표2.html --out ./voice --human   # 사람이 쓴 자료만
+   python scripts/voice_tool.py build 예전발표1.pptx 예전발표2.html --out ./my-deck/voice --human   # 사람이 쓴 자료만
    ```
    `label`·`rules`를 사용자에게 알린다. 분석만 원하면 `voice/style-guide.md` 요약을 보여 주고 끝낸다. `references/voice.md`.
 3. **원고 설계** — 장마다 메시지 한 줄(제목), 근거(숫자·그림), 출처. 숫자는 **실측 / 외부 조사 / 가정**으로 나누고 가정은 가정이라고 쓴다. 장 구성은 `references/storyline.md`. 문체 폴더가 있으면 `style-guide.md`의 규칙·제목 예·예문을 덧입힌다(무엇이 이기는지는 `references/voice.md`).
-4. **새 덱 만들기**
+4. **서식 고르기(브라우저 스튜디오)** — 원고 설계에 맞는 장 구성(보고·브리핑 8장 / 짧은 소개 5장 / 제안·공모전 전체)을 한 줄로 추천하고 스튜디오를 연다. 사용자가 장 미리보기를 보고 장·부록·덱 정보(제목·상단 바·꼬리표)를 고른 뒤 「이 서식으로 만들기」를 누르면 `deck/`이 만들어진다.
    ```bash
-   python scripts/new_deck.py --list                      # 템플릿의 장·부록 목록
-   python scripts/new_deck.py ./my-deck --title "제목" --keep 1,2,3,8,19,21 --drop-side gallery,live
+   python scripts/studio.py ./my-deck            # 배경으로 실행(서버가 떠 있어야 한다). 브라우저가 열린다
+   python scripts/studio.py ./my-deck --wait     # 고를 때까지 기다렸다가 choice.json 출력. 종료 코드 2면 다시 실행
    ```
-5. **장 쓰기** — `index.html`의 `<section class="slide">`를 고치거나 복제한다. 쓸 수 있는 부품과 규칙은 `references/components.md`. 목차(`.agenda .agrow`)와 각 장의 `data-sec`이 왼쪽 레일을 만든다.
+   브라우저를 못 여는 환경(원격·CI)이거나 사용자가 "알아서 골라"라고 하면 채팅으로 장 목록을 보여 주고 만든다.
+   ```bash
+   python scripts/new_deck.py --list
+   python scripts/new_deck.py ./my-deck/deck --title "제목" --keep 1,2,3,8,19,21 --drop-side gallery,live
+   ```
+5. **장 쓰기** — `deck/index.html`의 `<section class="slide">`를 고치거나 복제한다. 쓸 수 있는 부품과 규칙은 `references/components.md`. 목차(`.agenda .agrow`)와 각 장의 `data-sec`이 왼쪽 레일을 만든다.
 6. **데이터·차트** — 숫자와 표는 맨 아래 `<script id="deck-data">`(JSON)에 둔다. 차트는 `charts.<캔버스 id>`에 `kind`(hbar·vbar·doughnut·line)만 주면 그려지고, 편집 모드의 「차트 데이터 편집」으로 고칠 수 있다. `references/data-and-charts.md`.
 7. **삽화** — 코쇠 삽화는 `koscom-kosoe-illustrations` 스킬로 그리고(16:9 흰 배경 webp), `scripts/cut_layers.py`로 레이어(배경·코쇠·화살표/라벨)를 잘라 움직이게 한다. 어두운 장(`.navy`·`.black`)은 자동으로 `-d` 변형을 쓴다. `references/illustrations.md`.
 8. **부록(사이드 페이지)** — 수치 근거·출처·예상 질문·실물·요약 영상·추가 자료. 본문은 짧게, 근거는 부록으로. `references/components.md#부록`.
 9. **요약 모션(선택)** — `video/summary.html`의 장면을 바꾸면 부록 E에서 그대로 재생된다(동영상 파일 없이). mp4가 따로 필요하면 `scripts/render_video.js`. `references/motion.md`.
 10. **문체·숫자 검사**
     ```bash
-    python scripts/voice_tool.py gate --voice ./voice --facts facts.txt ./my-deck/index.html   # 문체 폴더가 없으면 --voice 를 뺀다
+    python scripts/voice_tool.py gate --voice ./my-deck/voice --facts ./my-deck/facts/facts.txt ./my-deck/deck/index.html   # 문체 폴더가 없으면 --voice 를 뺀다
     ```
     종료 코드 0이면 합격이다. 3이면 `rework`에 나온 항목만 고친다(최대 2번, 그래도 불합격이면 남은 항목을 그대로 보고). `titles`를 위에서 아래로 읽어 제목만으로 이야기가 이어지는지 본다.
-11. **단일 파일 · 점검**
-   ```bash
-   python scripts/build_single.py ./my-deck ./my-deck/제목_단일파일.html      # 9.5MB 넘으면 경고
-   node scripts/check_deck.js ./my-deck/제목_단일파일.html --shots ./my-deck/qa
-   ```
-   점검 결과가 ✅(외부 요청 0 · 스크립트 오류 0 · 용량 이내)일 때만 전달한다. 화면 그림(`--shots`)을 직접 보고 넘침·겹침을 고친다.
+11. **사용자 수정** — 스튜디오의 「덱 열고 고치기」로 덱을 열면 편집 모드(E)에서 글·차트·그림을 고치고 「HTML 저장」으로 `deck/index.html`에 바로 저장된다(이전 판은 `studio/history/`). 사용자가 고쳤다고 하면 **`deck/index.html`을 다시 읽은 뒤** 이어서 고친다. 기억하는 옛 내용으로 덮어쓰지 않는다.
+12. **최종본** — 스튜디오의 「최종본 만들기」 또는
+    ```bash
+    python scripts/finalize.py ./my-deck     # 검사(gate) → 단일 파일 → 점검을 모두 통과해야 exports/제목_verN.html
+    ```
+    `facts/`·`voice/`를 알아서 쓴다. 종료 코드 0이면 `exports/<제목>_verN.html`과 검사 기록 `.json`이 남는다(N은 1부터 자동 증가, 이전 판은 그대로). 3이면 번호를 쓰지 않고 `rework` 또는 점검 결과를 돌려주니 고치고 다시 돌린다. 화면 그림이 필요하면 `node scripts/check_deck.js exports/…_verN.html --shots ./my-deck/qa`로 직접 보고 넘침·겹침을 고친다. 점검(✅ 외부 요청 0 · 스크립트 오류 0 · 용량 이내)을 못 돌렸으면(`--skip-check`) 최종본이라고 하지 않고 그 사실을 알린다.
 
 ## 꼭 지키는 규칙
 - **서체**: KoPub돋움체 Medium(본문)·Bold(제목). 다른 서체를 섞지 않는다.
@@ -59,7 +66,10 @@ description: 코스콤 스타일(KoPub돋움체 · 오렌지·네이비 · 셰�
 | `template/index.html` | 예시 덱 겸 엔진(23장 + 부록 A~F). CSS·JS·deck-data 한 파일 |
 | `template/video/summary.html` | 요약 모션 원본(111초, 장면별 CSS 애니메이션) |
 | `template/assets/` | 서체(ttf), 코쇠 삽화와 레이어(`illust/layers2` + manifest), 코쇠 아바타, 예시 그림 |
-| `scripts/new_deck.py` | 템플릿 복사, 장·부록 고르기 |
+| `scripts/studio.py` · `studio/` | 브라우저 스튜디오: 서식 고르기(장 미리보기 `studio/thumbs`) → 덱 열고 고치기(프로젝트에 저장) → 최종본 |
+| `scripts/finalize.py` | 최종본: 검사 → 단일 파일 → 점검 통과 시 `exports/<제목>_verN.html` + 검사 기록 |
+| `scripts/studio_selftest.py` | 스튜디오·최종본 자체검사(보안·서식·저장·번호). 이 둘을 고쳤으면 돌린다 |
+| `scripts/new_deck.py` | 템플릿 복사, 장·부록 고르기(스튜디오 없이 쓸 때) |
 | `scripts/build_single.py` | 단일 HTML 파일(그림·서체·Chart.js·모션 내장) |
 | `scripts/check_deck.js` | 외부 연결을 막고 전 장·부록·모션·편집 모드 점검 |
 | `scripts/subset_fonts.py` | 단일 파일용 서체 다시 줄이기(새 글자를 썼을 때) |
@@ -67,7 +77,7 @@ description: 코스콤 스타일(KoPub돋움체 · 오렌지·네이비 · 셰�
 | `scripts/render_video.js` | 요약 모션 → mp4(결정적 프레임 녹화 + ffmpeg) |
 | `scripts/voice_tool.py` | 문체 분석(`build`: 대표 자료 → `style-guide.md`)·검사(`gate`: 문체 밴드 + 상투구 + 숫자 대조 + 제목 목록) |
 | `scripts/voice_selftest.py` | 문체 도구 자체검사. `voice_tool.py`를 고쳤으면 돌린다 |
-| `references/` | 부품·데이터·삽화·모션·원고 구성·문체 맞추기(`voice.md`) 안내 |
+| `references/` | 부품·데이터·삽화·모션·원고 구성·문체 맞추기(`voice.md`)·스튜디오와 최종본(`studio.md`) 안내 |
 
 ## 필요한 것
 Python 3.10+ (Pillow, numpy, fontTools[woff2]), Node 18+ 와 `playwright-core`(점검·녹화, 설치된 Edge/Chrome 사용), ffmpeg(mp4를 만들 때만). 문체 도구는 Python 표준 라이브러리만 쓴다.

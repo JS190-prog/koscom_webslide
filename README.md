@@ -10,6 +10,7 @@
 - 편집 모드(E): 글·차트·그림을 브라우저에서 고치고 HTML로 저장
 - 요약 모션: 덱 안에서 재생(동영상 파일 없이) + 필요하면 mp4 녹화
 - 단일 HTML 파일(그림·서체·차트·모션 내장, 외부 연결 0) — 예시 덱 23장 + 부록 6개 + 111초 모션이 **6.4MB**
+- **문체 맞추기**([gn-voice](https://github.com/gongnyang/gn-voice) 방식): 예전 발표자료(.pptx·웹슬라이드·.md) 2~3건에서 제목 꼴·끝맺음·장당 분량·표기·자주 쓴 표현을 재서 `style-guide.md`로 정리하고, 그 문체로 쓴 덱을 스크립트가 검사한다(문체 밴드 · AI 상투구 · 근거에 없는 숫자 · 제목만 읽기)
 
 ## 설치
 Claude Code에서:
@@ -30,11 +31,21 @@ node   skills/koscom-webslide/scripts/check_deck.js ./my-deck/제목_단일파�
 ```
 자세한 규칙과 부품은 [SKILL.md](skills/koscom-webslide/SKILL.md)와 `references/`.
 
+### 문체를 맞출 때
+"이 발표자료들 문체로 웹슬라이드 만들어줘", "우리 팀 장표 문체 분석해줘"처럼 대표 자료와 함께 말하면 먼저 문체를 분석하고, 다 쓴 덱을 검사합니다.
+
+```bash
+python skills/koscom-webslide/scripts/voice_tool.py build 예전발표1.pptx 예전발표2.html --out ./voice --human
+# … voice/style-guide.md 대로 장을 쓴다 …
+python skills/koscom-webslide/scripts/voice_tool.py gate --voice ./voice --facts facts.txt ./my-deck/index.html
+```
+`gate`가 불합격이면 고칠 항목(어느 장의 제목·분량·끝맺음·숫자인지)을 한 줄씩 돌려줍니다. 자세한 절차는 [references/voice.md](skills/koscom-webslide/references/voice.md).
+
 ## 예시
 `skills/koscom-webslide/template/index.html` — 「코쇠오피스」 참가 기획서(23장). 브라우저로 바로 열립니다.
 
 ## 필요한 것
-Python 3.10+ (Pillow · numpy · fontTools[woff2]), Node 18+ + `playwright-core`(점검·녹화, 설치된 Edge/Chrome 사용), ffmpeg(mp4를 만들 때만).
+Python 3.10+ (Pillow · numpy · fontTools[woff2]), Node 18+ + `playwright-core`(점검·녹화, 설치된 Edge/Chrome 사용), ffmpeg(mp4를 만들 때만). 문체 도구는 Python 표준 라이브러리만 씁니다.
 
 ## 알림
 조직·사람·고객사·수치 예시는 가상입니다. 서체·삽화·라이브러리의 이용 조건은 [NOTICE.md](NOTICE.md).

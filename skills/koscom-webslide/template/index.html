@@ -2281,7 +2281,8 @@ body.editing .chart-edit{display:block}
   const panel = document.getElementById('cpanel'), cpBody = document.getElementById('cpBody');
   let panelId = null, rbT = null;
   document.querySelectorAll('#stage canvas').forEach(cv => {
-    if (!BUILD[cv.id]) return;
+    const cd = T(cv.id);   // 전용 차트, 또는 표 머리(cols·types)를 갖춘 범용 차트(kind)에 편집 버튼을 단다
+    if (!BUILD[cv.id] && !(cd && AUTO[cd.kind] && cd.cols && cd.types)) return;
     const b = document.createElement('button');
     b.className = 'chart-edit'; b.textContent = '차트 데이터 편집';
     b.onclick = () => openPanel(cv.id);

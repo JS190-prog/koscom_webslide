@@ -68,6 +68,7 @@ MINI = """<div class="topbar">상단 바 2026</div>
 <table><tr><td>표 칸 120만원</td></tr></table>
 <p>첫째 줄<br>이어지는 줄
 <div class="pain"><span class="n">1</span><h4>형식마다 재작성</h4></div>
+<aside class="notes"><p>대본에서 <strong>77만원</strong>을 말합니다.</p></aside>
 </section>
 <aside class="side-page"><p>부록 근거 500명</p></aside>
 <script type="application/json" id="deck-data">{"charts":{"c":{"kind":"vbar","types":["t","n"],"rows":[["항목",440],["둘째",3.30]]}}}</script>"""
@@ -111,7 +112,7 @@ def main():
     assert s["title"] == "업무시간의 35%, 보고서에 씁니다" and s["em"] == 1, s
     assert s["lines"] == ["사람인 조사입니다.", "PPT 한글 문서", "첫째 줄 이어지는 줄", "1", "형식마다 재작성"], s["lines"]
     assert vt.end_type(s["lines"][0]) == "end_polite"
-    assert {"표 칸 120만원", "부록 근거 500명", "440"} <= set(d["extra"]), d["extra"]
+    assert {"표 칸 120만원", "부록 근거 500명", "440", "대본에서 77만원을 말합니다."} <= set(d["extra"]), d["extra"]   # 대본은 문체 측정에서 빠지고 숫자 대조에 든다
     whole = json.dumps(d, ensure_ascii=False)
     for gone in ("상단 바", "THE PROBLEM", "출처 보기", "자동 생성 글", "외부 조사"):
         assert gone not in whole, gone

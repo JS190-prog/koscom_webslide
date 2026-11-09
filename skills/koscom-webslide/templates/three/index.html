@@ -663,6 +663,15 @@ body.editing .chart-edit{display:block}
 
 /* print */
 @media print{html,body{overflow:visible;background:#fff}#stage{position:relative;transform:none!important}}
+/* ── 대본(발표자 노트): 청중 화면에는 숨기고 N 키로 펼친다(편집 모드에서는 여기서 고친다) · 발표자 보기(S)는 맨 아래 스크립트 ── */
+.slide aside.notes{display:none}
+body.notes-on .slide.active aside.notes{display:block;position:absolute;left:128px;right:72px;bottom:76px;z-index:35;max-height:300px;overflow:auto;margin:0;padding:14px 24px 16px;background:#fff;color:#2b2b2e;border:1px solid #dcdce0;border-top:3px solid #ee6d1d;box-shadow:0 -10px 32px rgba(0,0,0,.16);font-size:18px;line-height:1.7;text-align:left;letter-spacing:0;pointer-events:auto}
+body.notes-on .slide.active aside.notes::before{content:'대본 · N 닫기';display:block;margin-bottom:4px;font-size:12px;font-weight:700;color:#ee6d1d}
+#stage .slide aside.notes p{margin:0 0 .5em;max-width:none;color:#2b2b2e;font-size:inherit;line-height:inherit}
+#stage .slide aside.notes strong{color:#d4560f}
+body.kp-black::after{content:'';position:fixed;inset:0;z-index:2000;background:#000;cursor:none}
+html.kp-preview #cursor,html.kp-preview #toast,html.kp-preview #editbar,html.kp-preview #cpanel{display:none!important}
+html.kp-preview .slide .a{opacity:1}html.kp-preview .slide.active .a{animation:none!important}html.kp-preview .slide.active,html.kp-preview .slide.leaving{transition:none!important}
 </style>
 <style>
 /* ═══ 원고 원본 three — 3D 구조 브리핑: 짙은 네이비 무대 위 three.js 층(.gl-layer), 장 배경은 투명 ═══ */
@@ -751,7 +760,7 @@ body.editing .chart-edit{display:block}
     <div class="progress" id="prog"></div>
     <div class="pager"><b id="pgCur">01</b><span>/ <span id="pgTot">21</span></span><span class="lab" id="pgLab"></span></div>
     <div class="right">
-      <span><span class="kbd">←</span><span class="kbd">→</span> 키 · 스크롤로 넘기기 · <span class="kbd">E</span> 편집</span>
+      <span><span class="kbd">←</span><span class="kbd">→</span> 키 · 스크롤로 넘기기 · <span class="kbd">E</span> 편집 · <span class="kbd">S</span> 발표자 보기 · <span class="kbd">N</span> 대본</span>
       <button class="navbtn prev" id="prevBtn" aria-label="이전"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
       <button class="navbtn next" id="nextBtn" aria-label="다음"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
     </div>
@@ -1017,7 +1026,14 @@ body.editing .chart-edit{display:block}
 <script>
 (() => {
   /* 편집 저장의 바탕: 스크립트가 DOM을 바꾸기 전의 원본 */
-  const PRISTINE = '<!doctype html>\n' + document.documentElement.outerHTML;
+  let PRISTINE = '<!doctype html>\n' + document.documentElement.outerHTML;
+  // 이 스크립트 뒤의 블록(원본 움직임 층·발표자 보기)은 아직 읽히기 전이라 위 원본에 없다. 다 읽힌 뒤 <script>만 덧붙인다(실행 중에 만든 요소는 빼고)
+  const ENGINE = document.currentScript;
+  document.addEventListener('DOMContentLoaded', () => {
+    let tail = '';
+    for (let n = ENGINE.nextElementSibling; n; n = n.nextElementSibling) if (n.tagName === 'SCRIPT') tail += '\n' + n.outerHTML;
+    PRISTINE = PRISTINE.replace(/<\/body>(?=\s*<\/html>\s*$)/, () => tail + '\n</body>');
+  });
   // 단일 파일판: 그림·영상이 #asset-map 안에 들어 있으면 경로 대신 그것을 쓴다(폴더판에서는 경로 그대로)
   const ASSETS = (() => { try { return JSON.parse(document.getElementById('asset-map')?.textContent || '{}'); } catch (e) { return {}; } })();
   const A = p => ASSETS[p] || p;
@@ -1945,7 +1961,7 @@ body.editing .chart-edit{display:block}
     clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), action ? 9000 : 4200);
   }
 
-  window.deck = {go, get index() { return cur; }, get editing() { return editing; }, get side() { return !!sideOpen; }, slides, N, edit: setEdit, buildHTML};
+  window.deck = {go, get index() { return cur; }, get editing() { return editing; }, get side() { return !!sideOpen; }, slides, N, edit: setEdit, buildHTML, toast};
 
   /* ── boot ── */
   const start = Math.max(0, (parseInt(location.hash.slice(1)) || 1) - 1);
@@ -2321,6 +2337,211 @@ body.editing .chart-edit{display:block}
     stage.classList.add('gl-on');
     last = performance.now(); raf = requestAnimationFrame(frame);
   } catch (e) { off(); }
+})();
+</script>
+<script>
+/* ═════════ 발표자 보기(S) · 대본(N) ═════════
+   대본은 장마다 <aside class="notes"> 안에 <p> 문단으로 쓴다. 청중 화면에는 보이지 않는다.
+   S   새 창에 PPT 발표자 보기처럼 현재 장·다음 장·대본·경과 시간을 띄운다. 두 창은 함께 넘어간다.
+   N   이 화면 아래에 대본을 펼친다. 편집 모드(E)에서는 여기서 대본을 고치고 HTML 저장으로 남긴다.
+   리모컨(클리커): PgDn·PgUp 넘김은 어느 창에서나, B·마침표는 화면 가림, F5(슬라이드 쇼 시작)는 전체 화면(새로 고침 대신).
+   미리보기는 같은 파일을 ?preview 로 띄운 것이라 청중 화면과 똑같다(lewislulu/html-ppt-skill, MIT 의 방식). */
+(() => {
+  const D = window.deck;
+  if (!D) return;
+  const booted = () => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => new Promise(r => setTimeout(r)));
+
+  // ── 발표자 창 속 미리보기: 발표자 창이 고른 장을 보인다
+  if (new URLSearchParams(location.search).has('preview')) {
+    document.documentElement.classList.add('kp-preview');
+    if (window.Chart) Chart.defaults.animation = false;   // 미리보기는 등장 움직임 없이 바로 최종 모습(글·장 페이드는 CSS)
+    let want = null, up = false;
+    addEventListener('message', e => {
+      if (!e.data || e.data.kp !== 'go' || (e.source !== parent && e.source !== parent.opener)) return;   // 보내는 코드는 청중 창에 있다
+      want = +e.data.i;
+      if (up) D.go(want);
+    });
+    booted().then(() => { up = true; if (want != null) D.go(want); parent.postMessage({kp: 'ready'}, '*'); });
+    return;
+  }
+
+  const pad = n => String(n).padStart(2, '0');
+  const at = () => Math.max(0, D.index);
+  const noteOf = i => D.slides[i] && D.slides[i].querySelector('aside.notes');
+  const titleOf = i => {
+    const s = D.slides[i], h = s && s.querySelector('h1,h2');
+    return s ? ((h && h.textContent) || s.dataset.label || '').replace(/\s+/g, ' ').trim() : '';
+  };
+  const say = m => (D.toast || console.log)(m);
+  const escH = v => String(v).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+  // ── N: 대본 펼치기
+  function toggleNotes() {
+    if (document.body.classList.toggle('notes-on') && !(noteOf(at()) || {}).textContent) say('이 장에는 대본이 없습니다');
+  }
+  // ── B·마침표: 화면 가림(리모컨의 화면 끄기 단추)
+  function black() {
+    const on = document.body.classList.toggle('kp-black');
+    if (live()) $('blk').classList.toggle('on', on);
+  }
+
+  // ── S: 발표자 창
+  const FS = 'kosoe-presenter-fs';
+  let pw = null, fs = 22, acc = 0, t0 = 0, tick = 0;
+  try { fs = +localStorage.getItem(FS) || 22; } catch (e) {}
+  const $ = id => pw.document.getElementById(id);
+  const live = () => !!(pw && !pw.closed && pw.document.getElementById('cur'));
+
+  function openPresenter() {
+    if (live()) { pw.focus(); return; }
+    pw = window.open('', 'kosoe-presenter', 'width=1280,height=800');
+    if (!pw) return say('팝업이 막혀 발표자 보기를 열지 못했습니다. 주소창에서 팝업을 허용한 뒤 S를 다시 누르세요');
+    const src = location.href.split('#')[0].split('?')[0] + '?preview#';
+    pw.document.open();
+    pw.document.write(page(src, at()));
+    pw.document.close();
+    pw.document.body.style.setProperty('--fs', fs + 'px');
+    $('prev').onclick = () => D.go(D.index - 1);
+    $('next').onclick = () => D.go(D.index + 1);
+    $('pause').onclick = pause;
+    $('reset').onclick = reset;
+    $('smaller').onclick = () => zoom(-2);
+    $('bigger').onclick = () => zoom(2);
+    pw.document.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });   // 단추가 초점을 잡지 않게: 키는 늘 장 넘김
+    pw.addEventListener('keydown', key);
+    pw.addEventListener('message', e => { if (e.data && e.data.kp === 'ready' && (e.source === $('cur').contentWindow || e.source === $('nxt').contentWindow)) sync(false); });
+    $('blk').classList.toggle('on', document.body.classList.contains('kp-black'));
+    acc = 0; t0 = Date.now();
+    clearInterval(tick); tick = setInterval(clock, 500);
+    sync(true); clock();
+  }
+  function key(e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key;
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(k)) D.go(D.index + 1);
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(k)) D.go(D.index - 1);
+    else if (k === 'Home') D.go(0);
+    else if (k === 'End') D.go(D.N - 1);
+    else if (k === 'b' || k === 'B' || k === '.') black();
+    else if (k === 'p' || k === 'P') pause();
+    else if (k === 'r' || k === 'R') reset();
+    else if (k === '+' || k === '=') zoom(2);
+    else if (k === '-') zoom(-2);
+    else if (k !== 'F5') return;   // F5: 이 창을 새로 고치면 빈 창이 되므로 막는다
+    e.preventDefault();
+  }
+  function sync(top) {
+    if (!live()) return;
+    const i = at(), last = i >= D.N - 1;
+    post('cur', i);
+    if (!last) post('nxt', i + 1);
+    $('end').classList.toggle('on', last);
+    $('no').textContent = pad(i + 1) + ' / ' + pad(D.N);
+    $('ttl').textContent = titleOf(i);
+    $('nttl').textContent = last ? '' : titleOf(i + 1);
+    script(top);
+  }
+  function post(id, i) { try { $(id).contentWindow.postMessage({kp: 'go', i}, '*'); } catch (e) {} }
+  function script(top) {
+    if (!live()) return;
+    const n = noteOf(at()), box = $('script');
+    if (n && n.textContent.trim()) {
+      const c = n.cloneNode(true);
+      c.querySelectorAll('[contenteditable]').forEach(x => x.removeAttribute('contenteditable'));
+      box.innerHTML = c.innerHTML;
+    } else box.innerHTML = '<p class="none">이 장에는 대본이 없습니다.</p>';
+    if (top) box.scrollTop = 0;
+  }
+  const elapsed = () => acc + (t0 ? Date.now() - t0 : 0);
+  function pause() { if (t0) { acc += Date.now() - t0; t0 = 0; } else t0 = Date.now(); clock(); }
+  function reset() { acc = 0; t0 = t0 && Date.now(); clock(); }
+  function clock() {
+    if (!live()) { clearInterval(tick); return; }
+    const s = Math.floor(elapsed() / 1000);
+    $('time').textContent = (s >= 3600 ? Math.floor(s / 3600) + ':' : '') + pad(Math.floor(s / 60) % 60) + ':' + pad(s % 60);
+    $('time').classList.toggle('held', !t0);
+    $('pause').textContent = t0 ? '일시정지' : '계속';
+    $('now').textContent = new Date().toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'});
+  }
+  function zoom(d) {
+    fs = Math.max(14, Math.min(44, fs + d));
+    try { localStorage.setItem(FS, fs); } catch (e) {}
+    if (live()) pw.document.body.style.setProperty('--fs', fs + 'px');
+  }
+  function page(src, i) {
+    const nx = Math.min(i + 1, D.N - 1);
+    return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>발표자 보기 · ${escH(document.title)}</title><style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{display:flex;flex-direction:column;background:#1c1d21;color:#e8e8ec;font:14px/1.5 'Malgun Gothic','Apple SD Gothic Neo',sans-serif}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 18px;border-bottom:1px solid #34353b}
+#time{font-size:30px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;min-width:96px}
+#time.held{color:#8c8c92}
+#now{color:#9a9aa2;font-variant-numeric:tabular-nums}
+#blk{display:none;padding:3px 10px;border-radius:4px;background:#ee6d1d;color:#fff;font-weight:700}
+#blk.on{display:inline-block}
+.sp{flex:1}
+.hint{color:#77777f;font-size:12px}
+.lab{font-size:12px;font-weight:700;letter-spacing:.04em;color:#ee6d1d}
+.lab span{margin-left:6px;color:#9a9aa2;font-weight:400;letter-spacing:0}
+button{font:inherit;color:#e8e8ec;background:#2b2c32;border:1px solid #45464d;border-radius:6px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:#ee6d1d}
+main{flex:1;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;padding:14px 18px 18px;min-height:0;overflow:auto}
+.col{display:flex;flex-direction:column;gap:8px;min-height:0}
+.frame{position:relative;flex:none;aspect-ratio:16/9;background:#000;border-radius:6px;overflow:hidden;box-shadow:0 0 0 1px #34353b}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+#end{position:absolute;inset:0;display:none;place-items:center;background:#26272c;color:#9a9aa2;font-size:16px}
+#end.on{display:grid}
+.cap{display:flex;align-items:baseline;gap:12px;min-width:0}
+#no{flex:none;font-size:22px;color:#fff;font-variant-numeric:tabular-nums}
+#ttl{color:#c8c8ce;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+nav{display:flex;gap:10px;margin-top:auto}
+nav button{flex:1;padding:12px;font-size:16px}
+#script{flex:1;min-height:140px;overflow:auto;padding:16px 20px;border-radius:6px;background:#fbfbfc;color:#2b2b2e;font-size:var(--fs,22px);line-height:1.75;word-break:keep-all}
+#script p{margin:0 0 .65em}
+#script strong,#script b{color:#d4560f}
+#script em{font-style:normal;font-weight:700;color:#00338d}
+#script .none{color:#8c8c92}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+</style></head><body>
+<header>
+  <span class="lab">경과</span><b id="time">00:00</b>
+  <button id="pause">일시정지</button><button id="reset">다시 재기</button>
+  <span id="now"></span><span id="blk">화면 가림 중 · B</span>
+  <span class="sp"></span>
+  <span class="hint">→ PgDn 다음 · ← PgUp 이전 · B 화면 가림 · P 일시정지 · R 다시 재기</span>
+  <span class="lab">대본 글자</span><button id="smaller">가−</button><button id="bigger">가+</button>
+</header>
+<main>
+  <section class="col">
+    <div class="lab">현재 장</div>
+    <div class="frame"><iframe id="cur" src="${escH(src + (i + 1))}" tabindex="-1" title="현재 장"></iframe></div>
+    <div class="cap"><b id="no"></b><span id="ttl"></span></div>
+    <nav><button id="prev">◀ 이전</button><button id="next">다음 ▶</button></nav>
+  </section>
+  <section class="col">
+    <div class="lab">다음 장<span id="nttl"></span></div>
+    <div class="frame"><iframe id="nxt" src="${escH(src + (nx + 1))}" tabindex="-1" title="다음 장"></iframe><div id="end">마지막 장입니다</div></div>
+    <div class="lab">대본</div>
+    <div id="script"></div>
+  </section>
+</main>
+</body></html>`;
+  }
+
+  addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey || e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    const k = e.key;
+    if (k === 's' || k === 'S') openPresenter();
+    else if (k === 'n' || k === 'N') toggleNotes();
+    else if (k === 'b' || k === 'B' || k === '.') black();
+    else if (k === 'F5') { if (!document.fullscreenElement && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {}); }
+    else return;
+    e.preventDefault();
+  });
+  document.addEventListener('deck:slide', () => sync(true));
+  document.addEventListener('input', e => { if (e.target.closest && e.target.closest('aside.notes')) script(false); });
+  addEventListener('pagehide', () => { if (pw && !pw.closed) pw.close(); });
 })();
 </script>
 </body>

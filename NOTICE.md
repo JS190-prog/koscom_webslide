@@ -10,6 +10,7 @@
 
 | 모션 기법 · 덱 모션 원칙 | `templates/motion/` | [gongnyang/awesome-ai-motion](https://github.com/gongnyang/awesome-ai-motion)(MIT, © 2026 gongnyang)의 효과 카드·`routes/덱과사이트.md`의 정의·기본 파라미터를 참고해 바닐라 JS·CSS로 다시 구현했다. 클립·코드는 복사하지 않았다 |
 | 스크롤 연속 타임라인 · handoff move | `templates/scrolline/` | [gongnyang/awesome-html-scrolline-deck](https://github.com/gongnyang/awesome-html-scrolline-deck)(MIT, © 2026 gongnyang)의 개념(무대 하나·연속 timeline·link move·컨셉 문법)을 참고해 바닐라 JS로 다시 구현했다. GSAP·Lenis는 쓰지 않는다 |
+| 발표자 보기 방식 | 원고 원본마다 「발표자 보기(S)·대본(N)」 블록, `references/presenter.md` | [lewislulu/html-ppt-skill](https://github.com/lewislulu/html-ppt-skill)(MIT)의 발표자 모드 방식(장마다 `aside.notes`, `S`로 새 창, 같은 파일을 `?preview`로 띄운 미리보기를 `postMessage`로 넘김)과 대본 쓰기 원칙을 참고해 새로 구현했다. 코드는 복사하지 않았다 |
 | three.js r158 | `templates/three/assets/vendor/three.min.js` | MIT License, © 2010-2023 three.js authors(`three.LICENSE.txt`). 3D 장면은 위 두 저장소의 3D 효과 카드·`launch-orbit-note` 장면을 참고해 새로 만들었다 |
 
 예시 덱의 조직·사람·고객사·수치(가정·가상 표기)는 시연용입니다. 사내 원본 서식이나 실데이터는 들어 있지 않습니다.

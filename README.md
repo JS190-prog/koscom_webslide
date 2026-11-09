@@ -8,6 +8,7 @@
 - 레이어로 움직이는 코쇠 삽화(배경·몸통·꺾쇠·눈 깜빡임·화살표), 어두운 장 자동 변형
 - 부록(사이드 페이지): 수치 근거 · 출처 · 예상 질문 · 실물 · 요약 영상 · 추가 자료
 - 편집 모드(E): 글·차트·그림을 브라우저에서 고치고 HTML로 저장
+- **대본과 발표자 보기**: 장마다 대본(발표자 노트)을 넣고, 발표할 때 `S`를 누르면 PPT처럼 새 창에 현재 장·다음 장·대본·경과 시간이 뜬다. 두 창이 함께 넘어가고 발표 리모컨(PgDn·PgUp, 화면 가림 B, F5)으로 넘긴다. 화면이 하나면 `N`으로 대본을 펼치고 편집 모드에서 고친다 — [references/presenter.md](skills/koscom-webslide/references/presenter.md)
 - 요약 모션: 덱 안에서 재생(동영상 파일 없이) + 필요하면 mp4 녹화
 - 단일 HTML 파일(그림·서체·차트·모션 내장, 외부 연결 0) — 예시 덱 23장 + 부록 6개 + 111초 모션이 **6.4MB**
 - **원고 원본 4가지**: 코쇠오피스 기획서(정적 장 넘김) · 키네틱 모션 브리핑([awesome-ai-motion](https://github.com/gongnyang/awesome-ai-motion) 기법) · 스크롤 타임라인([awesome-html-scrolline-deck](https://github.com/gongnyang/awesome-html-scrolline-deck) 방식의 연속 타임라인) · 3D 구조 브리핑(three.js). 편집 모드·검사·단일 파일은 모두 같다 — [references/templates.md](skills/koscom-webslide/references/templates.md)

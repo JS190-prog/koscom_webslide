@@ -15,10 +15,11 @@
 ## 설치
 Claude Code에서:
 ```
-/plugin marketplace add humanist96/koscom_webslide
+/plugin marketplace add JS190-prog/koscom_webslide
 /plugin install koscom-webslide@koscom-webslide
 ```
 또는 `skills/koscom-webslide` 폴더를 `~/.claude/skills/` (또는 프로젝트의 `.claude/skills/`)에 복사합니다.
+원 저장소 [humanist96/koscom_webslide](https://github.com/humanist96/koscom_webslide)에는 문체 맞추기 기능이 없습니다.
 
 ## 쓰는 법
 "이 원고로 코스콤 웹슬라이드 만들어줘", "기획서를 단일 HTML로 묶어줘(10MB 이하)" 처럼 말하면 스킬이 다음 순서로 만듭니다.

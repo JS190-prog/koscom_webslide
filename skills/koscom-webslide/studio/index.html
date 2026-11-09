@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>웹슬라이드 스튜디오</title>
 <style>
-  :root{--or:#ee6d1d;--nv:#00338d;--ink:#2b2b2e;--grey:#8c8c92;--hair:#e4e4e8;--bg:#f6f6f8}
+  :root{--or:#ee6d1d;--nv:#00338d;--ink:#2b2b2e;--grey:#8c8c92;--hair:#e4e4e8;--bg:#f6f6f8;--ai:#fff6ef}
   *{box-sizing:border-box}
   body{margin:0;font:15px/1.55 'KoPub Dotum','Malgun Gothic',sans-serif;color:var(--ink);background:var(--bg);word-break:keep-all}
   .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;padding:14px 28px;background:#fff;border-bottom:1px solid var(--hair)}
@@ -13,14 +13,22 @@
   .top span{color:var(--grey);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   main{max-width:1180px;margin:0 auto;padding:24px 28px 120px}
   .step,.made{background:#fff;border:1px solid var(--hair);border-radius:10px;padding:22px 24px;margin-bottom:18px}
-  h2{margin:0 0 14px;font-size:18px;display:flex;align-items:center;gap:10px}
+  h2{margin:0 0 14px;font-size:18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   h2 i{font-style:normal;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--or);color:#fff;font-size:14px}
   h2 small{font-weight:400;color:var(--grey);font-size:13px}
+  .ainote{margin:-6px 0 14px;padding:9px 12px;border-radius:6px;background:var(--ai);font-size:14px}
+  .ainote b{color:var(--or)}
   .form{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 18px}
   .form label{display:grid;gap:4px;font-size:13px;color:var(--grey)}
-  input[type=text]{font:inherit;color:var(--ink);padding:9px 11px;border:1px solid var(--hair);border-radius:6px}
+  input[type=text]{font:inherit;color:var(--ink);padding:9px 11px;border:1px solid var(--hair);border-radius:6px;width:100%;background:#fff}
   input[type=text]:focus{outline:2px solid var(--or);border-color:transparent}
+  input.ai{background:var(--ai)}
+  input.edited{background:#fff;border-color:var(--nv);box-shadow:inset 3px 0 0 var(--nv)}
   .presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .tpls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+  .tpls button.on{border-color:var(--or);background:var(--ai);font-weight:700}
+  .tdesc{margin:0 0 12px;font-size:13px;color:var(--grey)}
+  .draft .tpl{display:inline-block;margin-top:4px;font-size:12px;color:var(--nv);border:1px solid var(--nv);border-radius:10px;padding:0 8px}
   button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--hair);background:#fff;padding:8px 14px;color:var(--ink)}
   button:hover{border-color:var(--ink)}
   button.primary{background:var(--or);border-color:var(--or);color:#fff;font-weight:700;padding:11px 22px}
@@ -31,10 +39,26 @@
   .card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#eee}
   .card .cap{display:flex;gap:8px;padding:7px 10px;font-size:13px;align-items:baseline}
   .card .cap b{color:var(--grey);font-size:12px}
-  .card input{position:absolute;opacity:0}
+  .card input,.draft input{position:absolute;opacity:0}
   .card:has(input:checked){border-color:var(--or)}
   .card:has(input:checked)::after{content:'✓';position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--or);color:#fff;display:grid;place-items:center;font-weight:700}
-  .card:has(input:focus-visible){outline:3px solid var(--nv)}
+  .card:has(input:focus-visible),.draft:has(input:focus-visible){outline:3px solid var(--nv)}
+  .drafts{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:16px}
+  .draft{position:relative;display:block;border:2px solid var(--hair);border-radius:8px;padding:12px 14px;cursor:pointer;background:#fff}
+  .draft:has(input:checked){border-color:var(--or);background:var(--ai)}
+  .draft b{font-size:16px}
+  .draft .rec{margin-left:8px;font-size:12px;font-weight:700;color:#fff;background:var(--or);border-radius:10px;padding:1px 8px;vertical-align:2px}
+  .draft .meta{display:block;color:var(--grey);font-size:13px;margin-top:2px}
+  .draft p{margin:6px 0 0;font-size:14px}
+  .orow{display:grid;grid-template-columns:28px 176px 1fr;gap:14px;align-items:center;padding:10px 0;border-top:1px solid var(--hair)}
+  .orow img{width:176px;aspect-ratio:16/9;object-fit:cover;border-radius:4px;border:1px solid var(--hair);background:#eee}
+  .orow .oi{display:grid;gap:6px}
+  .orow .ol{font-size:12px;color:var(--grey)}.orow .ol b{color:var(--or);font-size:13px;margin-right:6px}
+  .orow .ot{font-weight:700}
+  .orow .om{font-size:14px}
+  .orow input[type=checkbox]{width:18px;height:18px;accent-color:var(--or)}
+  .orow.off{opacity:.45}.orow.off img{filter:grayscale(1)}
+  .err-box{padding:10px 12px;border-radius:6px;background:#fdecea;color:#c62828;font-size:14px;margin-bottom:12px}
   .bar{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;gap:14px;align-items:center;justify-content:center;padding:14px;background:#fff;border-top:1px solid var(--hair)}
   #msg{font-size:14px;color:var(--grey)}#msg.err{color:#c62828}
   .made{border-color:var(--or);border-width:2px}
@@ -64,7 +88,8 @@
   </section>
 
   <section class="step">
-    <h2><i>1</i> 덱 정보</h2>
+    <h2><i>1</i> 덱 정보 <small id="infoHint"></small></h2>
+    <div class="ainote" id="aiNote" hidden></div>
     <div class="form">
       <label>덱 제목 (필수) <input type="text" id="title" maxlength="80" placeholder="예: 본사 노후 소방배관 교체 공사 추진(안)"></label>
       <label>상단 바 이름 <input type="text" id="brand" maxlength="40" placeholder="코스콤"></label>
@@ -73,8 +98,18 @@
     </div>
   </section>
 
-  <section class="step">
+  <section class="step" id="draftStep" hidden>
+    <h2><i>2</i> 원고 고르기 <small id="cnt2"></small></h2>
+    <div class="ainote">AI가 첨부 자료로 쓴 <b>원고 후보</b>입니다. 하나를 고르고, 장마다 제목·메시지가 맞는지 확인하세요. 고친 곳은 파란 줄로 표시되고 에이전트가 그대로 따릅니다. 필요 없는 장은 왼쪽 칸을 끕니다.</div>
+    <div class="drafts" id="drafts"></div>
+    <div id="outline"></div>
+  </section>
+
+  <section class="step" id="tplStep" hidden>
     <h2><i>2</i> 장 고르기 <small id="cnt"></small></h2>
+    <div class="err-box" id="recErr" hidden></div>
+    <div class="tpls" id="tpls"></div>
+    <p class="tdesc" id="tdesc"></p>
     <div class="presets" id="presets"></div>
     <div class="grid" id="slides"></div>
   </section>
@@ -84,12 +119,15 @@
     <div class="grid" id="sides"></div>
   </section>
 </main>
-<div class="bar"><button class="primary" id="create">이 서식으로 만들기</button><span id="msg">장을 고른 뒤 누르면 프로젝트의 deck/ 에 덱이 만들어집니다</span></div>
+<div class="bar"><button class="primary" id="create">이 서식으로 만들기</button><span id="msg">확인한 뒤 누르면 프로젝트의 deck/ 에 덱이 만들어집니다</span></div>
 
 <script>
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-let TOKEN = '', TPL = null, STATE = null;
+let TOKEN = '', TPLS = [], T = null, STATE = null, REC = null, CUR = null;   // T = 지금 보는 원고 원본
+const SAVED = {};            // 원고별로 고친 내용(다른 원고를 보고 돌아와도 남는다)
+const tplOf = id => TPLS.find(t => t.id === id) || TPLS[0];
+const FIELDS = ['title', 'brand', 'brand_en', 'pill'];
 const pad = n => String(n).padStart(2, '0');
 
 async function post(path, body) {
@@ -99,18 +137,72 @@ async function post(path, body) {
   return j;
 }
 function msg(t, err) { const m = $('#msg'); m.textContent = t; m.className = err ? 'err' : ''; }
+const thumb = (tid, img) => `/ui/thumbs/${encodeURIComponent(tid)}/${img}.webp`;
 function card(kind, value, img, num, label, on) {
   return `<label class="card"><input type="checkbox" data-kind="${kind}" value="${esc(value)}"${on ? ' checked' : ''}>
-    <img src="/ui/thumbs/${img}.webp" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+    <img src="${thumb(T.id, img)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
     <span class="cap"><b>${esc(num)}</b><span>${esc(label)}</span></span></label>`;
 }
 function picked(kind) { return [...document.querySelectorAll(`input[data-kind="${kind}"]:checked`)].map(x => x.value); }
-function count() { $('#cnt').textContent = `${picked('slide').length}장 선택 · 부록 ${picked('side').length}개`; }
+function count() {
+  $('#cnt').textContent = `${picked('slide').length}장 선택 · 부록 ${picked('side').length}개`;
+  $('#cnt2').textContent = `${picked('row').length}장 · 부록 ${picked('side').length}개`;
+}
 function apply(keep, sides) {
   document.querySelectorAll('input[data-kind="slide"]').forEach(x => x.checked = keep.includes(+x.value));
   document.querySelectorAll('input[data-kind="side"]').forEach(x => x.checked = sides.includes(x.value));
   count();
 }
+function renderSides() { $('#sides').innerHTML = T.sides.map(s => card('side', s.key, 'side-' + s.key, s.key, s.label)).join(''); }
+// 원고 원본 고르기(추천이 없을 때): 원본마다 장 미리보기·묶음·부록이 다르다
+function useTemplate(id, keep, sides) {
+  T = tplOf(id);
+  $('#tpls').innerHTML = TPLS.map(t => `<button data-t="${esc(t.id)}" class="${t.id === T.id ? 'on' : ''}" title="${esc(t.look || '')}">${esc(t.name)}</button>`).join('');
+  $('#tdesc').textContent = [T.desc, T.look].filter(Boolean).join(' · ');
+  $('#presets').innerHTML = T.presets.map((p, i) => `<button data-p="${i}">${esc(p.name)}</button>`).join('') + '<button data-p="none">모두 해제</button>';
+  $('#slides').innerHTML = T.slides.map(s => card('slide', s.n, 's' + pad(s.n), pad(s.n), s.label)).join('');
+  renderSides();
+  apply(keep || T.presets[0].keep, sides || T.presets[0].sides);
+}
+
+// ── 원고(AI 추천) ──
+const draftOf = id => REC.drafts.find(d => d.id === id);
+function mark(input, base) { input.classList.toggle('edited', input.value.trim() !== (base ?? '').trim()); }
+function rows() {
+  return [...document.querySelectorAll('.orow')].map(r => ({
+    layout: +r.dataset.layout, on: r.querySelector('input[data-kind="row"]').checked,
+    title: r.querySelector('.ot').value, msg: r.querySelector('.om').value}));
+}
+function renderOutline(id) {
+  if (CUR) SAVED[CUR] = {rows: rows(), sides: picked('side')};
+  CUR = id;
+  const d = draftOf(id), sv = SAVED[id], keep = sv && sv.rows;
+  T = tplOf(d.template); renderSides();           // 원고마다 원고 원본(장 모양·부록)이 다를 수 있다
+  const label = n => (T.slides[n - 1] || {}).label || '';
+  $('#outline').innerHTML = d.slides.map((s, i) => {
+    const k = keep ? keep.find(x => x.layout === s.layout) : null;
+    const on = k ? k.on : true, t = k ? k.title : s.title, m = k ? k.msg : s.msg;
+    return `<div class="orow${on ? '' : ' off'}" data-layout="${s.layout}" data-i="${i}">
+      <input type="checkbox" data-kind="row" aria-label="${i + 1}장 넣기"${on ? ' checked' : ''}>
+      <img src="${thumb(T.id, 's' + pad(s.layout))}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+      <div class="oi"><div class="ol"><b>${pad(i + 1)}장</b>모양 ${pad(s.layout)} · ${esc(label(s.layout))}</div>
+        <input type="text" class="ot ai" maxlength="120" value="${esc(t)}" aria-label="${i + 1}장 제목">
+        <input type="text" class="om ai" maxlength="300" value="${esc(m)}" placeholder="이 장에서 말할 것(한 줄)" aria-label="${i + 1}장 메시지"></div></div>`;
+  }).join('');
+  document.querySelectorAll('.orow').forEach(r => {
+    const s = d.slides[+r.dataset.i];
+    mark(r.querySelector('.ot'), s.title); mark(r.querySelector('.om'), s.msg);
+  });
+  document.querySelectorAll('input[name="draft"]').forEach(x => x.checked = x.value === id);
+  apply([], sv ? sv.sides : (d.sides || []));
+}
+function renderDrafts() {
+  $('#drafts').innerHTML = REC.drafts.map(d => `<label class="draft"><input type="radio" name="draft" value="${esc(d.id)}">
+    <b>${esc(d.name || d.id)}</b>${d.id === REC.recommend ? '<span class="rec">★ 추천</span>' : ''}
+    <span class="meta">${d.slides.length}장 · 부록 ${(d.sides || []).length}개</span>
+    <span class="tpl" title="${esc(tplOf(d.template).look || '')}">${esc(tplOf(d.template).name)}</span>${d.why ? `<p>${esc(d.why)}</p>` : ''}</label>`).join('');
+}
+
 function renderMade() {
   const s = STATE;
   $('#proj').textContent = s.project;
@@ -118,7 +210,9 @@ function renderMade() {
   if (!s.deck) return;
   const c = s.choice || {};
   $('#mTitle').textContent = s.title;
-  $('#mInfo').textContent = `장 ${s.slides}개` + (c.sides ? ` · 부록 ${c.sides.length}개` : '') + (c.created_at ? ` · 만든 때 ${c.created_at.replace('T', ' ').slice(0, 16)}` : '');
+  $('#mInfo').textContent = `장 ${s.slides}개` + (c.sides ? ` · 부록 ${c.sides.length}개` : '') + (c.draft ? ` · 원고 ${c.draft}` : '')
+    + (c.changes && c.changes.length ? ` · 사람이 고친 곳 ${c.changes.length}개` : '')
+    + (c.created_at ? ` · 만든 때 ${c.created_at.replace('T', ' ').slice(0, 16)}` : '');
   $('#exports').innerHTML = s.exports.length ? '최종본: ' + s.exports.map(n => `<a href="/exports/${encodeURIComponent(n)}" target="_blank">${esc(n)}</a>`).join('') : '';
   $('#create').textContent = '서식 다시 고르기(기존 덱은 history로)';
 }
@@ -140,35 +234,73 @@ function showFinal(r) {
 
 async function init() {
   TOKEN = await (await fetch('/api/token', {cache: 'no-store'})).text();
-  TPL = await (await fetch('/api/template', {cache: 'no-store'})).json();
+  TPLS = (await (await fetch('/api/template', {cache: 'no-store'})).json()).templates;
+  T = TPLS[0];
   STATE = await (await fetch('/api/state', {cache: 'no-store'})).json();
-  $('#presets').innerHTML = TPL.presets.map((p, i) => `<button data-p="${i}">${esc(p.name)}</button>`).join('') + '<button data-p="none">모두 해제</button>';
-  $('#slides').innerHTML = TPL.slides.map(s => card('slide', s.n, 's' + pad(s.n), pad(s.n), s.label)).join('');
-  $('#sides').innerHTML = TPL.sides.map(s => card('side', s.key, 'side-' + s.key, s.key, s.label)).join('');
+  const rec = STATE.recommend;
+  REC = rec && !rec.error ? rec : null;
   const c = STATE.choice;
-  if (c) {
-    $('#title').value = c.title || ''; $('#brand').value = c.brand || ''; $('#brand_en').value = c.brand_en || ''; $('#pill').value = c.pill || '';
-    apply(c.keep || [], c.sides || []);
-  } else apply(TPL.presets[0].keep, TPL.presets[0].sides);
+  if (REC) {
+    $('#draftStep').hidden = false;
+    $('#infoHint').textContent = 'AI가 미리 채움 — 고칠 곳만 고치세요';
+    $('#aiNote').hidden = !REC.basis;
+    $('#aiNote').innerHTML = `<b>근거</b> ${esc(REC.basis || '')}`;
+    FIELDS.forEach(k => { const x = $('#' + k); x.value = REC.deck[k] || ''; x.classList.add('ai'); });
+    renderDrafts();
+    if (c && c.draft && draftOf(c.draft)) {       // 이미 만든 원고를 다시 보여 준다(사람이 고친 값 포함)
+      SAVED[c.draft] = {sides: c.sides || [], rows: draftOf(c.draft).slides.map(s => {
+        const o = (c.outline || []).find(x => x.layout === s.layout);
+        return {layout: s.layout, on: !!o, title: o ? o.title : s.title, msg: o ? o.msg : s.msg};
+      })};
+      FIELDS.forEach(k => { $('#' + k).value = c[k] || ''; });
+      renderOutline(c.draft);
+    } else renderOutline(REC.recommend);
+    FIELDS.forEach(k => mark($('#' + k), REC.deck[k]));
+  } else {
+    $('#tplStep').hidden = false;
+    if (rec && rec.error) { $('#recErr').hidden = false; $('#recErr').textContent = `AI 원고 후보를 읽지 못했습니다: ${rec.error} — 템플릿 장에서 직접 고르거나 에이전트에게 알려 주세요`; }
+    if (c) FIELDS.forEach(k => { $('#' + k).value = c[k] || ''; });
+    useTemplate(c ? c.template || 'kosoe' : TPLS[0].id, c && c.keep, c && c.sides);
+  }
   renderMade();
 }
-document.addEventListener('change', e => { if (e.target.dataset.kind) count(); });
+document.addEventListener('change', e => {
+  if (e.target.name === 'draft') return renderOutline(e.target.value);
+  if (e.target.dataset.kind === 'row') e.target.closest('.orow').classList.toggle('off', !e.target.checked);
+  if (e.target.dataset.kind) count();
+});
+document.addEventListener('input', e => {
+  if (!REC) return;
+  if (FIELDS.includes(e.target.id)) return mark(e.target, REC.deck[e.target.id]);
+  const r = e.target.closest('.orow'); if (!r) return;
+  const s = draftOf(CUR).slides[+r.dataset.i];
+  mark(e.target, e.target.classList.contains('ot') ? s.title : s.msg);
+});
 $('#presets').addEventListener('click', e => {
   const k = e.target.dataset.p; if (k == null) return;
-  if (k === 'none') apply([], []); else apply(TPL.presets[+k].keep, TPL.presets[+k].sides);
+  if (k === 'none') apply([], []); else apply(T.presets[+k].keep, T.presets[+k].sides);
 });
+$('#tpls').addEventListener('click', e => { const t = e.target.closest('button'); if (t && t.dataset.t !== T.id) useTemplate(t.dataset.t); });
 $('#create').addEventListener('click', async () => {
   const body = {title: $('#title').value, brand: $('#brand').value, brand_en: $('#brand_en').value, pill: $('#pill').value,
-                keep: picked('slide').map(Number), sides: picked('side')};
+                sides: picked('side'), template: T.id};
+  if (REC) {
+    body.draft = CUR;
+    body.outline = rows().filter(r => r.on).map(({layout, title, msg}) => ({layout, title, msg}));
+    if (!body.outline.length) { msg('원고에서 장을 하나 이상 남기세요', true); return; }
+    if (body.outline.some(r => !r.title.trim())) { msg('제목이 빈 장이 있습니다', true); return; }
+  } else {
+    body.keep = picked('slide').map(Number);
+    if (!body.keep.length) { msg('장을 하나 이상 고르세요', true); return; }
+  }
   if (!body.title.trim()) { msg('덱 제목을 적어 주세요', true); $('#title').focus(); return; }
-  if (!body.keep.length) { msg('장을 하나 이상 고르세요', true); return; }
   if (STATE.deck && !confirm('이미 만든 덱이 있습니다. 새 서식으로 다시 만들까요? 기존 덱은 studio/history 로 옮겨 둡니다.')) return;
   $('#create').disabled = true; msg('만드는 중…');
   const r = await post('/api/create', body);
   $('#create').disabled = false;
   if (!r.ok) return msg(r.error || '만들지 못했습니다', true);
   STATE = r.state; renderMade();
-  msg(`deck/ 에 ${r.choice.slides}장짜리 덱을 만들었습니다. 이제 에이전트가 원고를 채웁니다(채팅으로 돌아가세요)`);
+  msg(`deck/ 에 ${r.choice.slides}장짜리 덱을 만들었습니다. 이제 에이전트가 ${REC ? '고른 원고대로' : ''} 장을 채웁니다(채팅으로 돌아가세요)`);
   window.scrollTo({top: 0, behavior: 'smooth'});
 });
 $('#open').addEventListener('click', () => window.open('/deck/index.html', '_blank'));

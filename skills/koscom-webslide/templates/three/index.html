@@ -1,0 +1,2327 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D 구조 브리핑 | 데이터센터 이중화·보안 계층 (표본)</title>
+<meta name="description" content="짙은 네이비 무대 위 three.js 입체 장면으로 데이터센터 이중화·보안 계층 구조를 설명하는 표본 덱. 기관·수치는 모두 가상.">
+<style>
+@font-face{font-family:'KoPub Dotum';src:local('KoPub돋움체 Medium'),local('KoPubDotum Medium'),url(assets/fonts/KoPubDotum-Medium.ttf) format('truetype');font-weight:500;font-display:swap}
+@font-face{font-family:'KoPub Dotum';src:local('KoPub돋움체 Bold'),local('KoPubDotum Bold'),url(assets/fonts/KoPubDotum-Bold.ttf) format('truetype');font-weight:700;font-display:swap}
+
+:root{
+  --canvas:#ffffff;--surface:#f5f5f7;--hair:#dcdce0;--chev:#ececee;
+  --or:#ee6d1d;--or2:#f26522;--ort:#fad3bb;--orp:#fdeee4;
+  --navy:#00338d;--navy2:#1f4b9b;--navy3:#0f499c;--bt:#edf4fb;
+  --black:#000;--wave1:#7a3a10;--wave2:#b85415;
+  --ink:#2b2b2e;--ink2:#6e6e73;--grey:#8c8c92;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --font:'KoPub Dotum','KoPub돋움체 Medium',Pretendard,'Malgun Gothic',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#e7e7ea;color:var(--ink);font-family:var(--font);font-weight:500;
+  word-break:keep-all;overflow-wrap:break-word;line-break:strict;-webkit-font-smoothing:antialiased;font-synthesis:none}
+h1,h2,h3,h4{font-weight:700;text-wrap:balance}
+p,li{text-wrap:pretty}
+b,strong{font-weight:700}
+em{font-style:normal;color:var(--or)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ───────── stage ───────── */
+#stage{position:fixed;left:0;top:0;width:1440px;height:810px;transform-origin:0 0;background:var(--canvas);overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.04)}
+.slide{position:absolute;inset:0;padding:96px 72px 84px 128px;visibility:hidden;opacity:0;pointer-events:none}
+.slide.active{visibility:visible;opacity:1;pointer-events:auto;transition:opacity .5s var(--ease)}
+.slide.leaving{visibility:visible;opacity:0;transition:opacity .35s ease}
+.slide.navy{background:var(--navy);color:#fff}
+.slide.black{background:#000;color:#fff}
+
+/* chrome */
+.topbar{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;padding:0 40px 0 32px;z-index:20;
+  border-bottom:1px solid var(--hair);background:rgba(255,255,255,.92);transition:background .4s,border-color .4s,color .4s}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:19px}
+.brand svg{width:22px;height:22px}
+.brand .div{width:1px;height:18px;background:var(--hair);margin:0 6px}
+.brand small{font-size:12px;letter-spacing:.32em;color:var(--grey);font-weight:500}
+.topbar .right{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:14px;color:var(--ink2)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border:1px solid var(--hair);border-radius:999px}
+.pill i{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--or);color:#fff;font-style:normal;font-size:11px;font-weight:700}
+.iconbtn{width:36px;height:36px;border:1px solid var(--hair);display:grid;place-items:center;border-radius:8px;transition:transform .25s var(--ease),border-color .25s}
+.iconbtn:hover{transform:translateY(-2px);border-color:var(--or)}
+.rail{position:absolute;left:0;top:64px;bottom:64px;width:112px;z-index:20;display:flex;flex-direction:column;justify-content:center;gap:16px;padding-left:24px}
+.rail>button{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding-left:22px;color:var(--grey);transition:color .3s}
+.rail>button::before{content:"";position:absolute;left:0;top:8px;width:12px;height:2px;background:currentColor;opacity:.5;transition:width .45s var(--ease),opacity .3s}
+.rail .n{font-size:12.5px;letter-spacing:.08em;line-height:1.3}
+.rail .nm{font-size:13.5px;line-height:1.35;white-space:nowrap;margin-top:2px;transition:color .3s,transform .35s var(--ease)}
+.rail .dots{display:flex;gap:5px;height:0;margin-top:0;opacity:0;overflow:hidden;transition:height .35s var(--ease),margin .35s var(--ease),opacity .3s}
+.rail .dots i{width:6px;height:6px;border-radius:50%;background:var(--hair);transition:background .3s,transform .3s}
+.rail .dots i.done{background:var(--ort)}
+.rail .dots i.on{background:var(--or);transform:scale(1.25)}
+.rail>button:hover{color:var(--ink)}
+.rail>button.on{color:var(--or)}
+.rail>button.on .n{font-weight:700}
+.rail>button.on .nm{color:var(--ink);font-weight:700}
+.rail>button.on::before{width:16px;opacity:1}
+.rail>button.on .dots{height:8px;margin-top:8px;opacity:1}
+.bottombar{position:absolute;left:0;right:0;bottom:0;height:64px;z-index:20;display:flex;align-items:center;padding:0 40px 0 32px;border-top:1px solid var(--hair);background:rgba(255,255,255,.92);transition:background .4s,border-color .4s,color .4s}
+.pager{font-size:15px;color:var(--grey);display:flex;align-items:baseline;gap:12px}
+.pager b{color:var(--or);font-size:18px}
+.pager .lab{color:var(--ink);font-weight:700;margin-left:10px}
+.progress{position:absolute;left:0;top:-1px;height:3px;background:var(--or);transition:width .6s var(--ease)}
+.bottombar .right{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:13px;color:var(--grey)}
+.kbd{display:inline-block;border:1px solid var(--hair);border-radius:4px;padding:1px 6px;font-size:12px;margin:0 2px}
+.navbtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--hair);display:grid;place-items:center;transition:background .3s,color .3s,transform .3s var(--ease),border-color .3s}
+.navbtn:hover{background:var(--or);border-color:var(--or);color:#fff}
+.navbtn.next:hover{transform:translateX(4px)}.navbtn.prev:hover{transform:translateX(-4px)}
+#stage[data-theme=navy] .topbar,#stage[data-theme=navy] .bottombar{background:rgba(0,51,141,.6);border-color:rgba(255,255,255,.14);color:#fff}
+#stage[data-theme=black] .topbar,#stage[data-theme=black] .bottombar{background:rgba(0,0,0,.55);border-color:rgba(255,255,255,.12);color:#fff}
+#stage[data-theme=navy] .pager .lab,#stage[data-theme=black] .pager .lab{color:#fff}
+#stage:is([data-theme=navy],[data-theme=black]) :is(.pill,.iconbtn,.navbtn,.kbd){border-color:rgba(255,255,255,.25)}
+#stage:is([data-theme=navy],[data-theme=black]) :is(.topbar .right,.bottombar .right,.pager,.rail>button){color:var(--bt)}
+#stage:is([data-theme=navy],[data-theme=black]) .rail>button.on{color:var(--or)}
+#stage:is([data-theme=navy],[data-theme=black]) :is(.rail>button.on .nm,.rail>button:hover .nm){color:#fff}
+#stage:is([data-theme=navy],[data-theme=black]) .rail .dots i:not(.on):not(.done){background:rgba(255,255,255,.25)}
+#stage:is([data-theme=navy],[data-theme=black]) .brand small{color:var(--bt)}
+
+/* cursor */
+#cursor{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:1.5px solid var(--or);border-radius:50%;pointer-events:none;z-index:99;
+  transition:width .25s var(--ease),height .25s var(--ease),margin .25s var(--ease),background .25s,opacity .3s;opacity:0}
+#cursor.big{width:64px;height:64px;margin:-32px 0 0 -32px;background:rgba(238,109,29,.08)}
+@media (hover:none){#cursor{display:none}}
+
+/* ───────── shared slide parts ───────── */
+.kick{display:flex;align-items:center;gap:12px;font-size:14px;letter-spacing:.24em;color:var(--grey);margin-bottom:14px}
+.kick .no{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--or);color:#fff;font-size:13px;letter-spacing:0;font-weight:700}
+.kick .bar{width:8px;height:22px;background:var(--or)}
+h2.t{font-size:42px;line-height:1.25;letter-spacing:-.01em}
+.lead{font-size:19px;line-height:1.6;color:var(--ink2);margin-top:12px;max-width:1040px}
+.navy .lead,.black .lead{color:var(--bt)}
+.navy .kick,.black .kick{color:var(--bt)}
+.src{font-size:12.5px;color:var(--grey);line-height:1.55}
+.card{background:var(--surface);border:1px solid var(--hair);padding:22px 24px;position:relative;transition:transform .35s var(--ease),border-color .35s,background .35s}
+.card::before{content:"";position:absolute;left:-1px;top:-1px;height:3px;width:0;background:var(--or);transition:width .45s var(--ease)}
+.card:hover{transform:translateY(-5px);border-color:var(--or);background:#fff}
+.card:hover::before{width:calc(100% + 2px)}
+.card h4{font-size:19px;margin-bottom:8px}
+.card p{font-size:16px;line-height:1.55;color:var(--ink2)}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:5px 10px;border:1px solid var(--hair);background:#fff;color:var(--ink2)}
+.tag.or{border-color:var(--or);color:var(--or)}
+.tag.solid{background:var(--or);border-color:var(--or);color:#fff}
+.tag.navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px}
+.illu{position:relative;overflow:hidden;background:#fff}
+.illu img{display:block;width:100%;height:100%;object-fit:contain;transition:transform .9s var(--ease)}
+.illu:hover img{transform:scale(1.045)}
+.cap{font-size:13px;color:var(--grey);margin-top:8px}
+.kpi{border-left:3px solid var(--or);padding:4px 0 4px 18px}
+.kpi .v{font-size:44px;font-weight:700;letter-spacing:-.01em;line-height:1.1;transition:color .3s}
+.kpi{transition:border-color .3s,padding .35s var(--ease)}
+.kpi:hover{padding-left:24px}
+.kpi:hover .v{color:var(--or)}
+body.editing .kpi:hover{padding-left:18px}
+.kpi .v small{font-size:18px;margin-left:4px;color:var(--ink2);font-weight:500}
+.kpi .d{font-size:14px;color:var(--ink2);margin-top:6px;line-height:1.45}
+.kpi.navy{border-color:var(--navy)}.kpi.grey{border-color:var(--grey)}
+.chart-box{position:relative}
+.chart-box canvas{position:absolute;inset:0}
+.note{font-size:13px;color:var(--grey)}
+.badge-live{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--or);font-weight:700}
+.badge-live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--or);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(238,109,29,.5)}100%{box-shadow:0 0 0 10px rgba(238,109,29,0)}}
+
+/* entrance animations */
+@keyframes slideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fromRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes reveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes barFill{from{transform:scaleX(0)}}
+@keyframes growUp{from{transform:scaleY(0)}}
+@keyframes dash{to{stroke-dashoffset:-40}}
+@keyframes chevIn{from{opacity:0;transform:translateX(-80px)}to{opacity:1;transform:none}}
+.slide .a{opacity:0}
+.slide.active .a{animation:slideIn .75s var(--ease) both;animation-delay:calc(var(--i,0) * 80ms + 120ms)}
+.slide.active .a.r{animation-name:fromRight}
+.slide.active .a.rv{animation-name:reveal;animation-duration:1.1s;opacity:1}
+@media (prefers-reduced-motion:reduce){.slide .a{opacity:1}.slide.active .a{animation:none!important}.slide.active,.slide.leaving{transition:none!important}}
+.px{translate:calc(var(--mx,0) * var(--d,10) * 1px) calc(var(--my,0) * var(--d,10) * 1px);transition:translate .25s linear}
+.tilt{transition:transform .5s var(--ease);transform-style:preserve-3d;will-change:transform}
+
+/* ───────── anchors (cover / statement / closing) ───────── */
+.chevs{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.chevs svg{position:absolute}
+.slide.active .chevs svg{animation:chevIn 1.2s var(--ease) both}
+.cover h1{font-size:104px;letter-spacing:-.02em;line-height:1}
+.cover .sub{font-size:31px;line-height:1.35;margin-top:22px;font-weight:700;color:var(--ink)}
+.cover .line{font-size:20px;color:var(--ink2);margin-top:18px}
+.cta{display:inline-flex;align-items:center;gap:14px;margin-top:34px;background:var(--or);color:#fff;font-size:17px;font-weight:700;padding:16px 22px 16px 26px;transition:transform .3s var(--ease),background .3s}
+.cta:hover{transform:translateY(-3px);background:var(--or2)}
+.cta span{display:inline-block;transition:transform .3s var(--ease)}
+.cta:hover span{transform:translate(4px,-4px)}
+.cta.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--ink);margin-left:10px;padding:15px 22px}
+.cta.ghost:hover{background:var(--ink);color:#fff}
+.cta.ghost i{font-style:normal;color:var(--or);margin-right:2px}
+/* 부록 F · 화면 시안과 본선 준비 */
+#side-live table.map td:first-child{white-space:nowrap;font-weight:700;width:96px}
+#side-live table.map td{white-space:normal;word-break:keep-all;overflow-wrap:anywhere}#side-live table.map{table-layout:fixed}#side-live table.map th:first-child{width:96px}
+.hw-out{margin-top:16px;border:1px solid var(--hair);background:#fff;padding:22px 26px;font-size:14px;line-height:1.6;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.hw-out .hw-t{font-size:18px;font-weight:700;text-align:center;border:2px solid var(--ink);padding:8px;margin-bottom:12px}
+.hw-out .hw-s{margin-top:10px}.hw-out .hw-s b{display:block;font-size:15px;margin-bottom:2px}.hw-out .hw-s div{padding-left:10px;color:var(--ink2)}
+/* 부록 E · 요약 영상 */
+.vbox{position:relative;background:#000;aspect-ratio:16/9}
+.vbox video,.vbox iframe{display:block;width:100%;height:100%;border:0;background:#000}
+.vbox iframe{pointer-events:none}
+.vbox{cursor:pointer;overflow:hidden}
+.vbig{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:rgba(238,109,29,.94);color:#fff;font-size:32px;display:grid;place-items:center;padding-left:6px;box-shadow:0 8px 30px rgba(0,0,0,.35);transition:transform .25s,opacity .25s}
+.vbox:hover .vbig{transform:scale(1.08)}.vbox.on .vbig{opacity:0;transform:scale(.8);pointer-events:none}
+.vctl{display:flex;align-items:center;gap:12px;margin-top:8px;font-size:13px;color:var(--ink2)}
+.vctl button{width:34px;height:30px;border:1px solid var(--hair);display:grid;place-items:center;font-size:13px;color:var(--ink)}
+.vctl button:hover{border-color:var(--or);color:var(--or)}
+.vbar{flex:1;height:8px;background:var(--surface,#f5f5f7);position:relative;cursor:pointer}
+.vbar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--or)}
+.vbar b{position:absolute;top:-4px;width:2px;height:16px;background:var(--ink);left:0;display:none}.vbar:hover b{display:block}
+.vtm{min-width:86px;text-align:right;font-variant-numeric:tabular-nums}
+#sumMotion:fullscreen{background:#000}#sumMotion:fullscreen .vbig{display:none}
+.vchap{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.vchap button{display:flex;align-items:baseline;gap:8px;text-align:left;font-size:14px;padding:9px 10px;border:1px solid var(--hair);color:var(--ink2);transition:border-color .2s,color .2s,background .2s}
+.vchap button b{font-size:13px;color:var(--grey);font-weight:700;min-width:34px}
+.vchap button:hover{border-color:var(--or);color:var(--ink)}
+.vchap button.on{background:var(--orp);border-color:var(--or);color:var(--ink);font-weight:700}
+.vchap button.on b{color:var(--or)}
+
+/* one-page summary · proof · before/after (2026-10-29) */
+.sum5{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:34px}
+.sum5 .sc{background:var(--surface);border:1px solid var(--hair);border-top:3px solid var(--ink);padding:22px 20px 18px;min-height:330px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:12px;transition:transform .35s var(--ease),border-color .3s;font:inherit;color:inherit}
+.sum5 .sc:hover{transform:translateY(-4px);border-color:var(--or)}
+.sum5 .sc .sl{font-size:14px;letter-spacing:.12em;color:var(--grey);font-weight:700}
+.sum5 .sc .bg{font-size:26px;font-weight:700;line-height:1.3}
+.sum5 .sc .bg em{font-style:normal;color:var(--or)}
+.sum5 .sc p{font-size:16px;line-height:1.6;color:var(--ink2);flex:1}
+.sum5 .sc .go{font-size:13.5px;color:var(--grey)}
+.sum5 .sc.star{border-top-color:var(--or);background:#fff7f1}
+.sum5 .sc.star .sl{color:var(--or)}
+.ev{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 7px;border:1px solid currentColor;margin-left:6px;vertical-align:2px;letter-spacing:0;line-height:1.4}
+.ev.ext{color:#5b6b8c}.ev.rec{color:var(--navy)}.ev.asm{color:#8c8c92}.ev.goal{color:var(--or)}.ev.fic{color:#8c8c92}
+.agenda.mini{display:grid;grid-template-columns:repeat(5,1fr);margin-top:30px;border-top:1px solid var(--hair)}
+.agenda.mini .agrow{grid-template-columns:auto 1fr auto;gap:10px;padding:16px 14px;border-bottom:none;border-right:1px solid var(--hair)}
+.agenda.mini .agrow:hover{padding-left:16px}
+.agenda.mini .n{font-size:22px}.agenda.mini .h{font-size:16px}.agenda.mini .d,.agenda.mini .ar{display:none}
+.evlegend{margin-top:22px;font-size:14px;color:var(--grey)}
+.proof3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:22px}
+.proof3 .pf{border:1px solid var(--hair);background:#fff;display:flex;flex-direction:column}
+.proof3 .pf .im{height:215px;background:#f5f5f7;overflow:hidden;border-bottom:1px solid var(--hair)}
+.proof3 .pf .im img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.proof3 .pf .tx{padding:16px 18px}
+.proof3 .pf .tx b{display:block;font-size:13px;letter-spacing:.1em;color:var(--or);margin-bottom:6px}
+.proof3 .pf .tx h4{font-size:19px;margin-bottom:6px}
+.proof3 .pf .tx p{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.proof3 .pf .tx button{margin-top:10px;font:inherit;font-size:13px;color:var(--or);background:none;border:1px solid var(--or);padding:4px 10px;cursor:pointer}
+.ba{display:grid;grid-template-columns:130px 1fr;row-gap:30px;margin-top:44px;align-items:center}
+.ba .who{font-size:19px;font-weight:700}
+.ba .lane{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
+.ba .lane .s{padding:16px 16px;font-size:17.5px;line-height:1.35;border:1px solid var(--hair);background:var(--surface);white-space:nowrap}
+.ba .lane .s.re{border-style:dashed;color:#8c8c92}
+.ba .lane .ar{color:#b0b0b6;font-size:22px}
+.ba .lane.new .s{background:#fff7f1;border-color:var(--or);color:var(--ink);font-weight:700}
+.ba .lane.new .ar{color:var(--or)}
+.ba .loop{font-size:15px;color:#8c8c92;margin-left:4px}
+/* agenda */
+.agenda{margin-top:34px;border-top:1px solid var(--hair)}
+.agenda .agrow{cursor:pointer;display:grid;grid-template-columns:110px 300px 1fr 120px 40px;align-items:center;width:100%;text-align:left;padding:18px 18px;border-bottom:1px solid var(--hair);transition:background .35s,padding .35s var(--ease)}
+.agenda .agrow:hover{background:var(--surface);padding-left:30px}
+.agenda .n{font-size:44px;font-weight:700;color:var(--or);line-height:1}
+.agenda .h{font-size:24px;font-weight:700}
+.agenda .d{font-size:17px;color:var(--ink2);line-height:1.5}
+.agenda .p{font-size:13px;color:var(--grey);text-align:right}
+.agenda .ar{font-size:22px;color:var(--grey);text-align:right;transition:transform .35s var(--ease),color .3s}
+.agenda .agrow:hover .ar{transform:translateX(8px);color:var(--or)}
+
+/* hbars (css) */
+.hb{display:grid;grid-template-columns:200px 1fr 70px;align-items:center;gap:14px;margin:12px 0;font-size:16px}
+.hb .track{height:14px;background:var(--surface);position:relative}
+.hb .fill{position:absolute;inset:0;transform-origin:left;transform:scaleX(var(--v));background:var(--hair)}
+.slide.active .hb .fill{animation:barFill 1.2s var(--ease) both;animation-delay:.45s}
+.hb.on .fill{background:var(--or)}
+.hb .val{font-weight:700;text-align:right}
+.hb.on .val{color:var(--or)}
+
+/* pains */
+.pain{display:grid;grid-template-columns:54px 1fr;gap:6px 14px;padding:20px 0;border-bottom:1px solid var(--hair)}
+.pain .n{grid-row:span 2;font-size:34px;font-weight:700;color:var(--or);line-height:1}
+.pain h4{font-size:21px}
+.pain p{font-size:16px;color:var(--ink2);line-height:1.6}
+.pain:hover h4{color:var(--or)}
+
+/* facts list */
+.fact{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid var(--hair);font-size:15.5px;line-height:1.5;transition:padding .3s var(--ease)}
+.fact:hover{padding-left:8px}
+.fact b{color:var(--ink)}
+.fact span{color:var(--ink2)}
+
+/* architecture */
+#arch .node rect{fill:#fff;stroke:var(--hair);stroke-width:1.5;transition:stroke .3s,fill .3s}
+#arch text{font-family:var(--font)}
+#arch text:not([fill]){fill:var(--ink)}
+#arch .flow{fill:none;stroke:var(--hair);stroke-width:2.5;transition:stroke .3s,opacity .3s}
+#arch .flow.live{stroke:var(--or);stroke-dasharray:8 8;animation:dash 1.2s linear infinite}
+#arch .eng{cursor:pointer;transition:opacity .35s}
+#arch .eng:hover rect.box,#arch .eng.on rect.box{stroke:var(--or);fill:var(--orp)}
+#arch.focus .eng:not(.on){opacity:.28}
+#arch.focus .flow.e:not(.on){opacity:.15}
+#arch .flow.e.on{stroke:var(--or);stroke-dasharray:8 8;animation:dash .8s linear infinite}
+.rule{display:grid;grid-template-columns:12px 1fr;gap:14px;padding:16px 14px;border-bottom:1px solid var(--hair);cursor:pointer;transition:background .3s}
+.rule:hover,.rule.on{background:var(--surface)}
+.rule i{width:12px;height:12px;margin-top:6px;background:var(--hair);transition:background .3s}
+.rule:hover i,.rule.on i{background:var(--or)}
+.rule h4{font-size:18px}
+.rule p{font-size:15px;color:var(--ink2);line-height:1.5;margin-top:4px}
+
+/* pipeline */
+.pipe{display:flex;gap:0}
+.pipe .st{flex:1;position:relative;background:var(--surface);padding:18px 16px 18px 34px;font-size:15px;line-height:1.45;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%,18px 50%);margin-right:-12px;transition:background .3s,color .3s}
+.pipe .st:first-child{clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%);padding-left:20px}
+.pipe .st b{display:block;font-size:17px;margin-bottom:3px}
+.pipe .st small{color:var(--grey);font-size:13px}
+.pipe .st:hover{background:var(--or);color:#fff}
+.pipe .st:hover small{color:var(--ort)}
+
+/* features */
+.feat{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--hair)}
+.feat .ic{width:44px;height:44px;display:grid;place-items:center;background:var(--orp);color:var(--or);transition:transform .4s var(--ease),background .3s,color .3s}
+.feat:hover .ic{transform:rotate(-8deg) scale(1.08);background:var(--or);color:#fff}
+.feat h4{font-size:18px}
+.feat p{font-size:15px;color:var(--ink2);line-height:1.5;margin-top:3px}
+.live-strip{display:flex;align-items:center;gap:16px;background:var(--ink);color:#fff;padding:16px 22px;font-size:16px}
+.live-strip .badge-live{color:var(--or)}
+
+/* hwp mock */
+.hwp{background:#fff;border:1px solid var(--hair);box-shadow:0 1px 0 var(--hair);padding:22px 24px;font-size:12.5px;line-height:1.5;position:relative}
+.hwp .tbox{border:2px solid var(--ink);border-bottom-width:4px;text-align:center;font-weight:700;font-size:17px;padding:8px}
+.hwp .meta{text-align:right;color:var(--grey);font-size:11px;margin:6px 0 10px}
+.hwp .l{position:relative;transition:background .3s}
+.hwp .l1{font-weight:700;font-size:14px;margin-top:12px}
+.hwp .l2{padding-left:16px;text-indent:-12px;margin-left:12px;margin-top:6px}
+.hwp .l3{padding-left:14px;text-indent:-10px;margin-left:28px;margin-top:4px;color:#444}
+.hwp .gap{position:absolute;right:-60px;font-size:11px;color:var(--or);font-weight:700;opacity:0;transition:opacity .3s}
+.hwp:hover .gap{opacity:1}
+.hwp:hover .l{background:linear-gradient(transparent 0,transparent calc(100% - 1px),rgba(238,109,29,.35) 0)}
+.hwp .att{border:1px solid var(--ink);padding:6px 10px;margin-top:14px;font-size:11.5px}
+
+/* catalog */
+.cat{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cat .chip{cursor:pointer;text-align:left;padding:14px 14px;border:1px solid var(--hair);background:#fff;font-size:15.5px;font-weight:700;transition:transform .3s var(--ease),border-color .3s,background .3s;position:relative}
+.cat .chip small{display:block;font-size:12px;color:var(--grey);font-weight:500;margin-top:4px}
+.cat .chip:hover,.cat .chip.on{border-color:var(--or);transform:translateY(-3px)}
+.cat .chip.on{background:var(--orp)}
+.cat .chip.d::after{content:"상세";position:absolute;right:10px;top:12px;font-size:11px;color:var(--navy);font-weight:700}
+.detail{border:1px solid var(--or);background:#fff;padding:18px 22px;min-height:120px}
+.detail h4{font-size:20px}
+.detail .ol{font-size:16px;margin-top:8px;line-height:1.55}
+.detail .ft{font-size:14px;color:var(--ink2);margin-top:6px}
+.tierbox{border-top:3px solid var(--navy);padding-top:12px}
+.tierbox h4{font-size:17px;margin-bottom:8px}
+.tierbox h4 small{color:var(--grey);font-weight:500;font-size:13px;margin-left:6px}
+
+/* code */
+pre.code{font-family:Consolas,'D2Coding',monospace;font-size:13.5px;line-height:1.6;background:#1d1d20;color:#e8e8ea;padding:18px 20px;overflow:hidden;white-space:pre}
+pre.code .k{color:#fad3bb}.code .s{color:#9cc2ff}.code .c{color:#8c8c92}.code .o{color:#ee6d1d}
+.code .ln{opacity:0;display:inline}
+.slide.active .code .ln{animation:slideIn .4s var(--ease) both;animation-delay:calc(var(--j) * 70ms + 500ms)}
+table.map{width:100%;border-collapse:collapse;font-size:15px}
+table.map th{text-align:left;font-size:13px;color:var(--grey);font-weight:500;padding:8px 10px;border-bottom:2px solid var(--ink)}
+table.map td{padding:10px 10px;border-bottom:1px solid var(--hair);line-height:1.4}
+table.map tr{transition:background .25s}
+table.map tbody tr:hover{background:var(--orp)}
+table.map td:first-child{font-weight:700}
+
+/* pack */
+.comp{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.comp .card{padding:18px 18px 16px}
+.comp .card h4{font-size:18px;display:flex;align-items:center;gap:8px}
+.comp .card h4 i{font-style:normal;font-size:12px;color:var(--or);border:1px solid var(--or);padding:1px 6px}
+.comp .card p{font-size:14px}
+.comp .card .eff{font-size:13.5px;color:var(--or);margin-top:10px;font-weight:700;opacity:.0;transform:translateY(4px);transition:.35s var(--ease)}
+.comp .card:hover .eff{opacity:1;transform:none}
+.tabs{display:flex;border-bottom:1px solid var(--hair)}
+.tabs .tab{cursor:pointer;padding:12px 18px;font-size:16px;color:var(--grey);position:relative;transition:color .3s}
+.tabs .tab::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--or);transform:scaleX(0);transition:transform .35s var(--ease)}
+.tabs .tab.on{color:var(--ink);font-weight:700}
+.tabs .tab.on::after,.tabs .tab:hover::after{transform:none}
+.packview{padding:18px 4px 0}
+.packview .row{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:10px 0;font-size:16px;line-height:1.55;border-bottom:1px dashed var(--hair)}
+.packview .row > span:first-child{color:var(--grey);font-size:14px}
+.eng-dots{display:flex;gap:8px}
+.eng-dots .tag{transition:all .3s}
+.eng-dots .tag.off{opacity:.35}
+
+/* layers */
+.stack{position:relative;height:470px;perspective:1400px}
+.stack .plane{position:absolute;left:40px;width:300px;height:180px;border:1.5px solid var(--ink);background:rgba(255,255,255,.88);transform:rotateX(62deg) rotateZ(calc(-38deg + var(--rz,0deg)));transform-origin:center;transition:transform .5s var(--ease),background .3s,border-color .3s,top .5s var(--ease);cursor:pointer}
+.stack .plane.lock{background:rgba(245,245,247,.95)}
+.stack .plane:hover,.stack .plane.on{background:var(--orp);border-color:var(--or)}
+.stack .lab{position:absolute;left:390px;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;transition:color .3s,transform .4s var(--ease);cursor:pointer;white-space:nowrap}
+.stack .lab::before{content:"";width:46px;height:1px;background:var(--ink2)}
+.stack .lab small{font-weight:500;color:var(--grey);font-size:13px}
+.stack .lab.on{color:var(--or);transform:translateX(6px)}
+.stack .lab.on::before{background:var(--or)}
+.stack .pin{position:absolute;left:218px;width:14px;height:14px;background:var(--or);border-radius:50%;transition:top .5s var(--ease)}
+.stack .beam{position:absolute;left:189px;width:2px;border-left:2px dashed var(--or);z-index:30;pointer-events:none;transition:top .5s var(--ease),height .5s var(--ease)}
+
+/* maker/inspect */
+.step{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;font-size:15.5px;line-height:1.5;padding:7px 0}
+.step i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--or);color:#fff;font-style:normal;font-size:12px;font-weight:700;margin-top:1px}
+.chk{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--hair);font-size:15px;line-height:1.5}
+.chk b{color:var(--navy)}
+
+/* timeline */
+.tl{position:relative;display:grid;grid-template-columns:repeat(8,1fr);margin-top:26px}
+.tl::before{content:"";position:absolute;left:0;right:0;top:19px;height:2px;background:var(--hair)}
+.tl .fillline{position:absolute;left:0;top:19px;height:2px;background:var(--or);transition:width .6s var(--ease)}
+.tl .tli{cursor:pointer;position:relative;text-align:left;padding-top:42px;font-size:15px;color:var(--grey)}
+.tl .tli::before{content:"";position:absolute;left:0;top:11px;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--hair);transition:all .35s var(--ease)}
+.tl .tli b{display:block;font-size:22px;color:var(--ink2);margin-bottom:2px;transition:color .3s}
+.tl .tli.on b,.tl .tli:hover b{color:var(--or)}
+.tl .tli.on::before{background:var(--or);border-color:var(--or);transform:scale(1.25)}
+.tl .tli.done::before{border-color:var(--or)}
+.tl .tli.on{color:var(--ink);font-weight:700}
+.scene{display:grid;grid-template-columns:690px 1fr;gap:40px;margin-top:22px;align-items:center}
+.scene .illu{height:330px;border:1px solid var(--hair)}
+.scene .illu img{transition:opacity .35s,transform .9s var(--ease)}
+.scene h3{font-size:30px;line-height:1.3}
+.scene p{font-size:18px;line-height:1.65;color:var(--ink2);margin-top:14px}
+.scene .time{font-size:15px;color:var(--or);font-weight:700;letter-spacing:.1em}
+.autoplay{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--grey);margin-top:18px;border:1px solid var(--hair);padding:6px 12px}
+.autoplay:hover{border-color:var(--or);color:var(--or)}
+
+/* readiness */
+.ready{display:grid;grid-template-columns:150px 1fr 90px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--hair);font-size:15px}
+.ready b{font-size:16px}
+.ready .meter{height:8px;background:var(--surface);position:relative}
+.ready .meter i{position:absolute;inset:0;transform-origin:left;transform:scaleX(var(--v));background:var(--or)}
+.ready .meter i.p{background:var(--hair)}
+.slide.active .ready .meter i{animation:barFill 1.1s var(--ease) both;animation-delay:.5s}
+.ready .st{font-size:13px;text-align:right;color:var(--grey)}
+.ready .st.ok{color:var(--or);font-weight:700}
+.ready small{display:block;color:var(--grey);font-size:12.5px}
+
+/* criteria */
+.crit{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.crit .card{padding:20px 22px}
+.crit .card .pt{font-size:13px;color:var(--grey)}
+.crit .card h4{font-size:20px;display:flex;justify-content:space-between;align-items:baseline}
+.crit .card h4 span{font-size:30px;color:var(--or)}
+.crit .card.on{border-color:var(--or);background:#fff;transform:translateY(-5px)}
+.crit .card.on::before{width:calc(100% + 2px)}
+
+/* closing */
+.wave{position:absolute;left:0;right:0;bottom:64px;height:150px;pointer-events:none;opacity:.9}
+.wave path{fill:none;stroke-width:2}
+
+/* cover: 셰브론 위 코쇠 아바타 */
+.cover-chevs .cv-group{position:absolute;inset:0}
+.cover-chevs .cv{position:absolute}
+.slide.active .cover-chevs .cv-group{animation:chevIn 1.2s var(--ease) both}
+.slide.active .cover-chevs .cv-group svg{animation:none}
+.cover-chevs .cv-or{animation:none}
+.slide.active .cover-chevs .cv-or{animation:chevIn 1.2s var(--ease) .24s both,cvNudge 3.6s ease-in-out 1.6s infinite}
+@keyframes cvNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+.kosoe{position:absolute;left:816px;top:252px;width:108px;height:212px;pointer-events:auto;cursor:pointer;opacity:0}
+.slide.active .kosoe{animation:kDrop .8s cubic-bezier(.3,.6,.4,1) .9s both}
+@keyframes kDrop{0%{opacity:0;transform:translateY(-54px)}55%{opacity:1}78%{transform:translateY(3px)}100%{opacity:1;transform:none}}
+.k-tilt{position:absolute;inset:0;transform-origin:50% 74%;rotate:calc(var(--mx,0) * 4deg);transition:rotate .5s var(--ease)}
+.slide.active .k-tilt{animation:kTeeter .6s ease-in-out 1.7s both}
+@keyframes kTeeter{0%,100%{transform:rotate(0)}15%{transform:rotate(2.5deg)}35%{transform:rotate(-2.5deg)}55%{transform:rotate(2deg)}75%{transform:rotate(-1.5deg)}}
+.k-bob{position:absolute;inset:0;transform-origin:50% 74%;animation:kBob 3.4s ease-in-out 2.4s infinite}
+@keyframes kBob{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-3px) rotate(-1.2deg)}65%{transform:translateY(-1px) rotate(1deg)}}
+.k-body,.k-legs{position:absolute;left:0;width:108px;display:block;user-select:none;-webkit-user-drag:none}
+.k-body{top:0;height:159px}
+.k-legs{top:155.6px;height:56.3px;transform-origin:52.5% 3%;animation:kSwing 1.15s ease-in-out infinite alternate}
+@keyframes kSwing{from{transform:rotate(9deg)}to{transform:rotate(-7deg)}}
+.kosoe:hover .k-bob{animation:kHop .55s cubic-bezier(.3,.7,.4,1) infinite}
+.kosoe:hover .k-legs{animation-duration:.45s}
+@keyframes kHop{0%,100%{transform:translateY(0)}45%{transform:translateY(-12px) rotate(-2deg)}}
+.k-say{position:absolute;left:96px;top:-30px;white-space:nowrap;font-size:14px;font-weight:700;line-height:1.45;background:#fff;color:var(--ink);border:1.5px solid var(--ink);padding:8px 12px;opacity:0;transform:translateY(6px) scale(.96);transform-origin:0 100%;transition:opacity .3s,transform .35s var(--ease);pointer-events:none}
+.k-say::after{content:"";position:absolute;left:-1.5px;bottom:-9px;border:8px solid transparent;border-left-color:var(--ink);border-bottom:0}
+.kosoe:hover .k-say,.kosoe.say .k-say{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.k-bob,.k-legs,.cover-chevs .cv-or{animation:none!important}}
+
+/* layered illustrations: 배경 · 코쇠(몸통·꺾쇠·눈) · 화살표/라벨 덩어리 */
+.lay{position:absolute;pointer-events:none;transition:transform .9s var(--ease)}
+.lay img,.lay .K,.lay .K-lid{position:absolute;display:block;max-width:none;user-select:none}
+.illu img.lay-src{visibility:hidden}
+.illu:hover .lay{transform:scale(1.04)}
+.slide:is(.navy,.black) .illu{background:transparent}
+.lay .K{translate:calc(var(--mx,0) * 6px) calc(var(--my,0) * 4px);transition:translate .35s linear}
+.lay .G{translate:calc(var(--mx,0) * -3px) calc(var(--my,0) * -2px);transition:translate .35s linear}
+.lay .K-lid{border-radius:50%;transform:scaleY(0);transform-origin:50% 30%}
+.K.bTilt{--km:bTilt;--kd:2.8s}.K.bNod{--km:bNod;--kd:2.6s}.K.bPress{--km:bPress;--kd:1.8s}.K.bRock{--km:bRock;--kd:1.6s}
+.K.bPush{--km:bPush;--kd:1.8s}.K.bPeer{--km:bPeer;--kd:3s}.K.bBreathe{--km:bBreathe;--kd:3.2s}
+.slide.active .lay .L-bg{animation:fadeIn .45s ease both}
+.slide.active .lay .K{animation:kIn .6s cubic-bezier(.3,1.4,.5,1) .2s both,var(--km) var(--kd) ease-in-out 1.1s infinite}
+.slide.active .lay .K-crest{animation:crestIn .7s cubic-bezier(.3,1.7,.5,1) .55s both,crestWiggle 3.4s ease-in-out 1.6s infinite}
+.slide.active .lay .K-lid{animation:blink 4.4s linear calc(1.9s + var(--ki,0) * .8s) infinite}
+.slide.active .lay .G.A-pop{animation:gPop .55s cubic-bezier(.3,1.6,.5,1) calc(.7s + var(--gi) * .11s) both}
+.slide.active .lay .G.A-wx{animation:wipeX .75s var(--ease) calc(.7s + var(--gi) * .11s) both}
+.slide.active .lay .G.A-wy{animation:wipeY .75s var(--ease) calc(.7s + var(--gi) * .11s) both}
+.slide.active .lay .G-r.A-pop{animation:gPop .55s cubic-bezier(.3,1.6,.5,1) calc(.7s + var(--gi) * .11s) both,redPulse 2.6s ease-in-out calc(2.4s + var(--gi) * .11s) infinite}
+.illu:hover .lay .K-crest{animation:crestWiggle 1s ease-in-out infinite}
+@keyframes kIn{from{opacity:0;transform:scale(.88)}}
+@keyframes crestIn{from{opacity:0;transform:scale(0) rotate(-30deg)}}
+@keyframes crestWiggle{0%,46%,100%{transform:rotate(0)}8%{transform:rotate(-14deg)}17%{transform:rotate(10deg)}26%{transform:rotate(-6deg)}35%{transform:rotate(3deg)}}
+@keyframes blink{0%,91%,100%{transform:scaleY(0)}94%,96%{transform:scaleY(1)}}
+@keyframes gPop{0%{opacity:0;transform:scale(.35)}65%{opacity:1;transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes wipeX{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes wipeY{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes redPulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes bTilt{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes bNod{0%,60%,100%{transform:rotate(0)}30%{transform:rotate(3.5deg) translateY(1px)}}
+@keyframes bPress{0%,100%{transform:none}40%,55%{transform:translateY(3px) scaleY(.97)}}
+@keyframes bRock{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes bPush{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(-4px) rotate(-1.5deg)}}
+@keyframes bPeer{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(4px) rotate(2deg)}}
+@keyframes bBreathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.015,.975)}}
+body.editing .lay *{animation:none!important}
+@media (prefers-reduced-motion:reduce){.lay *{animation:none!important}}
+
+/* side pages (부록) */
+.side-links{position:absolute;top:92px;right:72px;display:flex;gap:8px;z-index:6}
+.side-link{font-size:13.5px;font-weight:700;color:var(--or);border:1px solid var(--or);background:#fff;padding:7px 12px;transition:background .25s,color .25s,transform .3s var(--ease)}
+.side-link:hover{background:var(--or);color:#fff;transform:translateY(-2px)}
+:is(.navy,.black) .side-link{background:transparent}
+.side-scrim{position:absolute;inset:0;z-index:38;background:rgba(20,20,24,.4);opacity:0;pointer-events:none;transition:opacity .35s}
+.side-scrim.on{opacity:1;pointer-events:auto}
+.side-page{position:absolute;top:0;right:0;bottom:0;width:940px;z-index:40;background:#fff;color:var(--ink);box-shadow:-14px 0 40px rgba(0,0,0,.2);display:flex;flex-direction:column;transform:translateX(102%);visibility:hidden;transition:transform .55s var(--ease),visibility 0s .55s}
+.side-page.on{transform:none;visibility:visible;transition:transform .55s var(--ease),visibility 0s}
+.sp-head{position:relative;padding:34px 48px 18px;border-bottom:2px solid var(--ink)}
+.sp-head h2{font-size:34px;line-height:1.25;padding-right:60px}
+.sp-head .lead{font-size:16.5px;margin-top:8px}
+.sp-close{position:absolute;right:28px;top:26px;width:42px;height:42px;border:1px solid var(--hair);display:grid;place-items:center;font-size:18px;color:var(--ink2);transition:transform .35s var(--ease),border-color .25s,color .25s}
+.sp-close:hover{border-color:var(--or);color:var(--or);transform:rotate(90deg)}
+.sp-body{flex:1;overflow:auto;padding:24px 48px 44px;overscroll-behavior:contain}
+.side-page.on .sp-body>*{animation:slideIn .6s var(--ease) both;animation-delay:calc(var(--i,0) * 55ms + 160ms)}
+.sp-body h3{display:flex;align-items:center;gap:10px;font-size:20px;margin:30px 0 12px}
+.sp-body h3::before{content:"";width:6px;height:20px;background:var(--or)}
+.sp-body>h3:first-child,.sp-body>.flt+h3{margin-top:0}
+.sp-p{font-size:15.5px;line-height:1.7;color:var(--ink2);margin-top:12px}
+.sp-box{background:var(--surface);border-left:3px solid var(--or);padding:16px 18px;font-size:15px;line-height:1.75}
+.sp-box b{color:var(--or);margin-right:6px}
+.tg{display:inline-block;font-size:12px;font-weight:700;padding:3px 8px;border:1px solid;white-space:nowrap;line-height:1.3}
+.tg.m{background:var(--or);border-color:var(--or);color:#fff}
+.tg.x{color:var(--navy);border-color:var(--navy)}
+.tg.a{color:var(--ink2);border-color:var(--hair);background:var(--surface)}
+.tg.c{color:var(--ink);border-color:var(--ink)}
+.tg.v{color:#b85415;border-color:var(--ort);background:var(--orp)}
+.tg.n{color:var(--ink2);border-color:var(--grey)}
+.tg.o{background:var(--navy);border-color:var(--navy);color:#fff}
+.tg.s{color:var(--ink);border-color:var(--hair)}
+.formula{display:flex;align-items:stretch;gap:8px}
+.formula .fb{flex:1;border:1px solid var(--hair);background:var(--surface);padding:16px 10px;text-align:center;transition:transform .3s var(--ease),border-color .3s}
+.formula .fb:hover{transform:translateY(-4px);border-color:var(--or)}
+.formula .fb b{display:block;font-size:30px;line-height:1.1}
+.formula .fb small{display:block;font-size:12.5px;color:var(--ink2);margin-top:6px}
+.formula .fb.res{background:var(--or);border-color:var(--or);color:#fff}
+.formula .fb.res small{color:var(--ort)}
+.formula .op{align-self:center;font-size:22px;font-weight:700;color:var(--grey)}
+.mtl{margin-top:4px}
+.mtl-t{position:relative;height:44px;margin:0 50px 6px 0}
+.mtl-t span{position:absolute;left:0;top:0;transform:translateX(-50%);font-size:12.5px;color:var(--ink2);text-align:center;white-space:nowrap}
+.mtl-t span:first-child{transform:none;text-align:left}
+.mtl-t span:last-child{transform:translateX(-100%);text-align:right}
+.mtl-t b{display:block;font-size:16px;color:var(--ink)}
+.mtl-bar{display:flex;height:30px;margin-right:50px}
+.mtl-bar i{width:var(--w);display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:700;color:#fff;transform-origin:left}
+.mtl-bar i.or{background:var(--or)}
+.mtl-bar i.nv{background:var(--navy2)}
+.side-page.on .mtl-bar i{animation:barFill .9s var(--ease) both;animation-delay:.4s}
+.side-page.on .mtl-bar i.nv{animation-delay:.9s}
+.mtl .note{margin-top:8px}
+.cmp{margin-top:18px;display:grid;gap:10px}
+.cmp-row{display:grid;grid-template-columns:120px 1fr 110px;gap:12px;align-items:center;font-size:15px}
+.cmp-row b{text-align:right}
+.cbar{height:16px;background:var(--surface);position:relative}
+.cbar i{position:absolute;left:0;top:0;bottom:0;width:var(--w);transform-origin:left}
+.cbar i.g{background:var(--hair)}
+.cbar i.nv{background:var(--navy2)}
+.cbar i.or{background:var(--or)}
+.side-page.on .cbar i{animation:barFill 1.1s var(--ease) both;animation-delay:.5s}
+table.ftab td{font-size:14.5px}
+table.ftab td:nth-child(2){white-space:nowrap}
+table.sens{border-collapse:collapse;width:100%;font-size:15px;text-align:center}
+table.sens th{font-size:13.5px;color:var(--ink2);font-weight:700;padding:10px;background:var(--surface);border:1px solid #fff}
+table.sens td{padding:12px;border:1px solid var(--hair);font-weight:700;transition:background .2s,color .2s}
+table.sens td.pick{background:var(--or);color:#fff}
+table.sens :is(td,th).hl:not(.pick){background:var(--orp)}
+.flt{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.flt button{font-size:13px;padding:6px 12px;border:1px solid var(--hair);color:var(--ink2);transition:all .2s}
+.flt button:hover{border-color:var(--or);color:var(--or)}
+.flt button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.srcs .it{display:grid;grid-template-columns:1fr auto 54px;gap:14px;align-items:start;padding:12px 0;border-bottom:1px solid var(--hair);transition:background .2s}
+.srcs .it:hover{background:var(--surface)}
+.srcs .it.hide{display:none}
+.srcs .t{font-size:15.5px;font-weight:700;line-height:1.5}
+.srcs .s{font-size:13.5px;color:var(--ink2);margin-top:3px;line-height:1.5}
+.srcs a{color:var(--navy);text-decoration:none;border-bottom:1px solid rgba(0,51,141,.3)}
+.srcs a:hover{color:var(--or);border-color:var(--or)}
+.srcs .pg{font-size:13px;color:var(--grey);text-align:right;padding-top:2px}
+.qa-bar{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.qa-all{font-size:13px;padding:6px 12px;border:1px solid var(--ink);font-weight:700}
+.qa-all:hover{background:var(--ink);color:#fff}
+.qa{border-top:2px solid var(--ink)}
+.qa .q{border-bottom:1px solid var(--hair)}
+.qa summary{list-style:none;display:grid;grid-template-columns:46px 1fr auto 28px;gap:10px;align-items:center;padding:16px 4px;cursor:pointer;transition:background .2s}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary:hover{background:var(--surface)}
+.qa .qn{font-size:18px;font-weight:700;color:var(--or)}
+.qa .qt{font-size:17px;font-weight:700;line-height:1.45}
+.qa .qa-tag{font-size:12px;color:var(--ink2);border:1px solid var(--hair);padding:3px 8px;white-space:nowrap}
+.qa .pm{font-size:22px;color:var(--grey);text-align:center;transition:transform .3s var(--ease),color .3s}
+.qa details[open] .pm{transform:rotate(45deg);color:var(--or)}
+.qa .ans{padding:0 8px 18px 60px}
+.qa details[open] .ans{animation:slideIn .4s var(--ease) both}
+.qa .ans ul{margin:0;padding-left:18px}
+.qa .ans li{font-size:15.5px;line-height:1.75;color:var(--ink2);margin:2px 0}
+.qa .ans li b{color:var(--ink)}
+.sp-go{margin-top:10px;font-size:13px;font-weight:700;color:var(--or);border:1px solid var(--or);padding:6px 12px;transition:background .2s,color .2s}
+.sp-go:hover{background:var(--or);color:#fff}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gal .shot{position:relative;padding:0;border:1px solid var(--hair);background:#fff;overflow:hidden;aspect-ratio:16/9;cursor:zoom-in;transition:border-color .25s,transform .3s var(--ease)}
+.gal .shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+.gal .shot:hover{border-color:var(--or);transform:translateY(-3px)}
+.gal .shot:hover img{transform:scale(1.07)}
+.gal .shot span{position:absolute;left:6px;bottom:6px;font-size:11px;font-weight:700;background:rgba(0,0,0,.65);color:#fff;padding:2px 6px}
+.hwpshots{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.hwpshots figure{margin:0}
+.hwpshots .illu{height:520px;border:1px solid var(--hair);cursor:zoom-in;background:#fafafa}
+.hwpshots .illu img{object-fit:contain}
+.hwpshots figcaption{font-size:13.5px;color:var(--ink2);margin-top:8px}
+.lb{position:absolute;inset:0;z-index:5;background:rgba(14,14,18,.94);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.lb.on{display:flex;animation:fadeIn .25s ease both}
+@keyframes fadeIn{from{opacity:0}}
+.lb img{max-width:82%;max-height:76%;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff}
+.lb-cap{color:#d8d8dc;font-size:14px}
+.lb button{position:absolute;color:#fff;font-size:34px;width:56px;height:56px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.25);transition:background .2s,border-color .2s}
+.lb button:hover{background:var(--or);border-color:var(--or)}
+.lb .lb-x{top:24px;right:24px;font-size:20px;width:44px;height:44px}
+.lb .lb-p{left:24px;top:50%;margin-top:-28px}
+.lb .lb-n{right:24px;top:50%;margin-top:-28px}
+.rail{z-index:39}
+.rail-apx{margin-top:6px;padding-top:14px;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:8px;width:84px}
+.rail-apx .ttl{font-size:11.5px;letter-spacing:.2em;color:var(--grey);margin-bottom:2px}
+.rail-apx button{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--grey);white-space:nowrap;transition:color .25s,transform .3s var(--ease)}
+.rail-apx .k{display:inline-grid;place-items:center;width:17px;height:17px;border:1px solid currentColor;font-size:10.5px;font-weight:700}
+.rail-apx button:hover{color:var(--ink);transform:translateX(3px)}
+.rail-apx button.on{color:var(--or);font-weight:700}
+#stage:is([data-theme=navy],[data-theme=black]) .rail-apx{border-color:rgba(255,255,255,.18)}
+#stage:is([data-theme=navy],[data-theme=black]) :is(.rail-apx .ttl,.rail-apx button){color:var(--bt)}
+#stage:is([data-theme=navy],[data-theme=black]) .rail-apx button.on{color:var(--or)}
+body.editing .side-page .sp-body>*{animation:none}
+
+/* edit mode */
+#editBtn.on{background:var(--or);border-color:var(--or);color:#fff}
+body.editing #cursor{display:none}
+body.editing .slide.active .a{animation:none;opacity:1}
+body.editing .card:hover{transform:none}
+body.editing #stage [contenteditable]{outline:1px dashed rgba(238,109,29,.5);outline-offset:3px;cursor:text;border-radius:2px;transition:none}
+body.editing #stage [contenteditable]:hover{outline-color:var(--or);background-color:rgba(253,238,228,.55)}
+body.editing #stage [contenteditable]:focus{outline:2px solid var(--or);background-color:#fff;color:var(--ink)}
+body.editing #stage :is(.navy,.black) [contenteditable]:hover{background-color:rgba(255,255,255,.08)}
+body.editing #stage :is(.navy,.black) [contenteditable]:focus{background-color:rgba(255,255,255,.12);color:#fff}
+body.editing #stage .illu:has(img[data-ik])::after{content:"더블클릭해 이미지 바꾸기";position:absolute;left:10px;top:10px;font-size:13px;background:var(--ink);color:#fff;padding:5px 10px;opacity:.85;pointer-events:none}
+body.editing #stage [data-eng]{cursor:pointer}
+.chart-edit{display:none;position:absolute;right:0;top:-6px;z-index:5;font-size:13px;font-weight:700;background:var(--ink);color:#fff;padding:7px 12px}
+.chart-edit:hover{background:var(--or)}
+body.editing .chart-edit{display:block}
+#editbar{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:120;display:flex;align-items:center;gap:6px;background:#1d1d20;color:#fff;padding:8px 10px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-size:14px;white-space:nowrap}
+#editbar[hidden]{display:none}
+#editbar button{padding:7px 11px;color:#e8e8ea;border:1px solid transparent}
+#editbar button:hover{border-color:#55555a;color:#fff}
+#editbar button.primary{background:var(--or);color:#fff}
+#editbar button.primary:hover{background:var(--or2)}
+#editbar .eb-badge{color:var(--or);font-weight:700;padding:0 8px 0 4px;display:flex;align-items:center;gap:8px}
+#editbar .eb-badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--or)}
+#editbar .eb-sep{width:1px;height:20px;background:#3a3a3f;margin:0 4px}
+#editbar .eb-state{font-size:12.5px;color:#a0a0a6;padding:0 6px;min-width:120px;text-align:center}
+#editbar .eb-state.dirty{color:var(--ort)}
+#cpanel{position:fixed;right:0;top:0;bottom:0;width:min(560px,100vw);z-index:110;background:#fff;color:var(--ink);box-shadow:-8px 0 30px rgba(0,0,0,.18);display:flex;flex-direction:column;font-size:14px}
+#cpanel[hidden]{display:none}
+#cpanel header{display:flex;align-items:center;justify-content:space-between;padding:70px 20px 14px;border-bottom:2px solid var(--ink);font-size:17px}
+#cpanel header button{font-size:18px;color:var(--grey);padding:4px 8px}
+#cpBody{flex:1;overflow:auto;padding:12px 20px}
+#cpBody table{width:100%;border-collapse:collapse}
+#cpBody th{text-align:left;font-size:12px;color:var(--grey);font-weight:500;padding:6px 4px;border-bottom:1px solid var(--hair)}
+#cpBody td{padding:4px;border-bottom:1px solid var(--surface)}
+#cpBody input,#cpBody select{width:100%;font:inherit;font-size:13.5px;padding:6px 7px;border:1px solid var(--hair);background:#fff;color:var(--ink)}
+#cpBody input:focus,#cpBody select:focus{outline:2px solid var(--or);border-color:var(--or)}
+#cpBody td:last-child{width:30px}
+#cpBody td:first-child{width:42%}
+#cpBody [data-del]{color:var(--grey);padding:4px 6px}
+#cpBody [data-del]:hover{color:var(--or)}
+#cpanel footer{padding:14px 20px 20px;border-top:1px solid var(--hair);display:flex;align-items:center;gap:14px}
+#cpanel footer button{border:1px solid var(--or);color:var(--or);padding:8px 14px;font-weight:700}
+#cpanel footer button:hover{background:var(--or);color:#fff}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(20px);z-index:130;background:#1d1d20;color:#fff;padding:12px 16px;font-size:14px;display:flex;align-items:center;gap:14px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s var(--ease);max-width:calc(100vw - 32px)}
+#toast.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+#toast button{color:var(--or);font-weight:700}
+
+/* print */
+@media print{html,body{overflow:visible;background:#fff}#stage{position:relative;transform:none!important}}
+</style>
+<style>
+/* ═══ 원고 원본 three — 3D 구조 브리핑: 짙은 네이비 무대 위 three.js 층(.gl-layer), 장 배경은 투명 ═══ */
+#stage{background:radial-gradient(115% 100% at 68% 42%,#14408f 0%,#0a2459 46%,#040f2c 100%)}   /* WebGL을 못 쓰면 이 정지 그라데이션만 남는다 */
+#stage .slide{background:transparent;color:#fff}
+.gl-layer{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.gl-layer canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.gl-layer::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,11,34,.8) 0,rgba(3,11,34,.5) 32%,rgba(3,11,34,0) 58%)}
+#stage .slide :is(h1,h2){color:#fff}
+#stage .slide .lead{color:#c5d3ee;max-width:640px}
+#stage .slide .kick{color:#9fb6de}
+#stage .slide .note{color:#8ea3c9}
+#stage .slide .tag{background:rgba(255,255,255,.06);border-color:rgba(159,182,222,.4);color:#dce6f7}
+#stage .slide .tag.solid{background:var(--or);border-color:var(--or);color:#fff}
+/* 표지 · 맺음 */
+.cv3{position:relative;display:flex;flex-direction:column;justify-content:center;height:100%;max-width:660px}
+.cv3 h1{font-size:76px;line-height:1.12;letter-spacing:-.02em}
+.cv3 .sub{font-size:27px;line-height:1.4;font-weight:700;margin-top:24px}
+.cv3 .line{font-size:18px;line-height:1.65;color:#b9c8e6;margin-top:12px;max-width:560px}
+#stage .slide .cta.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+#stage .slide .cta.ghost:hover{background:#fff;color:var(--ink)}
+/* 목차 */
+#stage .slide .agenda{max-width:780px;border-top-color:rgba(159,182,222,.3)}
+#stage .slide .agenda .agrow{grid-template-columns:80px 130px 1fr 70px 30px;padding:20px 14px;border-bottom-color:rgba(159,182,222,.22)}
+#stage .slide .agenda .agrow:hover{background:rgba(255,255,255,.06);padding-left:24px}
+#stage .slide .agenda .h{font-size:23px}
+#stage .slide .agenda .d{color:#b9c8e6}
+#stage .slide .agenda :is(.p,.ar){color:#8ea3c9}
+/* 3D 점을 따라가는 라벨(data-pin) — 글은 그대로 HTML, 자리만 3D 층이 옮긴다 */
+.pin{position:absolute;padding:7px 12px 8px;background:rgba(4,15,46,.84);border:1px solid rgba(159,182,222,.38);white-space:nowrap;line-height:1.35}
+.pin b{display:block;font-size:17px;color:#fff}
+.pin span{display:block;font-size:15px;color:#b9c8e6}
+.pin.or{border-color:var(--or)}
+.pin.or b{color:var(--or)}
+.pin.side::before{content:"";position:absolute;right:100%;top:50%;width:22px;border-top:1px dashed rgba(159,182,222,.75)}
+.pin.or.side::before{border-top-color:var(--or)}
+.pin.bar{display:flex;align-items:baseline;gap:8px;padding:5px 10px}
+.pin.bar :is(span,b){display:inline}
+.pin.bar b{font-size:18px}
+.pin.num{padding:3px 9px;font-size:16px;font-weight:700;color:#fff}
+.pin.num.or{color:var(--or)}
+/* 어두운 장의 부품 */
+#stage .slide .fact{border-bottom-color:rgba(159,182,222,.22)}
+#stage .slide .fact b{color:#fff}
+#stage .slide .fact span{color:#b9c8e6}
+#stage .slide table.map th{color:#9fb6de;border-bottom-color:rgba(255,255,255,.7)}
+#stage .slide table.map td{color:#dce6f7;border-bottom-color:rgba(159,182,222,.22);padding:13px 10px;font-size:16px}
+#stage .slide table.map td:first-child{color:#fff}
+#stage .slide table.map tbody tr:hover{background:rgba(238,109,29,.12)}
+#stage .slide table.map .hl{color:var(--or)}
+#stage .slide .pipe .st{background:rgba(22,56,130,.85);color:#fff}
+#stage .slide .pipe .st small{color:#a9bbdc}
+#stage .slide .pipe .st.on{background:var(--or)}
+#stage .slide .pipe .st.on small{color:#fde3d2}
+#stage .slide .kpi .v small,#stage .slide .kpi .d{color:#b9c8e6}
+#stage .slide .kpi.navy{border-color:#6f9bff}
+#stage .slide .kpi.grey{border-color:#8ea3c9}
+.wcard{background:#fff;color:var(--ink);padding:16px 20px 12px;box-shadow:0 18px 40px rgba(0,6,30,.35)}
+.wcard h4{font-size:17px;margin-bottom:4px}
+#stage .slide .wcard .note{color:var(--grey);margin-top:4px}
+@media (prefers-reduced-motion:reduce){#stage .slide.active .a{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="stage" data-theme="light">
+
+  <!-- chrome -->
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 120 200" aria-hidden="true"><polygon points="0,0 60,0 120,100 60,200 0,200 60,100" fill="#ee6d1d"/></svg>
+      구조 브리핑<span class="div"></span><small>3D STRUCTURE BRIEF</small>
+    </div>
+    <div class="right">
+      <span class="pill"><i>3D</i>표본 · 가상 인프라</span>
+      <button class="iconbtn" id="editBtn" title="편집 모드 (E)" aria-label="편집 모드">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"/></svg>
+      </button>
+      <button class="iconbtn" id="fsBtn" title="전체 화면 (F)" aria-label="전체 화면">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      </button>
+    </div>
+  </header>
+  <nav class="rail" id="rail"></nav>
+  <footer class="bottombar">
+    <div class="progress" id="prog"></div>
+    <div class="pager"><b id="pgCur">01</b><span>/ <span id="pgTot">21</span></span><span class="lab" id="pgLab"></span></div>
+    <div class="right">
+      <span><span class="kbd">←</span><span class="kbd">→</span> 키 · 스크롤로 넘기기 · <span class="kbd">E</span> 편집</span>
+      <button class="navbtn prev" id="prevBtn" aria-label="이전"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <button class="navbtn next" id="nextBtn" aria-label="다음"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+  </footer>
+
+  <!-- 01 표지 · 쌓인 데이터 블록 턴테이블 — 카드 object-turntable -->
+  <section class="slide navy" data-sec="0" data-label="표지 · 쌓인 데이터 블록" data-theme="navy" data-scene="turntable">
+    <div class="cv3">
+      <div class="kick a"><span class="bar"></span>표본 · 가상 인프라 구조 브리핑</div>
+      <h1 class="a">데이터센터<br><em>이중화</em>와 보안 계층</h1>
+      <p class="sub a">네 계층으로 쌓고, 두 곳에 나눠 둡니다</p>
+      <p class="line a">가상의 「표본 센터」를 입체로 돌려 보며 구조를 설명합니다. 이름과 수치는 모두 가상입니다.</p>
+      <div class="a" style="margin-top:6px"><button class="cta" data-go="1">구조 펼치기 <span>↗</span></button><button class="cta ghost" data-side="basis">수치 근거</button></div>
+    </div>
+  </section>
+
+  <!-- 02 목차 · 궤도 시점 — 카드 camera-orbit -->
+  <section class="slide navy" data-sec="0" data-label="목차 · 네 묶음" data-theme="navy" data-scene="orbit">
+    <div class="kick a"><span class="no">02</span>CONTENTS</div>
+    <h2 class="t a">네 묶음으로 <em>구조</em>를 따라갑니다</h2>
+    <div class="agenda a">
+      <div class="agrow" role="button" tabindex="0" data-go="2"><span class="n">01</span><span class="h">구조</span><span class="d">네 계층 분해 · 구역별 처리량</span><span class="p">03–04</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="4"><span class="n">02</span><span class="h">연결</span><span class="d">노드와 회선 · 요청이 지나는 길</span><span class="p">05–06</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="6"><span class="n">03</span><span class="h">이중화</span><span class="d">두 센터 미러 · 단일 구성과 비교</span><span class="p">07–08</span><span class="ar">→</span></div>
+      <div class="agrow" role="button" tabindex="0" data-go="8"><span class="n">04</span><span class="h">실행</span><span class="d">전환 일정 · 예산 · 기대 효과</span><span class="p">09–11</span><span class="ar">→</span></div>
+    </div>
+    <p class="note a" style="margin-top:22px">왼쪽 레일과 ← → 키로 넘깁니다. 장마다 카메라가 다음 장면으로 옮겨 갑니다.</p>
+  </section>
+
+  <!-- 03 구조 · 네 계층 분해 — 카드 exploded-assembly (+ scene.js 층별 분해 간격) -->
+  <section class="slide navy" data-sec="1" data-label="구조 · 네 계층 분해" data-theme="navy" data-scene="explode">
+    <div class="kick a"><span class="no">03</span>LAYERS</div>
+    <h2 class="t a">요청은 <em>네 계층</em>을 차례로 지납니다</h2>
+    <p class="lead a">위에서부터 막고, 나누고, 처리하고, 남깁니다.<br>계층마다 맡은 일이 다릅니다.</p>
+    <div class="pin side or" data-pin="stack:0" data-at="right" style="left:1000px;top:250px"><b>경계 보안</b><span>방화벽 · 웹 방화벽 · 디도스 완화</span></div>
+    <div class="pin side" data-pin="stack:1" data-at="right" style="left:1000px;top:350px"><b>네트워크</b><span>코어 스위치 · 부하 분산</span></div>
+    <div class="pin side" data-pin="stack:2" data-at="right" style="left:1000px;top:450px"><b>서버 · 플랫폼</b><span>가상화 · 컨테이너</span></div>
+    <div class="pin side" data-pin="stack:3" data-at="right" style="left:1000px;top:550px"><b>데이터</b><span>DB · 백업 · 복제</span></div>
+    <p class="note a" style="position:absolute;left:128px;bottom:100px">표본 · 계층 구분과 구성 요소는 설명용 가상 구성입니다</p>
+  </section>
+
+  <!-- 04 구조 · 구역별 처리량 입체 막대(deck-data bars3d) — 카드 map-extrusion -->
+  <section class="slide navy" data-sec="1" data-label="구조 · 구역별 처리량" data-theme="navy" data-scene="bars">
+    <div class="side-links"><button class="side-link" data-side="basis">수치 근거 ↗</button></div>
+    <div class="kick a"><span class="no">04</span>LOAD</div>
+    <h2 class="t a">처리량은 <em>구역 C</em>에 몰립니다</h2>
+    <p class="lead a">여섯 구역의 초당 처리 건수입니다(가상).<br>막대의 높이와 색이 같은 값을 나타냅니다.</p>
+    <div class="pin bar" data-pin="bars:0" style="left:760px;top:330px"><span data-bind="bars3d.rows.0.0">구역 A</span><b data-bind="bars3d.rows.0.1">420</b></div>
+    <div class="pin bar" data-pin="bars:1" style="left:930px;top:330px"><span data-bind="bars3d.rows.1.0">구역 B</span><b data-bind="bars3d.rows.1.1">310</b></div>
+    <div class="pin bar or" data-pin="bars:2" style="left:1100px;top:330px"><span data-bind="bars3d.rows.2.0">구역 C</span><b data-bind="bars3d.rows.2.1">680</b></div>
+    <div class="pin bar" data-pin="bars:3" style="left:760px;top:420px"><span data-bind="bars3d.rows.3.0">구역 D</span><b data-bind="bars3d.rows.3.1">260</b></div>
+    <div class="pin bar" data-pin="bars:4" style="left:930px;top:420px"><span data-bind="bars3d.rows.4.0">구역 E</span><b data-bind="bars3d.rows.4.1">380</b></div>
+    <div class="pin bar" data-pin="bars:5" style="left:1100px;top:420px"><span data-bind="bars3d.rows.5.0">구역 F</span><b data-bind="bars3d.rows.5.1">210</b></div>
+    <p class="note a" style="position:absolute;left:128px;bottom:100px">단위 건/초 · 가상 수치 · 편집 모드에서 숫자를 고치면 막대가 바로 바뀝니다</p>
+  </section>
+
+  <!-- 05 연결 · 노드와 연결선 구 — 카드 particle-network · globe-connection-arcs -->
+  <section class="slide navy" data-sec="2" data-label="연결 · 노드와 회선" data-theme="navy" data-scene="network">
+    <div class="kick a"><span class="no">05</span>NETWORK</div>
+    <h2 class="t a">세 거점을 <em>두 회선</em>으로 잇습니다</h2>
+    <p class="lead a">노드 60개가 가까운 노드끼리 이어지고, 주 센터와 보조 센터는 경로가 다른 전용 회선 두 개로 묶입니다(가상 구성).</p>
+    <div class="a" style="margin-top:30px;max-width:560px">
+      <div class="fact"><b>전용 회선 2</b><span>경로가 달라 한쪽이 끊겨도 복제가 이어집니다</span></div>
+      <div class="fact"><b>관제 1</b><span>두 센터의 상태를 한 화면에서 봅니다</span></div>
+    </div>
+    <div class="pin or" data-pin="globe:0" style="left:900px;top:240px"><b>주 센터</b></div>
+    <div class="pin" data-pin="globe:1" style="left:1150px;top:300px"><b>보조 센터</b></div>
+    <div class="pin" data-pin="globe:2" style="left:1000px;top:560px"><b>관제 센터</b></div>
+  </section>
+
+  <!-- 06 연결 · 요청이 지나는 길 — 카드 camera-flythrough (관문 사이를 지나 옆에서 멈춤) -->
+  <section class="slide navy" data-sec="2" data-label="연결 · 요청이 지나는 길" data-theme="navy" data-scene="flythrough">
+    <div class="kick a"><span class="no">06</span>REQUEST PATH</div>
+    <h2 class="t a">요청 하나가 <em>여섯 단계</em>를 거칩니다</h2>
+    <p class="lead a">단계마다 한 가지만 확인하고 다음으로 넘깁니다.<br>걸리면 그 자리에서 멈춥니다.</p>
+    <div class="pin num" data-pin="corridor:0" style="left:700px;top:300px">01</div>
+    <div class="pin num" data-pin="corridor:1" style="left:790px;top:300px">02</div>
+    <div class="pin num or" data-pin="corridor:2" style="left:880px;top:300px">03</div>
+    <div class="pin num" data-pin="corridor:3" style="left:970px;top:300px">04</div>
+    <div class="pin num" data-pin="corridor:4" style="left:1060px;top:300px">05</div>
+    <div class="pin num" data-pin="corridor:5" style="left:1150px;top:300px">06</div>
+    <div class="pipe a" style="position:absolute;left:128px;right:72px;bottom:100px">
+      <div class="st"><b>01 사용자</b><small>접속 요청</small></div>
+      <div class="st"><b>02 경계 방화벽</b><small>허용한 주소만</small></div>
+      <div class="st on"><b>03 웹 방화벽</b><small>공격 패턴 차단</small></div>
+      <div class="st"><b>04 부하 분산</b><small>두 센터로 나눔</small></div>
+      <div class="st"><b>05 앱 서버</b><small>업무 처리</small></div>
+      <div class="st"><b>06 데이터베이스</b><small>기록 · 복제</small></div>
+    </div>
+  </section>
+
+  <!-- 07 이중화 · 두 센터 미러 — 카드 mirror-transition(대칭 축) · camera-orbit -->
+  <section class="slide navy" data-sec="3" data-label="이중화 · 두 센터 미러" data-theme="navy" data-scene="mirror">
+    <div class="kick a"><span class="no">07</span>REDUNDANCY</div>
+    <h2 class="t a">같은 구성을 <em>두 곳</em>에 둡니다</h2>
+    <p class="lead a">주 센터가 멈추면 보조 센터가 이어받습니다.<br>데이터는 두 회선으로 실시간 복제합니다(가상 구성).</p>
+    <div class="pin" data-pin="mirror:0" style="left:560px;top:420px"><b>주 센터</b><span>가동 중</span></div>
+    <div class="pin" data-pin="mirror:1" style="left:1060px;top:420px"><b>보조 센터</b><span>대기 · 즉시 전환</span></div>
+    <div class="pin or" data-pin="mirror:2" style="left:810px;top:300px"><b>실시간 복제</b><span>회선 2개</span></div>
+  </section>
+
+  <!-- 08 이중화 · 단일 구성과 비교 — 카드 perspective-tilt(좌우 대비 배치) -->
+  <section class="slide navy" data-sec="3" data-label="이중화 · 단일 구성과 비교" data-theme="navy" data-scene="compare">
+    <div class="side-links"><button class="side-link" data-side="basis">수치 근거 ↗</button></div>
+    <div class="kick a"><span class="no">08</span>COMPARE</div>
+    <h2 class="t a">이중화하면 복구가 <em>15분</em>으로 줄어듭니다</h2>
+    <p class="lead a">단일 구성과 이중화 구성의 목표치를 나란히 놓았습니다(가상 목표).</p>
+    <table class="map a" style="margin-top:28px;max-width:600px">
+      <thead><tr><th>항목</th><th>단일 구성</th><th>이중화 구성</th></tr></thead>
+      <tbody>
+        <tr><td>복구 목표 시간</td><td>4시간</td><td><b class="hl">15분</b></td></tr>
+        <tr><td>데이터 손실 허용</td><td>1시간</td><td>0분</td></tr>
+        <tr><td>장애 영향</td><td>전체 중단</td><td>한 센터</td></tr>
+        <tr><td>운영 비용</td><td>1배</td><td>1.6배</td></tr>
+      </tbody>
+    </table>
+    <div class="pin" data-pin="compare:0" style="left:820px;top:520px"><b>단일 구성</b></div>
+    <div class="pin or" data-pin="compare:1" style="left:1120px;top:520px"><b>이중화 구성</b></div>
+  </section>
+
+  <!-- 09 실행 · 전환 일정 계단 — 카드 stack-layer-addition · depth-assemble -->
+  <section class="slide navy" data-sec="4" data-label="실행 · 전환 일정" data-theme="navy" data-scene="timeline">
+    <div class="kick a"><span class="no">09</span>SCHEDULE</div>
+    <h2 class="t a">다섯 단계, <em>여덟 달</em>에 걸쳐 옮깁니다</h2>
+    <p class="lead a">한 단계를 마쳐야 다음 단계로 갑니다. 이중화 시험을 통과해야 운영으로 전환합니다(가상 일정).</p>
+    <div class="pin" data-pin="steps:0" style="left:600px;top:540px"><b>설계</b><span>1–2월</span></div>
+    <div class="pin" data-pin="steps:1" style="left:740px;top:500px"><b>구축</b><span>3–4월</span></div>
+    <div class="pin" data-pin="steps:2" style="left:880px;top:460px"><b>이관</b><span>5월</span></div>
+    <div class="pin or" data-pin="steps:3" style="left:1020px;top:420px"><b>이중화 시험</b><span>6–7월</span></div>
+    <div class="pin" data-pin="steps:4" style="left:1180px;top:380px"><b>운영 전환</b><span>8월</span></div>
+  </section>
+
+  <!-- 10 실행 · 예산 — 전체 조감 + 2D 차트(deck-data charts) — 카드 atmospheric-depth -->
+  <section class="slide navy" data-sec="4" data-label="실행 · 예산" data-theme="navy" data-scene="overview">
+    <div class="side-links"><button class="side-link" data-side="basis">수치 근거 ↗</button></div>
+    <div class="kick a"><span class="no">10</span>BUDGET</div>
+    <h2 class="t a">예산의 <em>4분의 1</em>은 보안에 씁니다</h2>
+    <p class="lead a" style="max-width:860px">총 12.5억 원(가상) 가운데 보안 장비·관제가 24%입니다. 단계별로는 구축이 가장 큽니다.</p>
+    <div class="a" style="display:grid;grid-template-columns:440px 1fr;gap:22px;margin-top:24px">
+      <div class="wcard"><h4>항목별 비중</h4><div class="chart-box" style="height:262px"><canvas id="c10mix"></canvas></div><p class="note">단위 % · 가상</p></div>
+      <div class="wcard"><h4>단계별 금액</h4><div class="chart-box" style="height:262px"><canvas id="c10step"></canvas></div><p class="note">단위 억 원 · 가상 · 합계 12.5억 원</p></div>
+    </div>
+  </section>
+
+  <!-- 11 실행 · 기대 효과 — 입자가 모여 블록이 됨 — 카드 particle-assemble -->
+  <section class="slide navy" data-sec="4" data-label="실행 · 기대 효과" data-theme="navy" data-scene="assemble">
+    <div class="kick a"><span class="no">11</span>EFFECT</div>
+    <h2 class="t a">멈춰도 <em>15분</em> 안에 이어집니다</h2>
+    <p class="lead a">흩어져 있던 계층과 두 센터가 하나의 구조로 움직일 때의 목표치입니다(가상 목표).</p>
+    <div class="a" style="display:grid;gap:26px;margin-top:34px;max-width:560px">
+      <div class="kpi"><div class="v"><span data-count="99.95" data-dec="2">0</span><small>%</small></div><div class="d">연간 가용성 목표 — 허용 중단 약 4.4시간</div></div>
+      <div class="kpi navy"><div class="v"><span data-count="15">0</span><small>분</small></div><div class="d">복구 목표 시간 — 단일 구성은 4시간</div></div>
+      <div class="kpi grey"><div class="v">0<small>분</small></div><div class="d">데이터 손실 허용 — 두 회선으로 실시간 복제</div></div>
+    </div>
+  </section>
+
+  <!-- 12 맺음 · 턴테이블 복귀 — 카드 object-turntable · atmospheric-depth -->
+  <section class="slide navy" data-sec="0" data-label="맺음 · 하나의 구조" data-theme="navy" data-scene="closing">
+    <div class="side-links"><button class="side-link" data-side="sources">출처 보기 ↗</button></div>
+    <div class="cv3">
+      <div class="kick a"><span class="bar"></span>CLOSING</div>
+      <h2 class="a" style="font-size:52px;line-height:1.25">네 계층, 두 센터,<br><em>하나의 구조</em></h2>
+      <p class="line a" style="font-size:20px">막고 · 나누고 · 처리하고 · 남기는 일을 두 곳에서 함께 합니다.</p>
+      <div class="chip-row a" style="margin-top:26px"><span class="tag solid">표본</span><span class="tag">가상 수치</span><span class="tag">three.js 3D</span></div>
+      <p class="a" style="font-size:40px;font-weight:700;margin-top:52px">감사합니다</p>
+    </div>
+  </section>
+
+  <!-- 사이드 페이지(부록): 본편 흐름 밖에서 옆으로 열린다 -->
+  <div class="side-scrim" id="sideScrim"></div>
+  <aside class="side-page" id="side-basis" data-side="basis" data-key="A" data-short="수치 근거" data-label="부록 A · 수치 근거" aria-hidden="true">
+    <header class="sp-head">
+      <div class="kick"><span class="bar"></span>APPENDIX A · 수치 근거</div>
+      <h2>표본의 수치는 모두 <em>가상</em>입니다</h2>
+      <p class="lead">구조를 설명하려고 정한 값입니다. 실제 덱에서는 이 표를 실측 · 외부 조사 · 가정으로 나눠 다시 채웁니다.</p>
+      <button class="sp-close" aria-label="닫기">✕</button>
+    </header>
+    <div class="sp-body">
+      <h3>가용성 목표 → 연간 허용 중단</h3>
+      <div class="formula">
+        <div class="fb"><b>8,760시간</b><small>1년</small></div><span class="op">×</span>
+        <div class="fb"><b>0.05%</b><small>1 − 99.95% · 가상 목표</small></div><span class="op">=</span>
+        <div class="fb res"><b>4.38시간</b><small>연간 허용 중단 약 4시간 23분</small></div>
+      </div>
+      <h3>장별 수치</h3>
+      <table class="map ftab"><thead><tr><th>장</th><th>항목</th><th>값</th><th>성격</th></tr></thead><tbody>
+        <tr><td>04</td><td>구역 A~F 초당 처리 건수</td><td>420 · 310 · 680 · 260 · 380 · 210</td><td><span class="tg a">가상</span></td></tr>
+        <tr><td>05</td><td>노드 · 전용 회선 · 관제</td><td>60개 · 2개 · 1곳</td><td><span class="tg a">가상</span></td></tr>
+        <tr><td>08</td><td>복구 목표 시간 (단일 → 이중화)</td><td>4시간 → 15분</td><td><span class="tg a">가상 목표</span></td></tr>
+        <tr><td>08</td><td>데이터 손실 허용</td><td>1시간 → 0분</td><td><span class="tg a">가상 목표</span></td></tr>
+        <tr><td>08</td><td>운영 비용</td><td>1배 → 1.6배</td><td><span class="tg a">가상</span></td></tr>
+        <tr><td>09</td><td>전환 일정</td><td>5단계 · 1~8월</td><td><span class="tg a">가상</span></td></tr>
+        <tr><td>10</td><td>항목별 비중</td><td>장비 42 · 보안 24 · 회선 18 · 운영·시험 16 (%)</td><td><span class="tg a">가상</span></td></tr>
+        <tr><td>10</td><td>단계별 금액 합계</td><td>1.2 + 6.8 + 2.1 + 1.5 + 0.9 = 12.5억 원</td><td><span class="tg c">계산</span></td></tr>
+        <tr><td>11</td><td>연간 가용성 목표</td><td>99.95%</td><td><span class="tg a">가상 목표</span></td></tr>
+      </tbody></table>
+      <p class="sp-p">04장 막대와 10장 차트의 숫자는 맨 아래 deck-data에 있습니다. 편집 모드에서 고치면 입체 막대와 차트가 바로 다시 그려집니다.</p>
+    </div>
+  </aside>
+  <aside class="side-page" id="side-sources" data-side="sources" data-key="B" data-short="출처" data-label="부록 B · 출처" aria-hidden="true">
+    <header class="sp-head">
+      <div class="kick"><span class="bar"></span>APPENDIX B · 출처</div>
+      <h2>입체 장면은 <em>공개 소스</em>로 그렸습니다</h2>
+      <p class="lead">3D 층과 움직임 값의 출처입니다. 덱 내용(기관 · 수치)은 모두 가상이라 출처가 없습니다. 오른쪽 끝은 쓰인 장입니다.</p>
+      <button class="sp-close" aria-label="닫기">✕</button>
+    </header>
+    <div class="sp-body">
+      <div class="flt"><button data-f="" class="on">전체</button><button data-f="s">오픈소스</button><button data-f="o">참고 카드</button></div>
+      <h3>라이브러리</h3>
+      <div class="srcs">
+        <div class="it" data-k="s"><div><div class="t">three.js r158 — WebGL 3D 렌더링(전역 THREE 빌드, 파일 안에 포함)</div><div class="s">MIT License · Copyright 2010–2023 three.js authors · threejs.org</div></div><span class="tg s">오픈소스</span><span class="pg">전 장</span></div>
+        <div class="it" data-k="s"><div><div class="t">Chart.js 4.4.1 — 2D 차트</div><div class="s">MIT License · chartjs.org</div></div><span class="tg s">오픈소스</span><span class="pg">10장</span></div>
+      </div>
+      <h3>움직임 값 — awesome-ai-motion 카드</h3>
+      <div class="srcs">
+        <div class="it" data-k="o"><div><div class="t">object-turntable — 일정한 속도의 한 바퀴(9초), 카메라 고도 9~15도</div><div class="s">MIT License · Copyright 2026 gongnyang · github.com/gongnyang/awesome-ai-motion</div></div><span class="tg o">참고 카드</span><span class="pg">01·12장</span></div>
+        <div class="it" data-k="o"><div><div class="t">camera-orbit — 중심과 거리를 고정하고 방위각을 옮기는 시점 이동</div><div class="s">같은 저장소 · MIT</div></div><span class="tg o">참고 카드</span><span class="pg">02장</span></div>
+        <div class="it" data-k="o"><div><div class="t">exploded-assembly — 한 축으로 벌리기, 층마다 시차</div><div class="s">같은 저장소 · MIT</div></div><span class="tg o">참고 카드</span><span class="pg">03장</span></div>
+        <div class="it" data-k="o"><div><div class="t">map-extrusion — 값에 비례해 솟는 막대, 큰 값부터, 높이와 색 이중 표시</div><div class="s">같은 저장소 · MIT</div></div><span class="tg o">참고 카드</span><span class="pg">04장</span></div>
+        <div class="it" data-k="o"><div><div class="t">particle-network · globe-connection-arcs — 가까운 노드 연결, 거점 사이 호와 이동하는 점</div><div class="s">같은 저장소 · MIT</div></div><span class="tg o">참고 카드</span><span class="pg">05장</span></div>
+        <div class="it" data-k="o"><div><div class="t">camera-flythrough — 관문 사이를 지나 다음 자리에 멈추는 카메라</div><div class="s">같은 저장소 · MIT</div></div><span class="tg o">참고 카드</span><span class="pg">06장</span></div>
+        <div class="it" data-k="o"><div><div class="t">mirror-transition · perspective-tilt — 대칭 축 배치, 좌우 대비</div><div class="s">같은 저장소 · MIT</div></div><span class="tg o">참고 카드</span><span class="pg">07·08장</span></div>
+        <div class="it" data-k="o"><div><div class="t">stack-layer-addition · depth-assemble — 단계가 차례로 쌓이는 계단</div><div class="s">같은 저장소 · MIT</div></div><span class="tg o">참고 카드</span><span class="pg">09장</span></div>
+        <div class="it" data-k="o"><div><div class="t">atmospheric-depth · particle-assemble — 안개로 먼 층 흐리기, 흩어진 입자가 모여 형태가 됨</div><div class="s">같은 저장소 · MIT</div></div><span class="tg o">참고 카드</span><span class="pg">10·11장</span></div>
+      </div>
+      <h3>제품 장면 참고</h3>
+      <div class="srcs">
+        <div class="it" data-k="o"><div><div class="t">awesome-html-scrolline-deck · launch-orbit-note/minute/scene.js — 층별 분해 간격, 3점 조명, 화면 중심 옮기기, 접지 그림자</div><div class="s">MIT License · Copyright 2026 gongnyang · github.com/gongnyang/awesome-html-scrolline-deck</div></div><span class="tg o">참고 카드</span><span class="pg">03장 외</span></div>
+      </div>
+    </div>
+  </aside>
+  <!-- /deck-content -->
+
+</div>
+
+<!-- 편집 모드 UI -->
+<div id="editbar" hidden>
+  <span class="eb-badge">편집 모드</span>
+  <button data-cmd="bold" title="굵게 (Ctrl+B)"><b>B</b></button>
+  <button data-cmd="accent" title="선택한 글자를 오렌지로 강조">강조</button>
+  <button data-cmd="plain" title="선택한 글자의 서식 지우기">서식 지우기</button>
+  <button data-cmd="undo" title="되돌리기 (Ctrl+Z)">되돌리기</button>
+  <span class="eb-sep"></span>
+  <span class="eb-state" id="ebState">변경 없음</span>
+  <button data-cmd="save" class="primary" title="HTML 저장 (Ctrl+S)">HTML 저장</button>
+  <button data-cmd="discard" title="저장하지 않은 편집을 모두 버리기">편집 버리기</button>
+  <button data-cmd="exit" title="편집 끝내기 (Esc)">완료</button>
+</div>
+<aside id="cpanel" hidden>
+  <header><b id="cpTitle"></b><button id="cpClose" aria-label="닫기">✕</button></header>
+  <div id="cpBody"></div>
+  <footer><button id="cpAdd">+ 행 추가</button><span class="note">값을 바꾸면 차트에 바로 반영됩니다</span></footer>
+</aside>
+<div id="toast"><span id="toastMsg"></span></div>
+<input type="file" id="imgPick" accept="image/*" hidden>
+
+<!-- 편집 가능한 데이터: 편집 모드에서 고치고 'HTML 저장'하면 이 블록이 다시 쓰인다 -->
+<!-- 삽화 레이어 지도: 배경과 움직일 요소의 위치(원본 픽셀) -->
+<script type="application/json" id="illu-layers">{}</script>
+<script type="application/json" id="deck-data">{"bars3d":{"title":"04 · 구역별 초당 처리 건수 (가상)","unit":"건/초","cols":["구역","건/초"],"rows":[["구역 A",420],["구역 B",310],["구역 C",680],["구역 D",260],["구역 E",380],["구역 F",210]]},"charts":{"c10mix":{"title":"10 · 항목별 예산 비중 (가상)","kind":"doughnut","cols":["항목","비중(%)","색"],"types":["t","n","c"],"rows":[["장비",42,"진네이비"],["보안 장비·관제",24,"오렌지"],["회선",18,"네이비"],["운영·시험",16,"회색"]]},"c10step":{"title":"10 · 단계별 예산 (가상, 억 원)","kind":"hbar","suffix":"억","cols":["단계","금액(억 원)","색"],"types":["t","n","c"],"rows":[["설계",1.2,"회색"],["구축",6.8,"진네이비"],["이관",2.1,"네이비"],["이중화 시험",1.5,"네이비"],["운영 전환",0.9,"회색"]]}}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>window.Chart || document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>')</script>
+<script>
+(() => {
+  /* 편집 저장의 바탕: 스크립트가 DOM을 바꾸기 전의 원본 */
+  const PRISTINE = '<!doctype html>\n' + document.documentElement.outerHTML;
+  // 단일 파일판: 그림·영상이 #asset-map 안에 들어 있으면 경로 대신 그것을 쓴다(폴더판에서는 경로 그대로)
+  const ASSETS = (() => { try { return JSON.parse(document.getElementById('asset-map')?.textContent || '{}'); } catch (e) { return {}; } })();
+  const A = p => ASSETS[p] || p;
+  const toBlobUrl = (d, type) => URL.createObjectURL(new Blob([Uint8Array.from(atob(d.split(',')[1]), c => c.charCodeAt(0))], {type}));
+  document.querySelectorAll('img[src^="assets/"], img[data-asset], video[src^="assets/"], video[data-asset], video[data-poster]').forEach(el => {
+    const src = el.dataset.asset || el.getAttribute('src'), poster = el.dataset.poster || el.getAttribute('poster');
+    if (src) { el.dataset.asset = src; if (ASSETS[src]) el.src = el.tagName === 'VIDEO' ? toBlobUrl(ASSETS[src], 'video/mp4') : ASSETS[src]; }
+    if (poster && ASSETS[poster]) el.poster = ASSETS[poster];
+  });
+  const DATA = JSON.parse(document.getElementById('deck-data').textContent);
+  ['cat', 'packs', 'layers', 'scenes'].forEach(k => DATA[k] = DATA[k] || []); DATA.charts = DATA.charts || {};
+  // 장·부록을 빼도 돌아가게: 그 장에만 있는 요소가 없으면 화면에 붙지 않는 빈 요소로 대신한다
+  const $el = id => document.getElementById(id) || Object.assign(document.createElement('div'), {id: '_' + id});
+
+  const C = {or:'#ee6d1d', or2:'#f26522', ort:'#fad3bb', orp:'#fdeee4', navy:'#00338d', navy2:'#1f4b9b', hair:'#dcdce0', surf:'#f5f5f7', ink:'#2b2b2e', ink2:'#6e6e73', grey:'#8c8c92'};
+  const COLORS = {'오렌지': C.or, '네이비': C.navy2, '진네이비': C.navy, '회색': C.hair, '진회색': C.grey, '연오렌지': C.ort};
+  const col = n => COLORS[n] || C.hair;
+  const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+  const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+  const FONT = "'KoPub Dotum','KoPub돋움체 Medium','Malgun Gothic',sans-serif";
+  const stage = document.getElementById('stage');
+  const slides = [...document.querySelectorAll('.slide')];
+  const N = slides.length;
+  let cur = -1, editing = false;
+
+  /* ── 편집 대상 찾기: 슬라이드 안에서 글자를 직접 가진 가장 바깥 요소 ── */
+  const SKIP = 'script,style,svg,canvas,button,[data-gen],.chevs,.lb';
+  function candidates(doc) {
+    const out = [], set = new Set();
+    doc.querySelectorAll('#stage .slide *, #stage .side-page *').forEach(el => {
+      if (el.closest(SKIP)) return;
+      for (let p = el.parentElement; p && p.id !== 'stage'; p = p.parentElement) if (set.has(p)) return;
+      if ([...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) { set.add(el); out.push(el); }
+    });
+    return out;
+  }
+  const images = doc => [...doc.querySelectorAll('#stage .slide img, #stage .side-page img')].filter(el => !el.closest('[data-gen]'));
+  const liveEds = candidates(document), liveImgs = images(document);
+  liveEds.forEach((el, i) => el.dataset.ek = i);
+  liveImgs.forEach((el, i) => el.dataset.ik = i);
+
+  /* ── 초안(브라우저 보관) ── */
+  // 초안은 슬라이드 본문과 데이터에만 묶는다. 스타일·스크립트를 고쳐도 초안이 살아남는다
+  const sigSrc = PRISTINE.slice(PRISTINE.indexOf('<section class="slide'), PRISTINE.indexOf('<!-- /deck-content -->')) + document.getElementById('deck-data').textContent;
+  let h = 5381; for (let i = 0; i < sigSrc.length; i++) h = (h * 33 ^ sigSrc.charCodeAt(i)) >>> 0;
+  const SIG = sigSrc.length + ':' + h, DKEY = 'kosoe-deck-draft:' + location.pathname;
+  const dirty = new Set(), dirtyImg = new Set();
+  let dataDirty = false, unsaved = false, draftT = null;
+  function storeDraft() {
+    try {
+      localStorage.setItem(DKEY, JSON.stringify({sig: SIG, t: Date.now(), n: liveEds.length, ni: liveImgs.length,
+        html: Object.fromEntries([...dirty].map(k => [k, liveEds[k].innerHTML])),
+        img: Object.fromEntries([...dirtyImg].map(k => [k, liveImgs[k].getAttribute('src')])),
+        data: dataDirty ? DATA : null}));
+    } catch (e) { toast('브라우저에 초안을 보관하지 못했습니다. HTML 저장을 눌러 주세요'); }
+  }
+  function changed() { unsaved = true; clearTimeout(draftT); draftT = setTimeout(storeDraft, 400); updateBar(); }
+  let draft = null, staleDraft = null;
+  try { draft = JSON.parse(localStorage.getItem(DKEY)); } catch (e) {}
+  if (draft && draft.sig === SIG) {
+    Object.entries(draft.html || {}).forEach(([k, v]) => { if (liveEds[k]) { liveEds[k].innerHTML = v; syncCounts(liveEds[k]); dirty.add(+k); } });
+    Object.entries(draft.img || {}).forEach(([k, v]) => { if (liveImgs[k]) { liveImgs[k].src = v; dirtyImg.add(+k); } });
+    if (draft.data) { Object.assign(DATA, draft.data); dataDirty = true; }
+    unsaved = dirty.size + dirtyImg.size > 0 || dataDirty;
+  } else if (draft) {
+    // 파일이 바뀐 뒤 남은 초안: 칸 수가 맞으면 불러올지 묻는다
+    const keysFit = (o, n) => Object.keys(o || {}).every(k => +k < n);
+    staleDraft = (draft.n == null || draft.n === liveEds.length) && (draft.ni == null || draft.ni === liveImgs.length)
+      && keysFit(draft.html, liveEds.length) && keysFit(draft.img, liveImgs.length) ? draft : null;
+    draft = null;
+  }
+
+  /* ── scale stage to window ── */
+  function fit() {
+    const s = Math.min(innerWidth / 1440, innerHeight / 810);
+    stage.style.transform = `scale(${s})`;
+    stage.style.left = (innerWidth - 1440 * s) / 2 + 'px';
+    stage.style.top = (innerHeight - 810 * s) / 2 + 'px';
+    stage.dataset.scale = s;
+  }
+  addEventListener('resize', fit); fit();
+
+  slides.forEach(sl => sl.querySelectorAll('.a').forEach((el, i) => el.style.setProperty('--i', i)));
+
+  /* ── rail: 섹션 번호·이름은 2장 목차에서 읽는다(목차를 고치면 레일도 바뀜) ── */
+  const rail = document.getElementById('rail');
+  const agRows = [...document.querySelectorAll('.agenda .agrow')];
+  agRows.forEach((row, k) => {
+    const members = slides.map((sl, i) => sl.dataset.sec === String(k + 1) ? i : -1).filter(i => i >= 0);
+    const b = document.createElement('button');
+    b.dataset.sec = k + 1;
+    b.innerHTML = `<span class="n"></span><span class="dots">${members.map(i => `<i data-i="${i}"></i>`).join('')}</span>`;
+    b.onclick = e => go(e.target.dataset.i != null ? +e.target.dataset.i : +row.dataset.go);
+    rail.appendChild(b);
+  });
+  function syncRail() {
+    agRows.forEach((row, k) => {
+      const b = rail.children[k];
+      b.querySelector('.n').textContent = row.querySelector('.n').textContent;
+      b.title = row.querySelector('.h').textContent + ' — ' + row.querySelector('.d').textContent;
+    });
+  }
+  syncRail();
+  const sides = [...document.querySelectorAll('.side-page')];
+  const apx = document.createElement('div');
+  apx.className = 'rail-apx';
+  apx.innerHTML = '<span class="ttl">부록</span>' + sides.map(sp => `<button data-side="${sp.dataset.side}" title="${sp.dataset.label}"><span class="k">${sp.dataset.key}</span>${sp.dataset.short}</button>`).join('');
+  rail.appendChild(apx);
+  document.getElementById('pgTot').textContent = String(N).padStart(2, '0');
+
+  /* ── navigation ── */
+  const hooks = {};
+  function go(i) {
+    i = Math.max(0, Math.min(N - 1, i));
+    closeSide();
+    if (i === cur) return;
+    const prev = slides[cur];
+    if (prev) { prev.classList.remove('active'); prev.classList.add('leaving'); setTimeout(() => prev.classList.remove('leaving'), 400); }
+    const sl = slides[i];
+    sl.classList.add('active');
+    cur = i;
+    stage.dataset.theme = sl.dataset.theme || 'light';
+    document.getElementById('pgCur').textContent = String(i + 1).padStart(2, '0');
+    document.getElementById('pgLab').textContent = sl.dataset.label || '';
+    document.getElementById('prog').style.width = ((i + 1) / N * 100) + '%';
+    rail.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.sec === sl.dataset.sec));
+    rail.querySelectorAll('.dots i').forEach(d => { const j = +d.dataset.i; d.classList.toggle('on', j === i); d.classList.toggle('done', j < i); });
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
+    sl.querySelectorAll('canvas').forEach(cv => make(cv.id));
+    sl.querySelectorAll('[data-count]').forEach(countUp);
+    if (sl.dataset.hook && hooks[sl.dataset.hook]) hooks[sl.dataset.hook](sl);
+    if (sl.dataset.hook !== 'tl') stopAuto();
+    // 원고별 움직임 층(모션·스크롤·3D)이 장 바뀜을 받는다
+    document.dispatchEvent(new CustomEvent('deck:slide', {detail: {i, el: sl, prev: prev || null}}));
+  }
+  document.getElementById('nextBtn').onclick = () => go(cur + 1);
+  document.getElementById('prevBtn').onclick = () => go(cur - 1);
+  document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { if (!editing) go(+b.dataset.go); }));
+  addEventListener('keydown', e => {
+    const typing = e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveFile(); return; }
+    if (e.key === 'Escape') {
+      if (typing) e.target.blur();
+      else if (lbOpen()) closeLb();
+      else if (sideOpen) closeSide();
+      else if (editing) setEdit(false);
+      return;
+    }
+    if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === 'e' || e.key === 'E') { setEdit(!editing); return; }
+    if (sideOpen) {
+      if (lbOpen() && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { e.preventDefault(); lbStep(e.key === 'ArrowRight' ? 1 : -1); }
+      const vid = vidOf(sideOpen);
+      if (vid && (e.key === ' ' || e.key === 'k' || e.key === 'K') && e.target !== vid) { e.preventDefault(); vid.paused ? vid.play() : vid.pause(); }
+      return;
+    }
+    if ((e.key === ' ' || e.key === 'Enter') && e.target.closest && e.target.closest('button,a,[role=button],summary')) return;
+    if (['ArrowRight','PageDown',' ','Enter'].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+    else if (['ArrowLeft','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(N - 1);
+    else if (e.key === 'f' || e.key === 'F') toggleFs();
+  });
+  let wheelLock = 0, wheelAcc = 0;
+  addEventListener('wheel', e => {
+    if (document.body.dataset.nav === 'scroll') return;   // 스크롤 원고는 휠을 자기 타임라인에 쓴다
+    if (sideOpen || (e.target.closest && e.target.closest('#cpanel'))) return;
+    const now = Date.now();
+    if (now < wheelLock) return;
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) > 60) { go(cur + (wheelAcc > 0 ? 1 : -1)); wheelAcc = 0; wheelLock = now + 750; }
+  }, {passive: true});
+  let tx = null;
+  addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive: true});
+  addEventListener('touchend', e => { if (tx == null || editing || sideOpen) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1)); tx = null; });
+  function toggleFs() { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+  document.getElementById('fsBtn').onclick = toggleFs;
+
+  /* ── count up ── */
+  const fmtNum = (v, dec) => v.toLocaleString('ko-KR', {minimumFractionDigits: dec, maximumFractionDigits: dec});
+  function countUp(el) {
+    const to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0);
+    if (editing) { el.textContent = fmtNum(to, dec); return; }
+    const t0 = performance.now(), dur = 1400;
+    const step = t => {
+      const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmtNum(to * e, dec);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  /* ── mouse: parallax, tilt, cursor ── */
+  const cursor = document.getElementById('cursor');
+  addEventListener('mousemove', e => {
+    cursor.style.opacity = 1;
+    cursor.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
+    const r = stage.getBoundingClientRect();
+    const mx = ((e.clientX - r.left) / r.width - .5) * 2, my = ((e.clientY - r.top) / r.height - .5) * 2;
+    if (slides[cur]) { slides[cur].style.setProperty('--mx', mx.toFixed(3)); slides[cur].style.setProperty('--my', my.toFixed(3)); }
+  });
+  document.addEventListener('mouseleave', () => cursor.style.opacity = 0);
+  document.addEventListener('mouseover', e => cursor.classList.toggle('big', !!e.target.closest('button,.card,.rule,.eng,.illu,.plane,.lab,.hwp,.pipe .st,.feat,canvas,[role=button],.kosoe,.kpi,.ready,.shot,summary')));
+  const tilts = [...document.querySelectorAll('[data-tilt]')];
+  tilts.forEach(el => {
+    el.addEventListener('mousemove', e => {
+      if (editing) return;
+      const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      el.style.transition = 'transform .12s linear';
+      el.style.transform = `perspective(1100px) rotateY(${x * 9}deg) rotateX(${-y * 9}deg) translateZ(6px)`;
+    });
+    el.addEventListener('mouseleave', () => { el.style.transition = ''; el.style.transform = ''; });
+  });
+
+  /* ── 삽화 레이어: 원본 그림 위에 배경 · 코쇠(몸통·꺾쇠·눈꺼풀) · 화살표/라벨 덩어리를 겹쳐 따로 움직인다 ── */
+  const LAYERS = JSON.parse(document.getElementById('illu-layers').textContent);
+  function layerize(img) {
+    const holder = img.parentElement;
+    holder.querySelector(':scope > .lay')?.remove();
+    img.classList.remove('lay-src');
+    const m = (img.dataset.asset || img.getAttribute('src') || '').match(/assets\/illust\/([\w-]+)\.webp$/);
+    const L = m && LAYERS[m[1]];
+    const bw = img.offsetWidth, bh = img.offsetHeight;
+    if (!L || !bw || !bh) return;
+    const dir = `assets/illust/layers2/${m[1]}/`, sfx = img.closest('.navy,.black') ? '-d' : '';
+    const sc = Math.min(bw / L.w, bh / L.h), w = L.w * sc, h = L.h * sc;
+    const P = (v, t) => (v / t * 100).toFixed(3) + '%';
+    const at = (o, ox, oy, tw, th) => `left:${P(o.x - ox, tw)};top:${P(o.y - oy, th)};width:${P(o.w, tw)};height:${P(o.h, th)}`;
+    let html = `<img class="L-bg" src="${A(`${dir}bg${sfx}.webp`)}" alt="" style="left:0;top:0;width:100%;height:100%">`;
+    L.G.forEach((g, i) => { html += `<img class="G G-${g.c} A-${g.a}" src="${A(`${dir}${g.id}${sfx}.webp`)}" alt="" style="${at(g, 0, 0, L.w, L.h)};--gi:${i}">`; });
+    L.K.forEach((k, i) => {
+      const c = k.crest;
+      const x0 = Math.min(k.x, c ? c.x : k.x), y0 = Math.min(k.y, c ? c.y : k.y);
+      const KW = Math.max(k.x + k.w, c ? c.x + c.w : 0) - x0, KH = Math.max(k.y + k.h, c ? c.y + c.h : 0) - y0;
+      let inner = `<img class="K-body" src="${A(`${dir}k${i}${sfx}.webp`)}" alt="" style="${at(k, x0, y0, KW, KH)}">`;
+      k.eyes.forEach(e => {
+        inner += `<i class="K-lid" style="left:${P(e[0] - e[2] * 1.6 - x0, KW)};top:${P(e[1] - e[3] * 1.6 - y0, KH)};width:${P(e[2] * 3.2, KW)};height:${P(e[3] * 3.2, KH)};background:${k.fill}"></i>`;
+      });
+      if (c) inner += `<img class="K-crest" src="${A(`${dir}c${i}${sfx}.webp`)}" alt="" style="${at(c, x0, y0, KW, KH)};transform-origin:${P(c.ox - c.x, c.w)} ${P(c.oy - c.y, c.h)}">`;
+      html += `<div class="K ${k.m}" style="${at({x: x0, y: y0, w: KW, h: KH}, 0, 0, L.w, L.h)};transform-origin:${P(k.pivot[0] - x0, KW)} ${P(k.pivot[1] - y0, KH)};--ki:${i}">${inner}</div>`;
+    });
+    const lay = document.createElement('div');
+    lay.className = 'lay';
+    Object.assign(lay.style, {left: img.offsetLeft + (bw - w) / 2 + 'px', top: img.offsetTop + (bh - h) / 2 + 'px', width: w + 'px', height: h + 'px'});
+    lay.innerHTML = html;
+    img.after(lay);
+    img.classList.add('lay-src');
+  }
+  document.querySelectorAll('#stage .illu img').forEach(layerize);
+
+  /* ── cover kosoe: 누르면 말풍선 ── */
+  const kosoe = $el('kosoe');
+  kosoe.addEventListener('click', () => { kosoe.classList.add('say'); clearTimeout(kosoe._t); kosoe._t = setTimeout(() => kosoe.classList.remove('say'), 2200); });
+
+  /* ── architecture focus ── */
+  const arch = $el('arch');
+  function focusEng(e) {
+    arch.classList.toggle('focus', !!e && e !== 'all');
+    arch.querySelectorAll('.eng,.flow.e').forEach(n => n.classList.toggle('on', e === 'all' || n.dataset.e === e));
+    document.querySelectorAll('.rule').forEach(r => r.classList.toggle('on', r.dataset.e === e));
+  }
+  arch.querySelectorAll('.eng').forEach(g => { g.addEventListener('mouseenter', () => focusEng(g.dataset.e)); g.addEventListener('mouseleave', () => focusEng(null)); });
+  document.querySelectorAll('.rule').forEach(r => { r.addEventListener('mouseenter', () => focusEng(r.dataset.e)); r.addEventListener('mouseleave', () => focusEng(null)); });
+
+  /* ── hangul catalog (data: cat) ── */
+  const cat = $el('cat'), catD = $el('catDetail');
+  let catK = 0;
+  function showCat(k) {
+    catK = k;
+    const [n, b, o, f] = DATA.cat[k];
+    cat.querySelectorAll('.chip').forEach((x, j) => x.classList.toggle('on', j === k));
+    catD.innerHTML = `<h4><span data-bind="cat.${k}.0">${esc(n)}</span> <span class="tag ${b === '상세' ? 'navy' : 'or'}" style="margin-left:8px;vertical-align:middle">${esc(b)}보고 기본</span></h4><div class="ol" data-bind="cat.${k}.2">${esc(o)}</div><div class="ft">특징 — <span data-bind="cat.${k}.3">${esc(f)}</span></div>`;
+    refreshBinds();
+  }
+  DATA.cat.forEach(([n, b], k) => {
+    const x = document.createElement('div');
+    x.className = 'chip' + (b === '상세' ? ' d' : '');
+    x.setAttribute('role', 'button');
+    x.innerHTML = `<span data-bind="cat.${k}.0">${esc(n)}</span><small>${esc(b)}보고</small>`;
+    x.addEventListener('mouseenter', () => { if (!editing) showCat(k); });
+    x.addEventListener('click', () => { if (catK !== k) showCat(k); });
+    cat.appendChild(x);
+  });
+  if (DATA.cat.length) showCat(0);
+
+  /* ── pack tabs (data: packs) ── */
+  const tabs = $el('packTabs'), pv = $el('packView');
+  let packK = 0;
+  function showPack(k) {
+    packK = k;
+    const [n, d, eng, own, chk] = DATA.packs[k];
+    tabs.querySelectorAll('.tab').forEach((b, j) => b.classList.toggle('on', j === k));
+    pv.innerHTML = `
+      <div class="row"><span>주 문서</span><b data-bind="packs.${k}.1">${esc(d)}</b></div>
+      <div class="row"><span>엔진</span><div class="eng-dots">${['PPT','WEB','한글'].map(e => `<span class="tag ${eng.includes(e) ? 'solid' : 'off'}" data-eng="${e}" title="편집 모드에서 눌러 켜고 끕니다">${e === 'WEB' ? 'WEBSLIDE' : e}</span>`).join('')}</div></div>
+      <div class="row"><span>팩 고유</span><span data-bind="packs.${k}.3">${esc(own)}</span></div>
+      <div class="row"><span>추가 검수</span><span data-bind="packs.${k}.4">${esc(chk)}</span></div>
+      <div class="row" style="border:0"><span>상속</span><span>전사 공통 팩 → <b style="color:var(--or)" data-bind="packs.${k}.0">${esc(n)}</b> → 개인 설정</span></div>
+      <p class="note" style="margin-top:8px">모든 팩은 가상 예시입니다</p>`;
+    pv.querySelectorAll('[data-eng]').forEach(t => t.addEventListener('click', () => {
+      if (!editing) return;
+      const arr = DATA.packs[k][2], i = arr.indexOf(t.dataset.eng);
+      i < 0 ? arr.push(t.dataset.eng) : arr.splice(i, 1);
+      dataDirty = true; changed(); showPack(k);
+    }));
+    refreshBinds();
+    if (!editing) pv.animate([{opacity: 0, transform: 'translateY(8px)'}, {opacity: 1, transform: 'none'}], {duration: 350, easing: 'cubic-bezier(.2,.8,.2,1)'});
+  }
+  DATA.packs.forEach(([n], k) => {
+    const b = document.createElement('div');
+    b.className = 'tab'; b.setAttribute('role', 'button');
+    b.innerHTML = `<span data-bind="packs.${k}.0">${esc(n)}</span>`;
+    b.onclick = () => { if (packK !== k) showPack(k); };
+    b.onmouseenter = () => { if (!editing && packK !== k) showPack(k); };
+    tabs.appendChild(b);
+  });
+  if (DATA.packs.length) showPack(0);
+
+  /* ── inheritance stack (data: layers) ── */
+  const stack = $el('stack');
+  const baseTop = [0, 80, 160, 240];
+  DATA.layers.forEach(([n, d, lock], k) => {
+    const p = document.createElement('div');
+    p.className = 'plane' + (lock ? ' lock' : '');
+    p.style.top = baseTop[k] + 'px'; p.style.zIndex = 10 - k;
+    const l = document.createElement('div');
+    l.className = 'lab'; l.style.top = (baseTop[k] + 70) + 'px';
+    l.innerHTML = `<span><span data-bind="layers.${k}.0">${esc(n)}</span><br><small data-bind="layers.${k}.1">${esc(d)}</small></span>`;
+    const on = () => { stack.querySelectorAll('.plane,.lab').forEach(x => x.classList.remove('on')); p.classList.add('on'); l.classList.add('on'); spread(k); };
+    p.onmouseenter = on; l.onmouseenter = on;
+    stack.append(p, l);
+  });
+  const beam = document.createElement('div'); beam.className = 'beam'; stack.appendChild(beam);
+  function spread(k) {
+    const planes = stack.querySelectorAll('.plane'), labs = stack.querySelectorAll('.lab');
+    planes.forEach((p, j) => { const t = baseTop[j] + (k == null ? 0 : (j < k ? -16 : j > k ? 16 : 0)); p.style.top = t + 'px'; labs[j].style.top = (t + 70) + 'px'; });
+    beam.style.top = (baseTop[0] + 90) + 'px'; beam.style.height = (baseTop[3] - baseTop[0]) + 'px';
+  }
+  spread(null);
+  stack.addEventListener('mouseleave', () => { stack.querySelectorAll('.plane,.lab').forEach(x => x.classList.remove('on')); spread(null); });
+  stack.addEventListener('mousemove', e => {
+    const r = stack.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5;
+    stack.querySelectorAll('.plane').forEach(p => p.style.setProperty('--rz', (x * 10).toFixed(1) + 'deg'));
+  });
+
+  /* ── demo timeline (data: scenes) ── */
+  const tl = $el('tl'), tlFill = $el('tlFill');
+  const sImg = $el('sceneImg');
+  let sceneK = 0, autoT = null, autoOn = true;
+  DATA.scenes.forEach(([t, h], k) => {
+    const b = document.createElement('div');
+    b.className = 'tli'; b.setAttribute('role', 'button');
+    b.innerHTML = `<b data-bind="scenes.${k}.0">${esc(t)}</b><span data-bind="scenes.${k}.1">${esc(h)}</span>`;
+    b.onclick = () => { setAuto(false); if (sceneK !== k) showScene(k); };
+    b.onmouseenter = () => { if (editing) return; setAuto(false); showScene(k); };
+    tl.appendChild(b);
+  });
+  function showScene(k) {
+    if (!tl.isConnected) return;   // 시연 타임라인 장이 없을 때
+    sceneK = k;
+    const [t, h, title, txt, img] = DATA.scenes[k];
+    tl.querySelectorAll('.tli').forEach((b, j) => { b.classList.toggle('on', j === k); b.classList.toggle('done', j < k); });
+    tlFill.style.width = (k / (DATA.scenes.length - 1) * (100 - 100 / DATA.scenes.length)) + '%';
+    [['sceneT', 0, t], ['sceneH', 1, h], ['sceneTitle', 2, title], ['sceneText', 3, txt]].forEach(([id, f, v]) => {
+      const el = $el(id); el.dataset.bind = `scenes.${k}.${f}`; el.textContent = v;
+    });
+    const src = `assets/illust/${img}.webp`;
+    if ((sImg.dataset.asset || sImg.getAttribute('src')) !== src) {
+      sImg.dataset.asset = src;
+      sImg.style.opacity = 0;
+      const old = sImg.parentElement.querySelector(':scope > .lay');
+      if (old) old.style.opacity = 0;
+      setTimeout(() => { sImg.src = A(src); sImg.onload = () => { layerize(sImg); sImg.style.opacity = 1; }; }, 180);
+    }
+    refreshBinds();
+  }
+  const autoBtn = $el('autoBtn');
+  function setAuto(on) {
+    autoOn = on; clearInterval(autoT);
+    autoBtn.textContent = on ? '❚❚ 자동 재생 멈춤' : '▶ 자동 재생';
+    if (on && !editing && slides[cur]?.dataset.hook === 'tl') autoT = setInterval(() => showScene((sceneK + 1) % DATA.scenes.length), 3200);
+  }
+  function stopAuto() { clearInterval(autoT); }
+  autoBtn.onclick = () => setAuto(!autoOn);
+  hooks.tl = () => { if (DATA.scenes.length) { showScene(0); setAuto(true); } };
+  if (DATA.scenes.length) showScene(0);
+
+  /* ── criteria cards ── */
+  const critCards = [...document.querySelectorAll('#crit .card')];
+  function hiCrit(k) { critCards.forEach((c, j) => c.classList.toggle('on', j === k)); }
+
+  /* ── closing waves ── */
+  const wave = $el('wave');
+  wave.innerHTML = [['#7a3a10', 0, 60], ['#b85415', 1.2, 80], ['#ee6d1d', 2.4, 100]].map(([c, ph, a]) => `<path stroke="${c}" data-ph="${ph}" data-a="${a}" />`).join('');
+  let wt = 0, wmy = 0;
+  addEventListener('mousemove', e => wmy = e.clientY / innerHeight);
+  (function waveLoop() {
+    if (slides[cur] && slides[cur].contains(wave)) {
+      wt += 0.012;
+      wave.querySelectorAll('path').forEach((p, k) => {
+        const ph = +p.dataset.ph, a = +p.dataset.a * (0.6 + wmy * 0.8);
+        let d = '';
+        for (let x = 0; x <= 1440; x += 24) {
+          const y = 150 + Math.sin(x / 210 + wt * (1 + k * .3) + ph) * a * .6 + Math.sin(x / 90 + wt * 2 + ph) * a * .12;
+          d += (x ? 'L' : 'M') + x + ' ' + y.toFixed(1);
+        }
+        p.setAttribute('d', d);
+      });
+    }
+    requestAnimationFrame(waveLoop);
+  })();
+
+  /* ── charts (data: charts) ── */
+  const charts = {};
+  const valueLabels = {
+    id: 'valueLabels',
+    afterDatasetsDraw(chart, _, opts) {
+      if (!opts || !opts.on) return;
+      const {ctx} = chart;
+      chart.data.datasets.forEach((ds, di) => {
+        chart.getDatasetMeta(di).data.forEach((el, i) => {
+          const v = ds.data[i]; if (Array.isArray(v) || v == null) return;
+          const txt = (opts.fmt ? opts.fmt(v) : v) + (opts.suffix || '');
+          ctx.save();
+          ctx.font = `700 15px ${FONT}`;
+          ctx.fillStyle = Array.isArray(ds.backgroundColor) && ds.backgroundColor[i] === C.or ? C.or : C.ink;
+          const horiz = chart.options.indexAxis === 'y';
+          ctx.textAlign = horiz ? 'left' : 'center';
+          ctx.textBaseline = horiz ? 'middle' : 'bottom';
+          horiz ? ctx.fillText(txt, el.x + 8, el.y) : ctx.fillText(txt, el.x, el.y - 6);
+          ctx.restore();
+        });
+      });
+    }
+  };
+  const TT = () => ({backgroundColor: C.ink, titleFont: {family: FONT, weight: 700, size: 14}, bodyFont: {family: FONT, size: 13}, padding: 10, cornerRadius: 0, displayColors: false});
+  function base(extra = {}) {
+    return Object.assign({
+      responsive: true, maintainAspectRatio: false, devicePixelRatio: Math.max(2, (window.devicePixelRatio || 1) * (+stage.dataset.scale || 1)),
+      animation: {duration: editing ? 0 : 1200, easing: 'easeOutQuart'},
+      plugins: {legend: {display: false}, tooltip: TT()},
+    }, extra);
+  }
+  const axisFont = {family: FONT, size: 13};
+  const gridOff = {display: false}, gridOn = {color: '#ececee'};
+  const T = id => DATA.charts[id];
+  const num = r => r.map(x => +x || 0);
+  const hbar = (id, suffix, extra = {}) => {
+    const d = T(id), vals = num(d.rows.map(r => r[1]));
+    return {type: 'bar', data: {labels: d.rows.map(r => r[0]), datasets: [{data: vals, backgroundColor: d.rows.map(r => col(r[2])), hoverBackgroundColor: C.or2, barThickness: extra.thick || 24}]},
+      options: base({indexAxis: 'y', layout: {padding: {right: 60}},
+        scales: {x: {display: false, min: 0, max: Math.max(1, ...vals) * 1.15}, y: {grid: gridOff, border: {display: false}, ticks: {font: {family: FONT, size: extra.fs || 14}, color: C.ink}}},
+        plugins: {legend: {display: false}, valueLabels: {on: true, suffix}, tooltip: {...TT(), callbacks: {afterLabel: c => d.rows[c.dataIndex][3] || ''}}}})};
+  };
+  const vbar = (id, opts) => {
+    const d = T(id), vals = num(d.rows.map(r => r[1]));
+    return {type: 'bar', data: {labels: d.rows.map(r => r[0]), datasets: [{data: vals, backgroundColor: d.rows.map(r => col(r[2])), hoverBackgroundColor: C.or2, barThickness: opts.thick}]},
+      options: base({layout: {padding: {top: 26}}, scales: {y: {display: false, min: 0, max: Math.max(1, ...vals) * 1.12}, x: {grid: gridOff, border: {color: C.hair}, ticks: {font: {family: FONT, size: 14}, color: C.ink}}},
+        plugins: {legend: {display: false}, valueLabels: {on: true, ...opts.label}, tooltip: {...TT(), ...(opts.tip || {})}}})};
+  };
+  const BUILD = {
+    c3bar: () => hbar('c3bar', '%', {thick: 26, fs: 15}),
+    c3ring: () => {
+      const [lab, v0] = T('c3ring').rows[0] || ['', 0], v = +v0 || 0;
+      const el = document.getElementById('c3ringVal'); el.dataset.count = v; el.dataset.dec = String(v).includes('.') ? 1 : 0;
+      document.getElementById('c3ringLab').textContent = '업무시간 중 ' + lab.replace(/ 작성$/, '');
+      return {type: 'doughnut', data: {labels: [lab, '그 밖의 업무'], datasets: [{data: [v, Math.max(0, 100 - v)], backgroundColor: [C.or, C.surf], borderWidth: 0, hoverOffset: 6}]},
+        options: base({cutout: '78%', rotation: -90, animation: {animateRotate: true, duration: editing ? 0 : 1400}})};
+    },
+    c5: () => {
+      const rows = T('c5').rows, last = rows.findIndex(r => r[4] === '오렌지');
+      return {type: 'bubble', data: {datasets: rows.map(([l, x, y, n, c]) => ({label: l, data: [{x: +x, y: +y, r: (+n || 1) * 13}], backgroundColor: rgba(col(c), c === '오렌지' ? .85 : c === '회색' ? .9 : .55), borderColor: c === '오렌지' ? C.or : 'transparent', borderWidth: 2, hoverRadius: 4}))},
+        options: base({layout: {padding: 10},
+          scales: {x: {min: 0, max: 10.5, grid: gridOn, border: {display: false}, ticks: {display: false}, title: {display: true, text: '만들기 → 마무리', font: {family: FONT, size: 14, weight: 700}, color: C.ink2}},
+                   y: {min: 0, max: 10.5, grid: gridOn, border: {display: false}, ticks: {display: false}, title: {display: true, text: '회사 공통 → 부서 맞춤', font: {family: FONT, size: 14, weight: 700}, color: C.ink2}}},
+          plugins: {legend: {display: false}, tooltip: {...TT(), callbacks: {label: c => c.dataset.label}}}}),
+        plugins: [{id: 'bubbleLabels', afterDatasetsDraw(ch) {
+          const {ctx} = ch;
+          ch.data.datasets.forEach((ds, i) => { const el = ch.getDatasetMeta(i).data[0]; if (!el) return;
+            ctx.save(); const ours = i === last, right = el.x > ch.chartArea.right - 200;
+            ctx.font = `${ours ? 700 : 500} ${ours ? 17 : 13}px ${FONT}`; ctx.fillStyle = ours ? C.or : C.ink2;
+            ctx.textAlign = right ? 'right' : 'left'; ctx.textBaseline = 'middle';
+            right ? ctx.fillText(ds.label, el.x - el.options.radius - 10, el.y) : ctx.fillText(ds.label, el.x + el.options.radius + 6, el.y);
+            ctx.restore(); });
+        }}]};
+    },
+    c6: () => hbar('c6', '%'),
+    c9: () => vbar('c9', {thick: 70, label: {fmt: v => v >= 60 ? `${Math.floor(v / 60)}시간 ${v % 60}분` : `${v}분`}, tip: {callbacks: {label: c => `${c.raw}분`}}}),
+    c11: () => vbar('c11', {thick: 64, label: {suffix: '%'}}),
+    c12: () => {
+      const rows = T('c12').rows;
+      document.getElementById('c12Sum').textContent = 'n';   // 개수는 계속 늘어나므로 n종으로 표기
+      document.getElementById('c12Leg').innerHTML = rows.map(r => `<span><i style="display:inline-block;width:12px;height:12px;background:${col(r[2])};margin-right:6px;vertical-align:-1px"></i>${esc(r[0])} n종</span>`).join('');
+      return {type: 'doughnut', data: {labels: rows.map(r => r[0]), datasets: [{data: num(rows.map(r => r[1])), backgroundColor: rows.map(r => col(r[2])), borderWidth: 2, borderColor: '#fff', hoverOffset: 8}]},
+        options: base({cutout: '68%', plugins: {legend: {display: false}, tooltip: {...TT(), callbacks: {label: c => `${c.label} · 비중 ${c.raw}`}}}})};
+    },
+    c18: () => {
+      const y = 2026, b0 = new Date(y, 9, 27);
+      const off = s => { const [m, d] = String(s).split('/').map(Number); return Math.round((new Date(y, (m || 1) - 1, d || 1) - b0) / 864e5); };
+      const D = v => { const t = new Date(b0.getTime() + v * 864e5); return `${t.getMonth() + 1}/${t.getDate()}`; };
+      const rows = T('c18').rows.map(r => [r[0], off(r[1]), off(r[2]) + 1, r[3]]);
+      const min = Math.min(0, ...rows.map(r => r[1])), max = Math.max(16, ...rows.map(r => r[2]));
+      const now = new Date(), today = Math.round((new Date(now.getFullYear(), now.getMonth(), now.getDate()) - b0) / 864e5);
+      return {type: 'bar', data: {labels: rows.map(r => r[0]), datasets: [{data: rows.map(r => [r[1], r[2]]), backgroundColor: rows.map(r => col(r[3])), hoverBackgroundColor: C.or2, barThickness: 22, borderSkipped: false}]},
+        options: base({indexAxis: 'y', layout: {padding: {top: 22}},
+          scales: {x: {min, max, grid: gridOn, border: {display: false}, ticks: {stepSize: 1, autoSkip: false, maxRotation: 0, font: axisFont, color: C.grey, callback: v => (v - min) % 2 === 0 ? D(v) : ''}},
+                   y: {grid: gridOff, border: {display: false}, ticks: {font: {family: FONT, size: 14}, color: C.ink}}},
+          plugins: {legend: {display: false}, tooltip: {...TT(), callbacks: {label: c => `${D(c.raw[0])} ~ ${D(c.raw[1] - 1)}`}}}}),
+        plugins: [{id: 'today', afterDatasetsDraw(ch) {
+          if (today < min || today > max) return;
+          const x = ch.scales.x.getPixelForValue(today + .5), {top, bottom} = ch.chartArea, ctx = ch.ctx;
+          ctx.save(); ctx.strokeStyle = C.or; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke();
+          ctx.fillStyle = C.or; ctx.font = `700 12px ${FONT}`; ctx.textAlign = 'center'; ctx.fillText('오늘 ' + D(today), x, top - 8); ctx.restore();
+        }}]};
+    },
+    c19: () => {
+      const rows = T('c19').rows, m = rows.map(r => r[0]), v = num(rows.map(r => r[1]));
+      let acc = 0; const cum = v.map(x => acc += x);
+      return {data: {labels: m, datasets: [
+        {type: 'line', label: '누적 절감', data: cum, borderColor: C.or, backgroundColor: C.or, pointRadius: 4, pointHoverRadius: 7, borderWidth: 3, tension: .25, yAxisID: 'y1'},
+        {type: 'bar', label: '월 절감', data: v, backgroundColor: C.hair, hoverBackgroundColor: C.navy2, barThickness: 26, yAxisID: 'y'}]},
+        options: base({interaction: {mode: 'index', intersect: false},
+          scales: {x: {grid: gridOff, ticks: {font: axisFont, color: C.grey}},
+                   y: {position: 'right', min: 0, max: Math.max(1, ...v) * 4, grid: gridOff, border: {display: false}, ticks: {font: axisFont, color: C.grey, callback: x => x.toLocaleString()}},
+                   y1: {position: 'left', min: 0, max: Math.max(1, acc) * 1.08, grid: gridOn, border: {display: false}, ticks: {font: axisFont, color: C.grey, callback: x => x.toLocaleString()}}},
+          plugins: {legend: {display: true, position: 'top', align: 'end', labels: {font: axisFont, color: C.ink, boxWidth: 12, boxHeight: 12}},
+            tooltip: {...TT(), displayColors: true, callbacks: {label: c => `${c.dataset.label} ${c.raw.toLocaleString()}시간`}}}})};
+    },
+    c20: () => {
+      const rows = T('c20').rows;
+      return {type: 'polarArea', data: {labels: rows.map(r => r[0]), datasets: [{data: num(rows.map(r => r[1])), backgroundColor: rows.map(r => rgba(col(r[2]), .85)), borderColor: '#fff', borderWidth: 2}]},
+        options: base({scales: {r: {grid: {color: '#ececee'}, ticks: {display: false}, pointLabels: {display: false}}},
+          onHover: (e, els) => hiCrit(els.length ? els[0].index : -1),
+          plugins: {legend: {display: true, position: 'bottom', labels: {font: axisFont, color: C.ink, boxWidth: 12, boxHeight: 12}},
+            tooltip: {...TT(), callbacks: {label: c => `${c.label} ${c.raw}점`}}}})};
+    },
+  };
+  // 범용 차트: deck-data의 charts.<id>.kind 만 적으면 전용 코드 없이 그린다 — 행 = [이름, 값, 색 이름]
+  const AUTO = {
+    hbar: id => hbar(id, T(id).suffix || ''),
+    vbar: id => vbar(id, {thick: 44, label: {suffix: T(id).suffix || ''}}),
+    doughnut: id => { const d = T(id); return {type: 'doughnut', data: {labels: d.rows.map(r => r[0]), datasets: [{data: num(d.rows.map(r => r[1])), backgroundColor: d.rows.map(r => col(r[2])), borderWidth: 2, borderColor: '#fff', hoverOffset: 8}]},
+      options: base({cutout: '62%', plugins: {legend: {display: true, position: 'bottom', labels: {font: axisFont, color: C.ink, boxWidth: 12}}, tooltip: TT()}})}; },
+    line: id => { const d = T(id); return {type: 'line', data: {labels: d.rows.map(r => r[0]), datasets: [{data: num(d.rows.map(r => r[1])), borderColor: C.or, backgroundColor: rgba(C.or, .12), fill: true, tension: .3, pointRadius: 4, pointHoverRadius: 7, borderWidth: 3}]},
+      options: base({scales: {x: {grid: gridOff, ticks: {font: axisFont, color: C.grey}}, y: {grid: gridOn, border: {display: false}, ticks: {font: axisFont, color: C.grey}}}})}; },
+  };
+  function make(id) {
+    const build = T(id) && AUTO[T(id).kind] ? () => AUTO[T(id).kind](id) : BUILD[id];   // kind 를 적은 차트가 전용 id 보다 먼저
+    if (!build || !window.Chart) return;
+    if (charts[id]) { charts[id].reset(); charts[id].update(); return; }
+    const cfg = build();
+    cfg.plugins = (cfg.plugins || []).concat([valueLabels]);
+    charts[id] = new Chart(document.getElementById(id), cfg);
+  }
+  function rebuild(id) {
+    if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+    make(id);
+    const v = document.getElementById('c3ringVal');
+    if (id === 'c3ring') v.textContent = fmtNum(+v.dataset.count, +v.dataset.dec || 0);
+  }
+  /* ── 마우스를 대면 숫자·그래프가 다시 채워진다 ── */
+  const lastPlay = new WeakMap();
+  const cool = el => { const t = performance.now(); if (t - (lastPlay.get(el) || 0) < 1600) return false; lastPlay.set(el, t); return true; };
+  document.querySelectorAll('#stage [data-count]').forEach(el => {
+    const zone = el.closest('.kpi, .chart-box, h1, h2, h3, h4') || el;
+    zone.addEventListener('mouseenter', () => { if (!editing && cool(el)) countUp(el); });
+  });
+  document.querySelectorAll('#stage .chart-box').forEach(box => {
+    const cv = box.querySelector('canvas');
+    if (!cv) return;
+    box.addEventListener('mouseenter', () => {
+      const ch = charts[cv.id];
+      if (!editing && ch && cool(box)) { ch.reset(); ch.update(); }
+    });
+  });
+  document.querySelectorAll('#stage .ready').forEach(row => row.addEventListener('mouseenter', () => {
+    const m = row.querySelector('.meter i');
+    if (editing || !m || !cool(row)) return;
+    m.style.animation = 'none'; void m.offsetWidth; m.style.animation = 'barFill 1s var(--ease) both';
+  }));
+  critCards.forEach((c, k) => { c.addEventListener('mouseenter', () => { hiCrit(k); const ch = charts.c20; if (ch && k < ch.data.labels.length) { ch.setActiveElements([{datasetIndex: 0, index: k}]); ch.tooltip.setActiveElements([{datasetIndex: 0, index: k}], {x: 0, y: 0}); ch.update(); } }); c.addEventListener('mouseleave', () => hiCrit(-1)); });
+
+  /* ── 사이드 페이지(부록) ── */
+  const scrim = document.getElementById('sideScrim'), pgLab = document.getElementById('pgLab');
+  let sideOpen = null;
+  sides.forEach(sp => [...sp.querySelector('.sp-body').children].forEach((el, i) => el.style.setProperty('--i', Math.min(i, 10))));
+  function vidOf(sp) { return sp?.id === 'side-video' ? MV : sp?.querySelector('video'); }
+  function openSide(id) {
+    const sp = document.getElementById('side-' + id);
+    if (!sp) return;
+    if (sideOpen && sideOpen !== sp) { closeLb(); vidOf(sideOpen)?.pause(); sideOpen.classList.remove('on'); sideOpen.setAttribute('aria-hidden', 'true'); }
+    sideOpen = sp;
+    sp.classList.add('on'); sp.setAttribute('aria-hidden', 'false'); scrim.classList.add('on');
+    sp.querySelector('.sp-body').scrollTop = 0;
+    if (editing) sp.querySelectorAll('details').forEach(d => d.open = true);
+    pgLab.textContent = sp.dataset.label;
+    apx.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.side === id));
+    const vid = vidOf(sp);
+    if (vid && !editing) setTimeout(() => vid.play().catch(() => {}), 450);
+  }
+  function closeSide() {
+    if (!sideOpen) return;
+    closeLb();
+    vidOf(sideOpen)?.pause();
+    sideOpen.classList.remove('on'); sideOpen.setAttribute('aria-hidden', 'true');
+    sideOpen = null;
+    scrim.classList.remove('on');
+    pgLab.textContent = slides[cur]?.dataset.label || '';
+    apx.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+  }
+  document.querySelectorAll('[data-side]:not(.side-page)').forEach(b => b.addEventListener('click', () => openSide(b.dataset.side)));
+  scrim.addEventListener('click', closeSide);
+  document.querySelectorAll('.sp-close').forEach(b => b.addEventListener('click', closeSide));
+  document.querySelectorAll('.sp-go').forEach(b => b.addEventListener('click', () => go(+b.dataset.goto)));
+  /* ── 요약 모션 재생기: video/summary.html을 iframe에서 재생(단일 파일판은 #motion-src의 원본 HTML) ── */
+  window.__motionAsset = p => { const u = A(p); return u === p ? new URL(p, location.href).href : u; };   // 폴더판: 기획서 기준 절대 경로
+  window.__motionManifest = JSON.parse(document.getElementById('illu-layers').textContent);
+  const MV = (() => {
+    if (!document.getElementById('sumMotion')) return {paused: true, currentTime: 0, duration: 0, play: async () => {}, pause() {}, addEventListener() {}, load() {}};   // 요약 모션 부록이 없을 때
+    const box = document.getElementById('sumMotion'), fr = box.querySelector('iframe'), ctl = box.nextElementSibling;
+    const tg = ctl.querySelector('.vtg'), bar = ctl.querySelector('.vbar'), fill = bar.querySelector('i'), tm = ctl.querySelector('.vtm');
+    const subs = [], fmt = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+    let m = null, loading = null, raf = 0, want = null;
+    function load() {
+      if (loading) return loading;
+      loading = new Promise(res => {
+        fr.addEventListener('load', async () => {
+          for (let i = 0; i < 400 && !fr.contentWindow.__ready; i++) await new Promise(r => setTimeout(r, 50));
+          m = fr.contentWindow.motion; if (want !== null) m.seek(want); paint(); res(m);
+        }, {once: true});
+        const src = document.getElementById('motion-src');
+        if (src) fr.srcdoc = src.textContent.replace(/<\\\/script/g, '</script'); else fr.src = 'video/summary.html?embed=1';
+      });
+      return loading;
+    }
+    function paint() {
+      const t = m ? m.time() : (want || 0), d = 111;
+      fill.style.width = (t / d * 100) + '%';
+      tm.textContent = `${fmt(t)} / ${fmt(d)}`;
+      const on = !!(m && m.playing);
+      tg.textContent = on ? '❚❚' : '▶'; box.classList.toggle('on', on);
+      subs.forEach(f => f());
+      if (on && t >= d - .02) { m.pause(); }
+      if (on) raf = requestAnimationFrame(paint);
+    }
+    const api = {
+      get paused() { return !(m && m.playing); },
+      get currentTime() { return m ? m.time() : (want || 0); },
+      set currentTime(t) { want = t; if (m) { const p = m.playing; m.seek(t); if (p) m.play(); } paint(); },
+      get duration() { return 111; },
+      async play() { await load(); m.play(); cancelAnimationFrame(raf); paint(); },
+      pause() { if (m && m.playing) m.pause(); paint(); },
+      addEventListener(ev, f) { if (ev === 'timeupdate') subs.push(f); },
+      load,
+    };
+    const toggle = () => api.paused ? api.play() : api.pause();
+    box.addEventListener('click', toggle); tg.addEventListener('click', toggle);
+    bar.addEventListener('click', e => { const r = bar.getBoundingClientRect(); api.currentTime = (e.clientX - r.left) / r.width * 111; });
+    bar.addEventListener('mousemove', e => { const r = bar.getBoundingClientRect(); bar.querySelector('b').style.left = (e.clientX - r.left) + 'px'; bar.title = fmt((e.clientX - r.left) / r.width * 111); });
+    ctl.querySelector('.vfs').addEventListener('click', () => document.fullscreenElement ? document.exitFullscreen() : box.requestFullscreen?.());
+    return api;
+  })();
+  // 요약 영상: 장면 바로가기와 현재 장면 표시
+  const sumVideo = MV, chaps = [...document.querySelectorAll('#vchap button')];
+  chaps.forEach(b => b.addEventListener('click', () => { sumVideo.currentTime = +b.dataset.t; sumVideo.play().catch(() => {}); }));
+  sumVideo.addEventListener('timeupdate', () => {
+    const t = sumVideo.currentTime;
+    chaps.forEach((b, i) => b.classList.toggle('on', t >= +b.dataset.t && (i === chaps.length - 1 || t < +chaps[i + 1].dataset.t)));
+  });
+  // 편집 모드에서는 링크 이동·질문 접기를 막는다
+  stage.addEventListener('click', e => {
+    if (editing && (e.target.closest('a[href]') || e.target.closest('summary'))) e.preventDefault();
+  }, true);
+  // 출처 필터
+  document.querySelectorAll('.flt button').forEach(b => b.addEventListener('click', () => {
+    b.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('#side-sources .it').forEach(it => it.classList.toggle('hide', !!b.dataset.f && it.dataset.k !== b.dataset.f));
+  }));
+  // 예상 질문 모두 펼치기
+  const qaAll = document.querySelector('.qa-all') || document.createElement('button');
+  qaAll.addEventListener('click', () => {
+    const ds = [...document.querySelectorAll('#side-qa details')], open = !ds.every(d => d.open);
+    ds.forEach(d => d.open = open);
+    qaAll.textContent = open ? '모두 접기' : '모두 펼치기';
+  });
+  // 가정 바꿔 보기 표: 같은 줄·같은 열 강조
+  document.querySelectorAll('table.sens').forEach(t => {
+    t.addEventListener('mouseover', e => {
+      const td = e.target.closest('td'); if (!td) return;
+      t.querySelectorAll('td,th').forEach(x => x.classList.toggle('hl', x.dataset.r === td.dataset.r || x.dataset.c === td.dataset.c));
+    });
+    t.addEventListener('mouseleave', () => t.querySelectorAll('.hl').forEach(x => x.classList.remove('hl')));
+  });
+  // 실물·화면 시안 크게 보기 — 부록 쪽마다 제 라이트박스를 쓴다
+  let lb = null, lbItems = [], lbK = 0;
+  function lbOpen() { return !!lb && lb.classList.contains('on'); }
+  function showLb(k) { lbK = (k + lbItems.length) % lbItems.length; lb.querySelector('img').src = lbItems[lbK].src; lb.querySelector('.lb-cap').textContent = lbItems[lbK].dataset.cap; lb.classList.add('on'); }
+  function lbStep(d) { showLb(lbK + d); }
+  function closeLb() { lb?.classList.remove('on'); }
+  document.querySelectorAll('.side-page .lb').forEach(box => {
+    const items = [...box.closest('.side-page').querySelectorAll('img[data-lb]')];
+    items.forEach((img, k) => (img.closest('.shot') || img.closest('.illu')).addEventListener('click', () => { if (!editing) { lb = box; lbItems = items; showLb(k); } }));
+    box.querySelector('.lb-x').onclick = closeLb;
+    box.querySelector('.lb-p').onclick = () => lbStep(-1);
+    box.querySelector('.lb-n').onclick = () => lbStep(1);
+    box.addEventListener('click', e => { if (e.target === box) closeLb(); });
+  });
+
+  /* ═════════ 편집 모드 ═════════ */
+  const editBtn = document.getElementById('editBtn'), bar = document.getElementById('editbar'), ebState = document.getElementById('ebState');
+  function refreshBinds() {
+    document.querySelectorAll('#stage [data-bind]').forEach(el => editing ? el.setAttribute('contenteditable', 'plaintext-only') : el.removeAttribute('contenteditable'));
+  }
+  function setEdit(on) {
+    editing = on;
+    document.body.classList.toggle('editing', on);
+    editBtn.classList.toggle('on', on);
+    bar.hidden = !on;
+    liveEds.forEach(el => on ? el.setAttribute('contenteditable', 'true') : el.removeAttribute('contenteditable'));
+    refreshBinds();
+    if (on) {
+      stopAuto(); autoBtn.textContent = '▶ 자동 재생'; autoOn = false;
+      document.querySelectorAll('#side-qa details').forEach(d => d.open = true);
+      tilts.forEach(el => { el.style.transition = ''; el.style.transform = ''; });
+      slides[cur]?.querySelectorAll('[data-count]').forEach(countUp);
+      if (!sessionStorage.getItem('kosoe-edit-tip')) { try { sessionStorage.setItem('kosoe-edit-tip', 1); } catch (e) {} toast('점선 상자를 눌러 글자를 고치세요. 차트는 「차트 데이터 편집」, 그림은 더블클릭'); }
+    } else {
+      closePanel();
+      if (document.activeElement && document.activeElement.isContentEditable) document.activeElement.blur();
+    }
+    updateBar();
+    document.dispatchEvent(new CustomEvent('deck:edit', {detail: {on}}));   // 움직임 층이 멈추고 푼다
+  }
+  editBtn.onclick = () => setEdit(!editing);
+  function updateBar() {
+    ebState.textContent = unsaved ? '저장 안 됨 · 초안 보관 중' : (dirty.size || dataDirty || dirtyImg.size ? '파일에 저장됨' : '변경 없음');
+    ebState.classList.toggle('dirty', unsaved);
+  }
+
+  // 글자 편집
+  function setPath(path, v) {
+    const ks = path.split('.'); let o = DATA;
+    for (let i = 0; i < ks.length - 1; i++) o = o[ks[i]];
+    o[ks[ks.length - 1]] = v;
+  }
+  stage.addEventListener('input', e => {
+    const b = e.target.closest('[data-bind]');
+    if (b) {
+      const v = b.textContent.replace(/\s*\n\s*/g, ' ');
+      setPath(b.dataset.bind, v);
+      document.querySelectorAll(`#stage [data-bind="${b.dataset.bind}"]`).forEach(x => { if (x !== b) x.textContent = v; });
+      dataDirty = true;
+    } else {
+      const el = e.target.closest('[data-ek]');
+      if (!el) return;
+      dirty.add(+el.dataset.ek);
+      syncCounts(el);
+      if (el.closest('.agenda')) syncRail();
+    }
+    changed();
+  });
+  // 숫자를 고치면 카운트업 값도 맞춘다
+  function syncCounts(el) {
+    [el, ...el.querySelectorAll('[data-count]')].filter(x => x.dataset.count != null).forEach(x => {
+      const m = x.textContent.replace(/,/g, '').match(/-?\d+(?:\.(\d+))?/);
+      if (!m) return;
+      x.dataset.count = m[0];
+      if (m[1]) x.dataset.dec = m[1].length; else delete x.dataset.dec;
+    });
+  }
+  stage.addEventListener('paste', e => {
+    if (!editing || !e.target.closest('[data-ek]')) return;
+    e.preventDefault();
+    document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text/plain'));
+  });
+  function selHost() {
+    const s = getSelection(); if (!s.rangeCount) return null;
+    const n = s.getRangeAt(0).commonAncestorContainer;
+    return (n.nodeType === 1 ? n : n.parentElement).closest('[data-ek]');
+  }
+  function accent() {
+    const s = getSelection(), host = selHost();
+    if (!host || s.isCollapsed) return toast('강조할 글자를 먼저 선택하세요');
+    const r = s.getRangeAt(0), n = r.commonAncestorContainer;
+    const em = (n.nodeType === 1 ? n : n.parentElement).closest('em');
+    if (em && host.contains(em) && em !== host) em.replaceWith(...em.childNodes);
+    else { const w = document.createElement('em'); w.appendChild(r.extractContents()); r.insertNode(w); s.removeAllRanges(); }
+    host.dispatchEvent(new Event('input', {bubbles: true}));
+  }
+  bar.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); });
+  bar.addEventListener('click', e => {
+    const c = e.target.closest('[data-cmd]')?.dataset.cmd;
+    if (c === 'bold') { if (selHost()) { document.execCommand('bold'); selHost()?.dispatchEvent(new Event('input', {bubbles: true})); } else toast('굵게 할 글자를 먼저 선택하세요'); }
+    else if (c === 'accent') accent();
+    else if (c === 'plain') { const h = selHost(); if (h) { document.execCommand('removeFormat'); h.dispatchEvent(new Event('input', {bubbles: true})); } }
+    else if (c === 'undo') document.execCommand('undo');
+    else if (c === 'save') saveFile();
+    else if (c === 'discard') discard();
+    else if (c === 'exit') setEdit(false);
+  });
+
+  // 그림 바꾸기
+  const imgPick = document.getElementById('imgPick');
+  let imgTarget = null;
+  stage.addEventListener('dblclick', e => {
+    if (!editing) return;
+    const img = e.target.closest('.illu')?.querySelector('img[data-ik]');
+    if (!img) return;
+    imgTarget = img; imgPick.value = ''; imgPick.click();
+  });
+  imgPick.addEventListener('change', () => {
+    const f = imgPick.files[0]; if (!f || !imgTarget) return;
+    const rd = new FileReader();
+    rd.onload = () => { delete imgTarget.dataset.asset; imgTarget.src = rd.result; layerize(imgTarget); dirtyImg.add(+imgTarget.dataset.ik); changed(); toast(`그림을 ${f.name}(으)로 바꿨습니다. 파일 안에 함께 저장됩니다`); };
+    rd.readAsDataURL(f);
+  });
+
+  // 차트 데이터 패널
+  const panel = document.getElementById('cpanel'), cpBody = document.getElementById('cpBody');
+  let panelId = null, rbT = null;
+  document.querySelectorAll('#stage canvas').forEach(cv => {
+    const cd = T(cv.id);   // 전용 차트, 또는 표 머리(cols·types)를 갖춘 범용 차트(kind)에 편집 버튼을 단다
+    if (!BUILD[cv.id] && !(cd && AUTO[cd.kind] && cd.cols && cd.types)) return;
+    const b = document.createElement('button');
+    b.className = 'chart-edit'; b.textContent = '차트 데이터 편집';
+    b.onclick = () => openPanel(cv.id);
+    cv.parentElement.appendChild(b);
+  });
+  function openPanel(id) {
+    panelId = id;
+    const d = T(id);
+    document.getElementById('cpTitle').textContent = d.title || id;
+    cpBody.innerHTML = `<table><thead><tr>${d.cols.map(c => `<th>${esc(c)}</th>`).join('')}<th></th></tr></thead><tbody>${d.rows.map((r, ri) => `<tr>${d.types.map((t, ci) =>
+      t === 'c' ? `<td><select data-r="${ri}" data-c="${ci}">${Object.keys(COLORS).map(n => `<option${n === r[ci] ? ' selected' : ''}>${n}</option>`).join('')}</select></td>`
+      : `<td><input data-r="${ri}" data-c="${ci}" ${t === 'n' ? 'type="number" step="any"' : ''} ${t === 'd' ? 'placeholder="월/일"' : ''} value="${esc(r[ci])}"></td>`).join('')}<td><button data-del="${ri}" title="행 삭제">✕</button></td></tr>`).join('')}</tbody></table>`;
+    panel.hidden = false;
+  }
+  function closePanel() { panel.hidden = true; panelId = null; }
+  document.getElementById('cpClose').onclick = closePanel;
+  cpBody.addEventListener('input', e => {
+    const t = e.target; if (t.dataset.r == null) return;
+    const d = T(panelId), ci = +t.dataset.c;
+    d.rows[+t.dataset.r][ci] = d.types[ci] === 'n' ? (t.value === '' ? 0 : +t.value) : t.value;
+    dataDirty = true; changed();
+    const id = panelId; clearTimeout(rbT); rbT = setTimeout(() => rebuild(id), 250);
+  });
+  cpBody.addEventListener('click', e => {
+    const b = e.target.closest('[data-del]'); if (!b) return;
+    T(panelId).rows.splice(+b.dataset.del, 1);
+    dataDirty = true; changed(); openPanel(panelId); rebuild(panelId);
+  });
+  document.getElementById('cpAdd').onclick = () => {
+    const d = T(panelId);
+    d.rows.push(d.types.map(t => ({t: '새 항목', n: 0, c: '회색', d: '11/12'})[t]));
+    dataDirty = true; changed(); openPanel(panelId); rebuild(panelId);
+    cpBody.scrollTop = cpBody.scrollHeight;
+  };
+
+  // 저장: 원본 HTML에 고친 부분만 덮어 새 파일을 만든다
+  function buildHTML() {
+    const doc = new DOMParser().parseFromString(PRISTINE, 'text/html');
+    const eds = candidates(doc), ims = images(doc);
+    dirty.forEach(k => {
+      if (!eds[k]) return;
+      const c = liveEds[k].cloneNode(true);
+      c.querySelectorAll('[contenteditable]').forEach(x => x.removeAttribute('contenteditable'));
+      eds[k].innerHTML = c.innerHTML;
+      if (liveEds[k].dataset.count != null) { eds[k].setAttribute('data-count', liveEds[k].dataset.count); liveEds[k].dataset.dec ? eds[k].setAttribute('data-dec', liveEds[k].dataset.dec) : eds[k].removeAttribute('data-dec'); }
+    });
+    dirtyImg.forEach(k => { if (ims[k]) ims[k].setAttribute('src', liveImgs[k].getAttribute('src')); });
+    const json = '{\n' + Object.entries(DATA).map(([k, v]) => k === 'charts'
+      ? ` "charts": {\n${Object.entries(v).map(([ck, cv]) => `  ${JSON.stringify(ck)}: ${JSON.stringify(cv)}`).join(',\n')}\n }`
+      : ` ${JSON.stringify(k)}: ${JSON.stringify(v)}`).join(',\n') + '\n}';
+    doc.getElementById('deck-data').textContent = '\n' + json.replace(/</g, '\\u003c') + '\n';
+    return '<!doctype html>\n' + doc.documentElement.outerHTML;
+  }
+  let fileHandle = null;
+  // 스튜디오(scripts/studio.py)가 띄운 덱이면 프로젝트의 deck/index.html 에 바로 저장한다. 아니면 false
+  async function saveToStudio(html) {
+    if (!location.protocol.startsWith('http') || !location.pathname.startsWith('/deck/')) return false;  // 스튜디오가 연 작업본만(최종본 /exports/ 는 제외)
+    let token;
+    try { const t = await fetch('/api/token', {cache: 'no-store'}); if (!t.ok) return false; token = await t.text(); } catch (e) { return false; }
+    try {
+      const r = await fetch('/api/save', {method: 'POST', headers: {'Content-Type': 'text/html; charset=utf-8', 'X-Studio-Token': token}, body: html});
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || r.status);
+      saved('작업 폴더(deck/index.html)에 저장했습니다. 이전 판은 studio/history에 남겼습니다');
+    } catch (e) { toast('작업 폴더에 저장하지 못했습니다: ' + e.message); }
+    return true;
+  }
+  async function saveFile() {
+    if (!(dirty.size || dirtyImg.size || dataDirty)) return toast('저장할 변경이 없습니다');
+    const html = buildHTML();
+    if (await saveToStudio(html)) return;
+    try {
+      if (window.showSaveFilePicker) {
+        if (!fileHandle) fileHandle = await showSaveFilePicker({suggestedName: 'index.html', types: [{description: 'HTML 문서', accept: {'text/html': ['.html']}}]});
+        const w = await fileHandle.createWritable(); await w.write(html); await w.close();
+        saved(`${fileHandle.name}에 저장했습니다. 같은 폴더의 assets와 함께 열면 됩니다`);
+      } else {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([html], {type: 'text/html'})); a.download = 'index.html'; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+        saved('index.html을 내려받았습니다. 이 폴더의 index.html과 바꿔 넣으세요');
+      }
+    } catch (e) { if (e.name !== 'AbortError') toast('저장하지 못했습니다: ' + e.message); }
+  }
+  function saved(msg) { unsaved = false; clearTimeout(draftT); try { localStorage.removeItem(DKEY); } catch (e) {} updateBar(); toast(msg); }
+  function discard() {
+    if (!unsaved) return toast('버릴 편집이 없습니다');
+    if (!confirm('저장하지 않은 편집을 모두 버리고 마지막으로 저장한 상태로 돌아갈까요?')) return;
+    unsaved = false; try { localStorage.removeItem(DKEY); } catch (e) {}
+    location.reload();
+  }
+  addEventListener('beforeunload', e => { if (unsaved) { storeDraft(); e.preventDefault(); e.returnValue = ''; } });
+
+  // 알림
+  const toastEl = document.getElementById('toast'), toastMsg = document.getElementById('toastMsg');
+  let toastT = null;
+  function toast(msg, action) {
+    toastMsg.textContent = msg;
+    toastEl.querySelector('button')?.remove();
+    if (action) { const b = document.createElement('button'); b.textContent = action[0]; b.onclick = () => { toastEl.classList.remove('show'); action[1](); }; toastEl.appendChild(b); }
+    toastEl.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), action ? 9000 : 4200);
+  }
+
+  window.deck = {go, get index() { return cur; }, get editing() { return editing; }, get side() { return !!sideOpen; }, slides, N, edit: setEdit, buildHTML};
+
+  /* ── boot ── */
+  const start = Math.max(0, (parseInt(location.hash.slice(1)) || 1) - 1);
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+    if (window.Chart) { Chart.defaults.font.family = FONT; Chart.defaults.color = C.ink2; if (matchMedia('(prefers-reduced-motion: reduce)').matches) Chart.defaults.animation = false; }
+    go(start);
+    updateBar();
+    if (draft && unsaved) toast('파일에 저장하지 않은 편집 초안을 불러왔습니다', ['초안 버리기', () => { unsaved = false; try { localStorage.removeItem(DKEY); } catch (e) {} location.reload(); }]);
+    else if (staleDraft) toast('이전 버전 화면에서 저장하지 않은 편집 초안이 있습니다', ['불러오기', () => {
+      try { localStorage.setItem(DKEY, JSON.stringify({...staleDraft, sig: SIG})); } catch (e) {}
+      location.reload();
+    }]);
+  });
+})();
+</script>
+<script src="assets/vendor/three.min.js"></script>
+<script>
+/* ── 3D 층(원고 원본 three 전용) ──────────────────────────────────────────────
+   장의 data-scene 이 정거장이다. 장이 바뀌면(deck:slide) 카메라와 물체를 그 정거장으로 1.1초 안에 옮긴다.
+   글은 모두 장 안의 HTML. data-pin="물체:번호" 인 요소만 그 3D 점을 따라 자리(left·top)를 옮긴다 — 글 안에 DOM을 넣지 않는다.
+   WebGL을 못 쓰면 #stage 의 정지 그라데이션과 라벨의 기본 자리(인라인 left·top)로 남고 오류를 내지 않는다.
+   편집 모드(E)면 마지막 상태로 멈춘 한 장, 탭이 숨으면 렌더를 멈춘다, 움직임 줄이기면 트윈 없이 바로 그 자리.
+   three.js r158 (MIT) · 움직임 값: awesome-ai-motion 카드, launch-orbit-note scene.js (MIT © 2026 gongnyang) — 부록 B */
+(() => {
+  const deck = window.deck, stage = document.getElementById('stage');
+  if (!deck || !stage) return;
+  // deck-data 값을 data-bind 글에 다시 채운다(편집 모드에서 고친 값이 다음에 열어도 보이게)
+  const DATA = (() => { try { return JSON.parse(document.getElementById('deck-data').textContent); } catch (e) { return {}; } })();
+  const val = p => p.split('.').reduce((o, k) => o == null ? o : o[k], DATA);
+  document.querySelectorAll('#stage .slide [data-bind]').forEach(el => { const v = val(el.dataset.bind); if (v != null && typeof v !== 'object') el.textContent = v; });
+
+  const T = window.THREE, W = 1440, H = 810, D = Math.PI / 180;
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const host = document.createElement('div');
+  host.className = 'gl-layer'; host.dataset.gen = ''; host.setAttribute('aria-hidden', 'true');
+  stage.appendChild(host);
+  const cv = document.createElement('canvas');
+  // 컨텍스트를 먼저 확인한다(못 얻으면 three를 부르지 않고 그라데이션으로)
+  let gl = null;
+  try { gl = T && (cv.getContext('webgl2') || cv.getContext('webgl')); } catch (e) {}
+  if (!gl) return;
+  let renderer = null, raf = 0, last = 0;
+  function off() {
+    cancelAnimationFrame(raf); raf = 0;
+    try { renderer && renderer.dispose(); } catch (e) {}
+    renderer = null; host.textContent = ''; stage.classList.remove('gl-on');
+  }
+  try {
+    renderer = new T.WebGLRenderer({canvas: cv, antialias: true, alpha: true});
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(W, H, false);
+    const fitPR = () => renderer && renderer.setPixelRatio(Math.min(1.5, (devicePixelRatio || 1) * (+stage.dataset.scale || 1)));
+    fitPR(); addEventListener('resize', fitPR);
+    host.appendChild(cv);
+    cv.addEventListener('webglcontextlost', e => { e.preventDefault(); off(); });
+
+    /* ── 무대: 안개(atmospheric-depth) · 3점 조명(scene.js) · 바닥 격자 · 떠도는 먼지 ── */
+    const scene = new T.Scene();
+    scene.fog = new T.Fog(0x0a2459, 20, 60);
+    const camera = new T.PerspectiveCamera(32, W / H, .1, 400);
+    scene.add(new T.HemisphereLight(0xc8dcff, 0x08183f, 1.4));
+    const key = new T.DirectionalLight(0xffffff, 2.4); key.position.set(6, 12, 9); scene.add(key);
+    const rim = new T.DirectionalLight(0x6f9bff, 1.6); rim.position.set(-9, 5, -10); scene.add(rim);
+    const rnd = (s => () => (s = s * 16807 % 2147483647) / 2147483647)(20261109);   // 매번 같은 배치(미리보기 그림이 흔들리지 않게)
+    const keep = m => { m.transparent = true; m.userData.o = m.opacity; return m; };
+    const std = (color, o) => keep(new T.MeshStandardMaterial(Object.assign({color, roughness: .5, metalness: .25}, o)));
+    const lin = (color, opacity) => keep(new T.LineBasicMaterial({color, opacity}));
+    const box = (w, h, d, m) => new T.Mesh(new T.BoxGeometry(w, h, d), m);
+    const edge = (mesh, c, o) => (mesh.add(new T.LineSegments(new T.EdgesGeometry(mesh.geometry), lin(c, o))), mesh);
+    const OR = 0xee6d1d, SKY = 0x9ec0ff, NV = [0x2552ad, 0x1d4594, 0x173a82, 0x113070];
+
+    const grid = new T.GridHelper(260, 130, 0x2f62c8, 0x1a3d8a);
+    grid.material.transparent = true; grid.material.opacity = .3; grid.position.set(40, 0, -6); scene.add(grid);
+    const NP = 700, dp = new Float32Array(NP * 3);
+    for (let i = 0; i < NP; i++) dp.set([-24 + rnd() * 130, rnd() * 16, -34 + rnd() * 46], i * 3);
+    const dg = new T.BufferGeometry(); dg.setAttribute('position', new T.BufferAttribute(dp, 3));
+    const dust = new T.Points(dg, new T.PointsMaterial({color: SKY, size: .07, transparent: true, opacity: .5, depthWrite: false}));
+    scene.add(dust);
+    const shTex = (() => {   // 접지 그림자(scene.js makeContactShadow)
+      const c = document.createElement('canvas'); c.width = c.height = 128;
+      const x = c.getContext('2d'), g = x.createRadialGradient(64, 64, 4, 64, 64, 64);
+      g.addColorStop(0, 'rgba(0,4,22,.6)'); g.addColorStop(1, 'rgba(0,4,22,0)');
+      x.fillStyle = g; x.fillRect(0, 0, 128, 128); return new T.CanvasTexture(c);
+    })();
+    const shadow = (parent, w, d) => { const m = new T.Mesh(new T.PlaneGeometry(w, d), keep(new T.MeshBasicMaterial({map: shTex, depthWrite: false}))); m.rotation.x = -Math.PI / 2; m.position.y = .015; parent.add(m); };
+
+    /* ── 물체(actor): 저마다 월드의 제자리에 있고, 정거장이 vis·크기·회전·고유 값(ex·grow·asm)을 정한다 ── */
+    const A = {}, ANCH = {};
+    function actor(name, pos, build) {
+      const g = new T.Group(); g.position.set(...pos); g.visible = false; scene.add(g);
+      const a = {g, p: {vis: 0, s: 1, ry: 0, ex: 0, grow: 0, asm: 0, spin: 0}, rate: 0, from: null, to: null, lag: 0};
+      a.upd = build(g, a) || (() => {});
+      a.mats = new Set(); g.traverse(o => [].concat(o.material || []).forEach(m => a.mats.add(m)));
+      return (A[name] = a);
+    }
+    const pin = (key, parent, x, y, z) => { const o = new T.Object3D(); o.position.set(x, y, z); parent.add(o); ANCH[key] = o; };
+    const along = (g, curves, accent, n, speed) => {   // 곡선을 따라 흐르는 점(복제·패킷)
+      const geo = new T.SphereGeometry(.075, 10, 8), list = [];
+      curves.forEach((c, ci) => { for (let k = 0; k < n; k++) {
+        const acc = accent(ci), m = new T.Mesh(geo, std(acc ? OR : 0xdce8ff, {emissive: acc ? OR : 0x9ec0ff, emissiveIntensity: 1.2}));
+        g.add(m); list.push({m, c, ph: k / n});
+      } });
+      return t => list.forEach(k => k.m.position.copy(k.c.getPointAt((t * speed + k.ph) % 1)));
+    };
+
+    // 쌓인 데이터 블록 4층(표지·분해·효과·맺음) — exploded-assembly
+    actor('stack', [0, 0, 0], g => {
+      shadow(g, 7.5, 6);
+      const L = NV.map((c, i) => {
+        const l = new T.Group(), acc = i === 0; g.add(l);
+        l.add(edge(box(4.2, .46, 3, std(c)), acc ? OR : SKY, acc ? .95 : .45));
+        const face = box(3.9, .24, .03, std(0x081a45, {roughness: .85})); face.position.z = 1.5; l.add(face);
+        const led = std(acc ? OR : 0x8fb3ff, {emissive: acc ? OR : 0x3f6fe8, emissiveIntensity: 1});
+        for (let k = 0; k < 6; k++) { const b = box(.36, .05, .03, led); b.position.set(-1.55 + k * .44, k % 3 === 1 ? .05 : -.04, 1.52); l.add(b); }
+        pin('stack:' + i, l, 2.2, 0, 0);
+        return l;
+      });
+      // 위층부터 먼저 벌어지는 시차(ex^(1+0.4i)) — 끝값은 모두 같다
+      return p => L.forEach((l, i) => { l.position.y = .25 + (3 - i) * (.56 + Math.pow(p.ex, 1 + i * .4) * .82); });
+    });
+
+    // 구역별 처리량 입체 막대 — map-extrusion: 값에 비례, 큰 값부터, 높이와 색 이중 표시
+    let barH = [], barRank = [];
+    actor('bars', [15, 0, -8], (g, a) => {
+      const plate = edge(box(8, .16, 5.6, std(0x0b2257)), SKY, .3); plate.position.y = .08; g.add(plate);
+      const geo = new T.BoxGeometry(1, 1, 1).translate(0, .5, 0), eg = new T.EdgesGeometry(geo);
+      a.B = [0, 1, 2, 3, 4, 5].map(i => {
+        const m = new T.Mesh(geo, std(0x2a5bbf)); m.add(new T.LineSegments(eg, lin(0xcfe0ff, .55)));
+        m.position.set(-2.6 + (i % 3) * 2.6, .16, -1.3 + Math.floor(i / 3) * 2.6); m.scale.set(1.4, 1, 1.4);
+        g.add(m); pin('bars:' + i, m, 0, 1, 0); return m;
+      });
+      return p => a.B.forEach((m, i) => {
+        const q = Math.min(1, Math.max(0, (p.grow - (barRank[i] || 0) * .05) / .75));
+        m.visible = barH[i] > 0; m.scale.y = Math.max(.001, (barH[i] || 0) * (1 - Math.pow(1 - q, 3)));
+      });
+    });
+    function setBars() {
+      const rows = (DATA.bars3d && DATA.bars3d.rows) || [];
+      const v = rows.slice(0, 6).map(r => +String(r[1]).replace(/[^\d.-]/g, '') || 0), mx = Math.max(1, ...v);
+      const order = v.map((x, i) => i).sort((p, q) => v[q] - v[p]);
+      barRank = []; order.forEach((i, r) => { barRank[i] = r; });
+      barH = [0, 1, 2, 3, 4, 5].map(i => i < v.length ? .3 + 3.4 * Math.max(0, v[i]) / mx : 0);
+      A.bars.B.forEach((m, i) => m.material.color.set(i === order[0] ? OR : new T.Color(0x1f4b9b).lerp(new T.Color(0xa9c6ff), (v[i] || 0) / mx)));
+      document.querySelectorAll('#stage [data-pin^="bars:"]').forEach(el => el.classList.toggle('or', +el.dataset.pin.slice(5) === order[0]));
+    }
+    setBars();
+
+    // 노드·연결선 구 — particle-network(가까운 노드 연결) · globe-connection-arcs(거점 사이 호와 흐르는 점)
+    actor('globe', [30, 2.8, -2], g => {
+      const R = 2.4, n = 60, P = [];
+      for (let i = 0; i < n; i++) { const y = 1 - (i + .5) / n * 2, r = Math.sqrt(1 - y * y), t = i * 2.39996; P.push(new T.Vector3(Math.cos(t) * r * R, y * R, Math.sin(t) * r * R)); }
+      const inst = new T.InstancedMesh(new T.IcosahedronGeometry(.07, 0), std(0xbcd3ff, {emissive: 0x3d6fe0, emissiveIntensity: .7}), n);
+      const mx = new T.Matrix4(); P.forEach((v, i) => inst.setMatrixAt(i, mx.makeTranslation(v.x, v.y, v.z))); g.add(inst);
+      const seg = [];
+      P.forEach((v, i) => P.map((w, j) => [j, v.distanceToSquared(w)]).filter(x => x[0] !== i).sort((p, q) => p[1] - q[1]).slice(0, 2).forEach(([j]) => seg.push(v, P[j])));
+      g.add(new T.LineSegments(new T.BufferGeometry().setFromPoints(seg), lin(0x8fb3ff, .32)));
+      g.add(new T.LineSegments(new T.EdgesGeometry(new T.IcosahedronGeometry(R * .97, 1)), lin(0x4f7fe8, .12)));
+      const hubs = [[-.62, .38, .69], [.66, .12, .74], [.05, -.66, .75]].map(d => new T.Vector3(...d).normalize().multiplyScalar(R));
+      hubs.forEach((h, i) => {
+        const m = new T.Mesh(new T.IcosahedronGeometry(.17, 1), std(i === 2 ? 0x8fb3ff : 0xffffff, {emissive: i === 2 ? 0x3d6fe0 : 0x9ec0ff, emissiveIntensity: .6}));
+        m.position.copy(h); g.add(m); pin('globe:' + i, g, h.x * 1.06, h.y * 1.06 + .22, h.z * 1.06);
+      });
+      const arc = (a0, b0, lift, c, o) => {
+        const pts = [];
+        for (let k = 0; k <= 40; k++) { const t = k / 40; pts.push(a0.clone().lerp(b0, t).normalize().multiplyScalar(R * (1 + lift * Math.sin(Math.PI * t)))); }
+        g.add(new T.Line(new T.BufferGeometry().setFromPoints(pts), lin(c, o))); return new T.CatmullRomCurve3(pts);
+      };
+      const C = [arc(hubs[0], hubs[1], .34, OR, .95), arc(hubs[0], hubs[1], .17, SKY, .65), arc(hubs[2], hubs[0], .14, SKY, .45), arc(hubs[2], hubs[1], .14, SKY, .45)];
+      const flow = along(g, C, ci => ci === 0, 3, .28);
+      return (p, t) => flow(t);
+    });
+
+    // 요청이 지나는 관문 6개 — camera-flythrough(관문 사이를 지나는 카메라) + 흐르는 패킷
+    actor('corridor', [44, 0, -6], g => {
+      const N = 6, gap = 2.6, w = 2.8, h = 2.3, t = .16;
+      const floor = box(1.3, .03, N * gap + 3, std(0x0d2a6b, {emissive: 0x0d2a6b, emissiveIntensity: .4})); floor.position.set(0, .02, -(N - 1) * gap / 2); g.add(floor);
+      for (let i = 0; i < N; i++) {
+        const acc = i === 2, m = std(acc ? OR : 0x2552ad, acc ? {emissive: OR, emissiveIntensity: .35} : {});
+        const G = new T.Group(); G.position.z = -i * gap; g.add(G);
+        [[0, h, w + t, t], [-w / 2, h / 2, t, h], [w / 2, h / 2, t, h]].forEach(([x, y, bw, bh]) => { const b = edge(box(bw, bh, .22, m), acc ? 0xffc39a : SKY, .45); b.position.set(x, y, 0); G.add(b); });
+        pin('corridor:' + i, G, 0, h + .2, 0);
+      }
+      const pk = [0, 1, 2, 3, 4].map(() => { const m = new T.Mesh(new T.BoxGeometry(.22, .22, .22), std(0xdce8ff, {emissive: 0x9ec0ff, emissiveIntensity: 1.3})); m.position.y = 1.05; g.add(m); return m; });
+      const len = (N - 1) * gap + 5;
+      return (p, tt) => pk.forEach((m, k) => {
+        const u = (tt * .16 + k / pk.length) % 1;
+        m.position.z = 2.5 - u * len; m.rotation.set(tt + k, tt * 1.3 + k, 0);
+        m.material.opacity = p.vis * Math.min(1, u * 6, (1 - u) * 6);   // 통과 페이드
+      });
+    });
+
+    // 센터 한 벌: 받침 + 랙 3대(앞면 표시등)
+    function cluster(parent, x, grey) {
+      const C = new T.Group(); C.position.x = x; parent.add(C);
+      shadow(C, 5.2, 4);
+      const plat = edge(box(3.8, .2, 2.8, std(grey ? 0x26324d : 0x0f2a66)), grey ? 0x8a94aa : SKY, .35); plat.position.y = .1; C.add(plat);
+      const rm = std(grey ? 0x4b556d : 0x2050a8), lm = std(grey ? 0x6d7790 : 0x9ec0ff, grey ? {} : {emissive: 0x3f6fe8, emissiveIntensity: 1});
+      for (let k = 0; k < 3; k++) {
+        const r = edge(box(.86, 2.2, 1, rm), grey ? 0x9aa3b8 : SKY, .45); r.position.set(-1.15 + k * 1.15, 1.3, 0); C.add(r);
+        for (let j = 0; j < 5; j++) { const l = box(.58, .045, .02, lm); l.position.set(r.position.x, .62 + j * .36, .51); C.add(l); }
+      }
+      return C;
+    }
+    // 두 센터 미러 — mirror-transition(가운데 대칭 축) + 두 회선 위로 흐르는 복제
+    actor('mirror', [58, 0, -10], g => {
+      cluster(g, -3.3); cluster(g, 3.3);
+      const pl = edge(new T.Mesh(new T.PlaneGeometry(3.2, 3.6), std(SKY, {opacity: .06, side: T.DoubleSide, depthWrite: false})), SKY, .3);
+      pl.rotation.y = Math.PI / 2; pl.position.y = 1.8; g.add(pl);
+      const bez = (hh, z) => new T.QuadraticBezierCurve3(new T.Vector3(-3.3, 2.5, z), new T.Vector3(0, hh, z), new T.Vector3(3.3, 2.5, z));
+      const C = [bez(5.6, 0), bez(4.3, .8)];
+      C.forEach((c, i) => g.add(new T.Line(new T.BufferGeometry().setFromPoints(c.getPoints(40)), lin(i ? SKY : OR, i ? .55 : .95))));
+      pin('mirror:0', g, -3.3, 2.6, 0); pin('mirror:1', g, 3.3, 2.6, 0); pin('mirror:2', g, 0, 4.2, 0);
+      const flow = along(g, C, ci => ci === 0, 4, .3);
+      return (p, t) => flow(t);
+    });
+    // 단일 구성(회색 한 벌) 대 이중화 구성(두 벌 + 복제 호) — 좌우 대비
+    actor('compare', [72, 0, -3], g => {
+      const s1 = new T.Group(); s1.position.x = -2.6; s1.scale.setScalar(.7); g.add(s1); cluster(s1, 0, true);
+      const s2 = new T.Group(); s2.position.x = 1.9; s2.scale.setScalar(.5); g.add(s2); cluster(s2, -2.4); cluster(s2, 2.4);
+      const c = new T.QuadraticBezierCurve3(new T.Vector3(-2.4, 2.5, 0), new T.Vector3(0, 4.8, 0), new T.Vector3(2.4, 2.5, 0));
+      s2.add(new T.Line(new T.BufferGeometry().setFromPoints(c.getPoints(30)), lin(OR, .95)));
+      pin('compare:0', s1, 0, 2.6, 0); pin('compare:1', s2, 0, 4.0, 0);
+      const flow = along(s2, [c], () => true, 3, .35);
+      return (p, t) => flow(t);
+    });
+    // 전환 일정 계단 — stack-layer-addition: 단계가 왼쪽부터 차례로 솟는다
+    actor('steps', [86, 0, -8], g => {
+      shadow(g, 11, 4);
+      const geo = new T.BoxGeometry(1, 1, 1).translate(0, .5, 0), eg = new T.EdgesGeometry(geo), HS = [.5, 1, 1.5, 2, 2.5];
+      const S = [0x173a82, 0x1d4594, 0x2552ad, OR, 0x3a6cc8].map((c, i) => {
+        const acc = i === 3, m = new T.Mesh(geo, std(c, acc ? {emissive: OR, emissiveIntensity: .25} : {}));
+        m.add(new T.LineSegments(eg, lin(acc ? 0xffc39a : 0xcfe0ff, .5)));
+        m.position.set(-3.6 + i * 1.8, 0, 0); m.scale.set(1.5, 1, 1.8); g.add(m); pin('steps:' + i, m, 0, 1, 0); return m;
+      });
+      return p => S.forEach((m, i) => { const q = Math.min(1, Math.max(0, (p.grow - i * .08) / .68)); m.scale.y = Math.max(.001, HS[i] * (1 - Math.pow(1 - q, 3))); });
+    });
+    // 흩어진 입자가 블록 4층의 겉면으로 모인다 — particle-assemble
+    actor('swarm', [0, 0, 0], g => {
+      const n = 900, P = new Float32Array(n * 3), S = new Float32Array(n * 3), E = new Float32Array(n * 3), dl = new Float32Array(n);
+      for (let k = 0; k < n; k++) {
+        const i = k % 4, f = rnd();
+        let x = (rnd() - .5) * 4.2, y = (rnd() - .5) * .46, z = (rnd() - .5) * 3;
+        if (f < .5) y = f < .25 ? .23 : -.23; else if (f < .75) x = rnd() < .5 ? -2.1 : 2.1; else z = rnd() < .5 ? -1.5 : 1.5;
+        E.set([x, .25 + (3 - i) * .56 + y, z], k * 3);
+        const th = rnd() * Math.PI * 2, ph = Math.acos(2 * rnd() - 1), r = 5 + rnd() * 5;
+        S.set([r * Math.sin(ph) * Math.cos(th), Math.max(.2, 2 + r * Math.cos(ph) * .6), r * Math.sin(ph) * Math.sin(th)], k * 3);
+        dl[k] = rnd() * .3;
+      }
+      P.set(S);
+      const geo = new T.BufferGeometry(); geo.setAttribute('position', new T.BufferAttribute(P, 3));
+      const pm = keep(new T.PointsMaterial({color: 0xcfe0ff, size: .09, opacity: .9, depthWrite: false}));
+      g.add(new T.Points(geo, pm));
+      let done = -1;
+      return p => {
+        pm.opacity = pm.userData.o * p.vis * (1 - .85 * p.asm);
+        if (p.asm === done) return; done = p.asm;
+        for (let k = 0; k < n; k++) {
+          const q = Math.min(1, Math.max(0, (p.asm - dl[k]) / .7)), e = 1 - Math.pow(1 - q, 3);
+          for (let j = k * 3; j < k * 3 + 3; j++) P[j] = S[j] + (E[j] - S[j]) * e;
+        }
+        geo.attributes.position.needsUpdate = true;
+      };
+    });
+
+    /* ── 정거장: cam = [목표 x, y, z, 방위각°, 고도°, 거리, 화면 속 목표 위치 x, y(0~1)] · fog = [가까이,멀리] ── */
+    const ALL = {vis: .75, grow: 1};
+    const ST = {
+      turntable:  {cam: [0, 1.3, 0, 36, 14, 13, .72, .53], act: {stack: {vis: 1, s: 1.1, spin: .7}}},        // object-turntable: 한 바퀴 9초
+      orbit:      {cam: [0, 1.7, 0, -42, 26, 15, .83, .56], act: {stack: {vis: 1, ex: .35, ry: .5, spin: .25}}}, // camera-orbit
+      explode:    {cam: [0, 2.4, 0, 28, 12, 17.5, .47, .58], act: {stack: {vis: 1, ex: 1, ry: -.15}}},      // exploded-assembly
+      bars:       {cam: [15, 1.3, -8, 34, 36, 20, .68, .52], act: {bars: {vis: 1, grow: 1}}},              // map-extrusion: 기울기 36°
+      network:    {cam: [30, 2.8, -2, 8, 8, 14.5, .73, .53], act: {globe: {vis: 1}}},
+      flythrough: {cam: [44, 1.1, -12.5, 48, 20, 19, .63, .41], via: [44, 1.3, 4.5], act: {corridor: {vis: 1}}},
+      mirror:     {cam: [58, 1.9, -10, 0, 14, 15.5, .58, .62], act: {mirror: {vis: 1}}},
+      compare:    {cam: [72, 1.2, -3, 18, 16, 17, .76, .60], act: {compare: {vis: 1}}},
+      timeline:   {cam: [86, 1.2, -8, 24, 20, 18, .66, .57], act: {steps: {vis: 1, grow: 1}}},
+      overview:   {cam: [45, 0, -7, 0, 13, 106, .52, .85], fog: [70, 150], act: {stack: ALL, bars: ALL, globe: ALL, corridor: ALL, mirror: ALL, compare: ALL, steps: ALL}},
+      assemble:   {cam: [0, 1.5, 0, -32, 13, 12.5, .72, .52], act: {swarm: {vis: 1, asm: 1}, stack: {vis: 1, lag: .55}}},   // particle-assemble
+      closing:    {cam: [0, 1.4, 0, 24, 9, 17, .74, .55], act: {stack: {vis: 1, s: 1.15, spin: .5}}},
+    };
+    const cam = {tx: 0, ty: 1.5, tz: 0, az: 60, el: 30, d: 30, cx: .7, cy: .53, fn: 20, ff: 60}, CK = Object.keys(cam);
+    const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;   // power2~3.inOut
+    const clamp = x => Math.min(1, Math.max(0, x));
+    let tw = null, clock = 0, started = false, frozen = false, redraw = false, pins = [], mx = 0, my = 0, smx = 0, smy = 0;
+
+    function go(sl) {
+      const st = ST[sl && sl.dataset.scene] || ST.turntable;
+      pins = sl ? [...sl.querySelectorAll('[data-pin]')] : [];
+      const c = camera.position;
+      if (started) {   // 지금 카메라 자리에서 출발한다(트윈 중에 바뀌어도 튀지 않게)
+        const dx = c.x - cam.tx, dy = c.y - cam.ty, dz = c.z - cam.tz, d = Math.hypot(dx, dy, dz) || 1;
+        cam.d = d; cam.el = Math.asin(dy / d) / D; cam.az = Math.atan2(dx, dz) / D;
+      }
+      const [tx, ty, tz, az, el, d, cx, cy] = st.cam, [fn, ff] = st.fog || [20, 60];
+      let a = az; while (a - cam.az > 180) a -= 360; while (a - cam.az < -180) a += 360;   // 가까운 쪽으로 돈다
+      tw = {t0: performance.now(), dur: RM ? 0 : 1100, from: {...cam}, to: {tx, ty, tz, az: a, el, d, cx, cy, fn, ff}, p0: c.clone(), via: started && st.via ? new T.Vector3(...st.via) : null};
+      for (const [n, ac] of Object.entries(A)) {
+        const s = st.act[n] || {};
+        ac.rate = RM ? 0 : (s.spin || 0);
+        if (!ac.rate) ac.p.spin = Math.atan2(Math.sin(ac.p.spin), Math.cos(ac.p.spin));
+        ac.from = {...ac.p};
+        ac.to = {vis: s.vis || 0, s: s.s || 1, ry: s.ry || 0, ex: s.ex || 0, grow: s.grow || 0, asm: s.asm || 0};
+        if (!ac.rate) ac.to.spin = 0;
+        ac.lag = s.lag || 0;
+      }
+      started = true; redraw = true;
+    }
+    function step(now, dt) {
+      const raw = !tw || !tw.dur ? 1 : clamp((now - tw.t0) / tw.dur), k = ease(raw);
+      if (tw) for (const key of CK) cam[key] = tw.from[key] + (tw.to[key] - tw.from[key]) * k;
+      clock += dt;
+      smx += (mx - smx) * Math.min(1, dt * 3); smy += (my - smy) * Math.min(1, dt * 3);   // 마우스 쪽으로 살짝
+      const el = (cam.el + smy * 3) * D, az = (cam.az - smx * 5) * D;
+      camera.position.set(cam.tx + cam.d * Math.cos(el) * Math.sin(az), cam.ty + cam.d * Math.sin(el), cam.tz + cam.d * Math.cos(el) * Math.cos(az));
+      if (tw && tw.via && raw < 1) {   // 관문 사이를 지나 옆 자리로(2차 베지어)
+        const P1 = camera.position.clone();
+        camera.position.copy(tw.p0).multiplyScalar((1 - k) * (1 - k)).addScaledVector(tw.via, 2 * k * (1 - k)).addScaledVector(P1, k * k);
+      }
+      camera.lookAt(cam.tx, cam.ty, cam.tz);
+      camera.setViewOffset(W, H, W * (.5 - cam.cx), H * (.5 - cam.cy), W, H);   // 물체를 글 오른쪽에 둔다(scene.js)
+      scene.fog.near = cam.fn; scene.fog.far = cam.ff;
+      for (const a of Object.values(A)) {
+        if (a.to) { const q = ease(clamp(a.lag < 1 ? (raw - a.lag) / (1 - a.lag) : 1)); for (const key in a.to) a.p[key] = a.from[key] + (a.to[key] - a.from[key]) * q; }
+        a.p.spin += a.rate * dt;
+        a.g.visible = a.p.vis > .01;
+        if (!a.g.visible) continue;
+        a.mats.forEach(m => { m.opacity = m.userData.o * a.p.vis; });
+        a.g.scale.setScalar(a.p.s); a.g.rotation.y = a.p.ry + a.p.spin;
+        a.upd(a.p, clock);
+      }
+      dust.position.y = Math.sin(clock * .25) * .25;
+    }
+    const v3 = new T.Vector3();
+    function place() {   // data-pin 라벨을 3D 점 옆으로(글은 건드리지 않고 left·top·opacity만)
+      for (const el of pins) {
+        const o = ANCH[el.dataset.pin], a = A[el.dataset.pin.split(':')[0]];
+        if (!o || !a) continue;
+        o.getWorldPosition(v3).project(camera);
+        const x = (v3.x + 1) / 2 * W, y = (1 - v3.y) / 2 * H;
+        if (el.dataset.at === 'right') { el.style.left = (x + 24).toFixed(1) + 'px'; el.style.top = (y - el.offsetHeight / 2).toFixed(1) + 'px'; }
+        else { el.style.left = (x - el.offsetWidth / 2).toFixed(1) + 'px'; el.style.top = (y - el.offsetHeight - 10).toFixed(1) + 'px'; }
+        el.style.opacity = v3.z > 1 ? 0 : Math.min(1, a.p.vis * 1.3).toFixed(3);
+      }
+    }
+    function frame(now) {
+      raf = requestAnimationFrame(frame);
+      try {
+        const dt = Math.min(.05, (now - last) / 1000); last = now;
+        if (deck.editing) {   // 편집 중: 트윈을 끝 상태로 두고 멈춘 한 장(글을 고치면 한 번 다시 그림)
+          if (frozen && !redraw) return;
+          if (tw) tw.dur = 0;
+          frozen = true;
+        } else frozen = false;
+        redraw = false;
+        step(now, frozen || RM ? 0 : dt);
+        renderer.render(scene, camera);
+        place();
+      } catch (e) { off(); }
+    }
+    addEventListener('mousemove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+    stage.addEventListener('input', e => {   // 04장 막대 숫자(data-bind)를 고치면 바로 다시 세운다
+      const b = e.target.closest && e.target.closest('[data-bind^="bars3d.rows."]');
+      const rows = DATA.bars3d && DATA.bars3d.rows;
+      if (b && rows) { const [, , r, c] = b.dataset.bind.split('.'); if (rows[r]) { rows[r][c] = b.textContent; setBars(); } }
+      redraw = true;
+    });
+    document.addEventListener('deck:slide', e => { try { go(e.detail.el); } catch (er) { off(); } });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+      else if (!raf && renderer) { last = performance.now(); raf = requestAnimationFrame(frame); }
+    });
+    if (deck.index >= 0) go(deck.slides[deck.index]);
+    stage.classList.add('gl-on');
+    last = performance.now(); raf = requestAnimationFrame(frame);
+  } catch (e) { off(); }
+})();
+</script>
+</body>
+</html>

@@ -9,7 +9,7 @@ gn-voice 저자의 코퍼스·지문·장르 팩 데이터는 쓰지 않는다. 
   build  대표 자료 -> 문체 폴더 (style-guide.md · style-profile.json · fingerprint-slim.json · ai-tells.json · manifest.jsonl · corpus/)
   gate   (문체 폴더) + 검사할 덱 + 근거 -> 합격/불합격 JSON, 고칠 항목, 제목 목록
 
-읽는 형식: 웹슬라이드 .html(section 슬라이드, 이 스킬의 덱) · .pptx · .md · .txt
+읽는 형식: 웹슬라이드 .html(section 슬라이드, 이 스킬의 덱) · .pptx · .hwpx(한 장으로 봄) · .md · .txt
 대표 자료와 검사할 덱은 같은 함수(read_deck -> style_parts -> points)를 거친다. 한쪽만 다른 규칙으로 읽지 않는다.
 """
 import argparse
@@ -257,6 +257,48 @@ def _top(sp):
     return int(off.get("y", 0)) if off is not None else 10 ** 12
 
 
+def _local(tag):
+    return tag.rsplit("}", 1)[-1]
+
+
+def _hp_text(par):
+    """한글 문단(hp:p) 하나의 글자. 표 칸·글상자(subList) 안은 따로 모으므로 건너뛴다 (koscom-hwp-report 와 같은 규칙)."""
+    out = []
+
+    def walk(e):
+        for c in e:
+            n = _local(c.tag)
+            if n == "subList":
+                continue
+            if n == "t":
+                out.append("".join(c.itertext()))
+            else:
+                walk(c)
+    walk(par)
+    return re.sub(r"\s+", " ", "".join(out)).strip()
+
+
+def read_hwpx(p):
+    """한글 문서는 장 구분이 없으므로 한 장으로 본다. 본문 문단은 문체 측정에, 표·글상자 안 글은 숫자 대조에만 쓴다.
+    본문이 표·글상자 안에만 있는 문서(견적서 등, 본문 문장 3줄 미만)는 그 안의 글을 본문으로 쓴다."""
+    top, nested = [], []
+    with zipfile.ZipFile(p) as z:
+        secs = sorted((n for n in z.namelist() if re.fullmatch(r"Contents/section\d+\.xml", n)),
+                      key=lambda n: int(re.findall(r"\d+", n)[-1]))
+        for s in secs:
+            for par in ET.fromstring(z.read(s)):
+                if _local(par.tag) != "p":
+                    continue
+                top.append(_hp_text(par))
+                for sub in par.iter():
+                    if _local(sub.tag) == "subList":
+                        nested += [_hp_text(q) for q in sub if _local(q.tag) == "p"]
+    top, nested = [x for x in top if x], [x for x in nested if x]
+    if sum(len(x) >= MIN_LINE for x in top) < 3:
+        top, nested = top + nested, []
+    return {"slides": [{"title": "", "em": None, "lines": top}], "extra": nested}
+
+
 def read_md(text):
     """# · ## 제목마다, 또는 --- 마다 새 장. 표(|…|)는 숫자 대조에만 쓴다."""
     slides, extra, cur = [], [], None
@@ -304,11 +346,16 @@ def read_deck(path):
             return read_pptx(p)
         except (zipfile.BadZipFile, ET.ParseError, KeyError) as e:
             sys.exit(f"{p.name}: .pptx 를 읽지 못했습니다({e}). 암호가 걸렸거나 손상된 파일일 수 있습니다")
+    if ext == ".hwpx":
+        try:
+            return read_hwpx(p)
+        except (zipfile.BadZipFile, ET.ParseError, KeyError) as e:
+            sys.exit(f"{p.name}: .hwpx 를 읽지 못했습니다({e}). 배포용·암호 문서이거나 손상된 파일일 수 있습니다")
     if ext in (".md", ".markdown", ".txt"):
         return read_md(_read(p))
     if ext == ".pia":
         sys.exit(f"{p.name}: 사내 보호 도구로 암호화된 파일입니다. 사내 절차대로 해제한 뒤 넣으세요")
-    sys.exit(f"{p.name}: 읽을 수 없는 형식입니다(.html·.pptx·.md·.txt). .ppt 는 .pptx 로, 한글·워드·PDF 는 본문을 .txt 로 저장해 넣으세요")
+    sys.exit(f"{p.name}: 읽을 수 없는 형식입니다(.html·.pptx·.hwpx·.md·.txt). .ppt 는 .pptx 로, .hwp 는 한글에서 .hwpx 로, 워드·PDF 는 본문을 .txt 로 저장해 넣으세요")
 
 
 # 줄 머리 기호: □ ㅇ - · * ※ ① ▶ ✓, '1.' '가.' 'I.' (뒤에 띄어쓰기가 있을 때만), '[1]', 기호 글꼴 문자(U+E000~F8FF)
